@@ -83,6 +83,18 @@ export function surface(maxW, r = R.panel, extra = "") {
   return card(maxW, r, C.white, null, `color:${C.slate900};${extra}`);
 }
 
+/**
+ * A white card that has to be visible ON A WHITE STAGE.
+ *
+ * Solid white on solid white has no edge — the hard drop alone was not enough to
+ * separate three cards from each other. The fix is a hairline, not an alpha:
+ * the fill stays fully solid (DESIGN_SYSTEM 1.1) and the stroke does the work the
+ * translucency was faking.
+ */
+export function surfaceOnWhite(maxW, r = R.panel, extra = "") {
+  return card(maxW, r, C.white, C.hairline, `color:${C.slate900};${extra}`);
+}
+
 /** White pill on blue - the h-14 rounded-xl font-bold CTA (OnboardingSteps:340). */
 export function pill(w, h, extra = "") {
   return sq(
@@ -600,7 +612,7 @@ export const beats = {
           ${steps
             .map(
               (s, i) => `<div class="jcard" data-i="${i}" style="${
-                surface(400, R.card)
+                onBlue ? surface(400, R.card) : surfaceOnWhite(400, R.card)
               };padding:30px 28px;opacity:0">
               <div class="irow" style="gap:18px"><span class="ico on-blue">${icon(
                 STEP_ICON[s[2]] || "arrow-right-circle",
