@@ -263,17 +263,17 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-prospects-b0" data-start="0" data-duration="16.500" data-width="1920" data-height="1080" data-fps="30">
+    <div id="root" data-composition-id="agency-calls-b0" data-start="0" data-duration="7.000" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="eyebrow blue" data-a="label" style="opacity:0">Agency Prospects</div>
+        <div class="eyebrow blue" data-a="label" style="opacity:0">One outbound call = one record</div>
         <div class="count" data-a="count"><span class="n blue" style="opacity:0">0</span></div>
-        <div class="body blue dim" data-a="sub" style="opacity:0">One row, one real business we might be able to win.</div>
+        <div class="body blue dim" data-a="sub" style="opacity:0">We have twenty-nine of them.</div>
       </div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["agency-prospects-b0"] = tl;
+      window.__timelines["agency-calls-b0"] = tl;
       const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
         const n = q('[data-a="count"] .n');
         tl.fromTo(q('[data-a="label"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
@@ -283,7 +283,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
         tl.fromTo(q('[data-a="sub"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.1);
         // constant motion: the number keeps a slow breathe so the frame never dies
         tl.to(n, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3);
-      });})({"label":"Agency Prospects","count":200,"sub":"One row, one real business we might be able to win."});
+      });})({"label":"One outbound call = one record","count":29,"sub":"We have twenty-nine of them."});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

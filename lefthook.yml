@@ -12,17 +12,19 @@ pre-commit:
       run: node scripts/lint-design.mjs {staged_files}
 
     build:
-      # Rebuild the compositions so a stale committed build can never ship. The
-      # generated HTML under compositions/ is committed on purpose — Studio and
-      # the renderer read it directly and a fresh clone must render without a
-      # build step — so it has to be regenerated, not just rebuilt locally.
-      run: node build-beats.mjs
+      # Regenerate the compositions and stage them, so a stale build can never
+      # ship. `compositions/` is committed on purpose — Studio and the renderer
+      # read it directly and a fresh clone must render without a build step.
+      run: node build-beats.mjs && node scripts/entry.mjs
       stage_fixed: true
 
-    diff-check:
-      # If `build` changed anything, fail and let the author inspect + stage it.
-      # Silently committing a regenerated build would hide the drift.
-      run: git diff --quiet -- compositions/ || (echo "compositions/ changed — review and stage the rebuild" && exit 1)
+    verify-build:
+      # After `build` + stage_fixed, the WORKING TREE must match the INDEX.
+      # Only the working tree — checking --cached as well can never pass during a
+      # commit, because the staged content IS the commit being made. A rule that
+      # can only ever fail trains people to reach for --no-verify.
+      run: git diff --quiet
+      stage_fixed: false
 
 pre-push:
   commands:

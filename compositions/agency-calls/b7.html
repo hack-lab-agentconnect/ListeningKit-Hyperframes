@@ -263,27 +263,31 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-prospects-b0" data-start="0" data-duration="16.500" data-width="1920" data-height="1080" data-fps="30">
+    <div id="root" data-composition-id="agency-calls-b7" data-start="0" data-duration="10.100" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="eyebrow blue" data-a="label" style="opacity:0">Agency Prospects</div>
-        <div class="count" data-a="count"><span class="n blue" style="opacity:0">0</span></div>
-        <div class="body blue dim" data-a="sub" style="opacity:0">One row, one real business we might be able to win.</div>
+        <div class="wk" style="max-width:1120px;background:rgba(255,255,255,0.10);border-radius:24px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);padding:0;overflow:hidden">
+          <div class="thead" style="border-bottom:1.5px solid rgba(255,255,255,.18)"><span class="kv white" style="opacity:.8">aiSummary · aiSentiment — written for every call</span></div>
+          <div style="padding:24px 30px;display:flex;flex-direction:column;gap:16px">
+            <div class="wrow" data-state="pending" style="background:rgba(255,255,255,.07)"><span class="spin white"></span><span class="body white">transcribing the audio</span><span class="chk"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M20 6L9 17L4 12" stroke="#6EE7A8"/></svg></span></div><div class="wrow" data-state="pending" style="background:rgba(255,255,255,.07)"><span class="spin white"></span><span class="body white">summarising what it was about</span><span class="chk"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M20 6L9 17L4 12" stroke="#6EE7A8"/></svg></span></div><div class="wrow" data-state="pending" style="background:rgba(255,255,255,.07)"><span class="spin white"></span><span class="body white">reading the tone</span><span class="chk"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M20 6L9 17L4 12" stroke="#6EE7A8"/></svg></span></div>
+          </div>
+          <div style="padding:22px 30px 26px;border-top:1.5px solid rgba(255,255,255,.18)" class="body white dim">Nobody has to sit through 41 minutes of playback.</div>
+        </div>
       </div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["agency-prospects-b0"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
-        const n = q('[data-a="count"] .n');
-        tl.fromTo(q('[data-a="label"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(n, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
-        const c = { v: 0 };
-        tl.to(c, { v: count, duration: 2.1, ease: "power2.out", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 0.3);
-        tl.fromTo(q('[data-a="sub"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.1);
-        // constant motion: the number keeps a slow breathe so the frame never dies
-        tl.to(n, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3);
-      });})({"label":"Agency Prospects","count":200,"sub":"One row, one real business we might be able to win."});
+      window.__timelines["agency-calls-b7"] = tl;
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { qq }) {
+        tl.fromTo(qq(".wk")[0], { opacity: 0, scale: 0.93 }, { opacity: 1, scale: 1, duration: 0.55, ease: "power3.out" }, t0);
+        qq(".wrow").forEach((r, i) => {
+          const at = t0 + 0.8 + i * 1.1;
+          tl.set(r, { attr: { "data-state": "active" } }, at);
+          tl.fromTo(r.querySelector(".spin"), { rotation: 0 }, { rotation: 360, duration: 1.1, ease: "none", repeat: -1 }, at);
+          tl.set(r, { attr: { "data-state": "done" } }, at + 1.1);
+          tl.fromTo(r.querySelector(".chk"), { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, at + 1.1);
+        });
+      });})({"head":"aiSummary · aiSentiment — written for every call","steps":["transcribing the audio","summarising what it was about","reading the tone"],"foot":"Nobody has to sit through 41 minutes of playback."});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

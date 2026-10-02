@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+/* ---- fonts: Satoshi only. tailwind.config.js aliases mono to sans on purpose. */
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Light.woff') format('woff');font-weight:300;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Regular.woff') format('woff');font-weight:400;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Medium.woff') format('woff');font-weight:500;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Bold.woff') format('woff');font-weight:700;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Black.woff') format('woff');font-weight:900;font-display:block}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;
+ font-family:'Satoshi',system-ui,sans-serif;font-synthesis:none;
+ -webkit-font-smoothing:antialiased}
+.clip{position:absolute;inset:0}
+.ringdefs{position:absolute;top:0;left:0;pointer-events:none}
+
+/* ---- stage. Flat colour, never a gradient: the app's shell is a flat
+   backgroundColor with a dither layer on top (OnboardingShell.tsx:65,70).
+   One .stage div per beat, so the background itself cuts between beats. */
+.stages{position:absolute;inset:0;z-index:0}
+.stage{position:absolute;inset:0;background:#2A8CFF}
+.stage.white{background:#FFFFFF}
+
+/* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
+   ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
+   to the left and right edges at opacity-55 (OnboardingShell.tsx:15,70).
+   Recreating that per-pixel in canvas JS produced a heavy overlay that both
+   looked wrong and counted against the capture layer's overlay budget, so the
+   visible surface here is the ordered-dither lattice itself: two 3px-period
+   repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
+   once quantised, plus the app's edge mask. It animates by sliding the lattice,
+   so the frame is never static. */
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
+ background-size:6px 6px,6px 6px;
+ mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%);-webkit-mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)}
+/* On a white stage the lattice is BLUE, but it keeps the app's edge mask.
+   Removing the mask here (as an earlier pass did) laid a full-frame blue wash
+   over every white beat: the stage stopped reading as white and white type on
+   it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
+   backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
+#dither.on-white{opacity:.55;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
+
+/* ---- the one persistent element is a moving chapter rail, not a stuck
+   eyebrow. It wipes, it moves, it changes - see .rail in build-beats. */
+.chapter{position:absolute;left:0;right:0;bottom:0;height:6px;z-index:70;
+ display:flex;gap:4px;padding:0 88px 0}
+.chapter i{flex:1;height:6px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+.stage.white .chapter i{background:rgba(42,140,255,.16)}
+.chapter i b{position:absolute;inset:0;transform-origin:left center;transform:scaleX(0);
+ background:#FFFFFF;display:block}
+.stage.white .chapter i b{background:#2A8CFF}
+
+/* ---- logo lockup: the onboarding hero treatment (OnboardingShell.tsx:43-45) */
+.lockup{position:absolute;z-index:70;display:flex;align-items:center;gap:18px}
+.lockup img{width:64px;height:64px;border-radius:18px;display:block}
+.lockup .word{font-size:30px;font-weight:900;letter-spacing:0;text-transform:uppercase}
+.lockup .obj{font-size:30px;font-weight:500;opacity:.72}
+/* The logo is a blue tile with a white mark, so it needs NO filter on either
+   stage — brightness(0) invert(1) (which used to be here) flattens both the
+   background and the mark to solid white. */
+.lockup.on-white img{filter:none}
+
+/* ---- endcard lockup. The logo IS a blue tile with a white mark
+   (apps/web/public/logo.svg), so on the blue stage it needs no backing plate -
+   only a hard offset shadow to lift it off the field. Two earlier attempts were
+   wrong: brightness(0) invert(1) flattened BOTH the blue background and the
+   white mark to solid white (the end card shipped a blank white square), and a
+   white plate behind an opaque blue logo is simply invisible. Tracking is 0: a
+   tracked wordmark is not the wordmark. */
+.ecmark{position:relative;width:168px;height:168px}
+.ecmark img{position:absolute;inset:0;width:168px;height:168px;border-radius:18px;
+  display:block;box-shadow:0 10px 0 0 rgba(9,32,63,0.30)}
+.wordmark{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:0;text-transform:uppercase;color:#FFFFFF;white-space:nowrap}
+
+/* ---- type scale */
+.hero{font:900 104px/1.02 'Satoshi', system-ui, sans-serif;letter-spacing:-.03em}
+.h1{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:-.025em}
+.h2{font:900 62px/1.08 'Satoshi', system-ui, sans-serif;letter-spacing:-.02em}
+.h3{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;letter-spacing:-.015em}
+.body{font:400 30px/1.45 'Satoshi', system-ui, sans-serif}
+.eyebrow{font:700 20px/1 'Satoshi', system-ui, sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.label{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.kv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;letter-spacing:.04em}
+.cap{font:400 34px/1.34 'Satoshi', system-ui, sans-serif}
+.blue{color:#2A8CFF}
+.white{color:#FFFFFF}
+.dim{opacity:.72}
+.dim2{opacity:.55}
+
+/* ---- glass card on blue: border-white/30 bg-white/10 (OnboardingSteps.tsx:322) */
+.glass{background:rgba(255,255,255,.10);border:1.5px solid rgba(255,255,255,.30);
+ box-shadow:0 6px 0 0 rgba(9,32,63,0.30)}
+.glass:hover{background:rgba(255,255,255,.20)}
+/* inverted: the selected state, border-white bg-white text-[#2a8cff] (:321) */
+.invert{background:#FFFFFF;color:#2A8CFF}
+/* white surface on blue: rounded-[32px] bg-white text-slate-900 (:475) */
+.surface{background:#FFFFFF;color:#0F172A;
+ box-shadow:0 10px 0 0 rgba(13,42,76,0.22),0 26px 60px -28px rgba(15,30,51,.45)}
+.hard{box-shadow:inset 0 1px 0 0 #1f6fe6, inset 0 -2px 0 0 #117eff, 0 0 3px 0 rgba(0,0,0,0.2)}
+
+/* ---- captions: the onboarding dashed underline is the signature link style
+   (OnboardingSteps.tsx:369). Captions use it as their rail. */
+.cap{z-index:80;display:flex;justify-content:center;align-items:flex-end;padding:0 260px 74px;pointer-events:none}
+.cap span{display:inline-block;max-width:1440px;text-align:center;font:400 34px/1.34 'Satoshi', system-ui, sans-serif;
+ font-weight:400;color:#FFFFFF;padding:14px 30px;border-radius:12px;
+ background:rgba(10,24,48,.42);border:1.5px solid rgba(255,255,255,.16)}
+#root.tone-white .cap span{color:#0F172A;background:rgba(255,255,255,.88);border-color:#E2E8F0}
+
+/* ---- shared diagram primitives */
+.connector{fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round}
+.connector.blue{stroke:#2A8CFF}
+.node{padding:22px 26px}
+.node .nk{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
+.node .nv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:6px}
+
+/* ---- icon primitive. Heroicons 24 outline, stroke currentColor, sw 1.5 -
+   the app's own icon defaults (lkicons.mjs). Sits at the LEFT of a card.
+   Radius is rounded-sm (8), NOT a large radius: the app has no fully-rounded
+   tile in this position, and at 72px a 12px radius already reads as a lozenge.
+   Two tile treatments, and the difference matters:
+     .ico.on-blue  brand-blue tile, WHITE glyph  - on a white card
+     .ico.on-white light tint tile, BLUE glyph    - on a blue stage
+   A bare icon with no tile is fine either way. */
+.ic{display:block;flex:none;overflow:visible}
+.ico{display:flex;flex:none;align-items:center;justify-content:center;
+ width:72px;height:72px;border-radius:8px;
+ background:#2A8CFF;color:#FFFFFF}
+.ico.on-white{background:#EFF6FF;color:#2A8CFF}
+.ico.plain{background:none;width:auto;height:auto;color:inherit}
+.irow{display:flex;align-items:center;gap:24px}
+.irow > .itx{flex:1;min-width:0}
+
+/* ---- grid + list rows used by the field-by-field beats */
+.rows{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:22px;padding:18px 24px;border-radius:14px}
+.row .rk{font:undefined;width:270px;flex-shrink:0;opacity:.8}
+.row .rv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:500}
+.row .rdot{margin-left:auto;width:12px;height:12px;border-radius:50%;background:currentColor;opacity:.28}
+
+/* ---- countup, the one pure-number beat */
+.count{display:flex;align-items:baseline;justify-content:center;gap:16px}
+.count .n{font-size:300px;font-weight:900;line-height:.9;letter-spacing:-.045em;
+ font-variant-numeric:tabular-nums}
+.count .u{font-size:84px;font-weight:500;opacity:.72}
+
+/* ---- bar chart (sentiment) */
+.bar{display:flex;align-items:center;gap:20px;padding:14px 0}
+.bar .bl{font:undefined;width:130px;opacity:.8}
+.bar .bt{flex:1;height:26px;border-radius:8px;overflow:hidden;background:rgba(127,127,127,.14)}
+.bar .bf{display:block;height:100%;width:0;border-radius:8px}
+.bar .bv{font:undefined;width:150px;text-align:right;opacity:.8}
+
+/* ---- journey / step cards */
+.jr{display:flex;gap:20px;justify-content:center}
+.jr .card{width:400px;padding:30px 28px;border-radius:20px}
+.jr .num{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;
+ justify-content:center;font-size:20px;font-weight:700}
+.jr .ch{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:20px}
+.jr .cs{font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:400;opacity:.72;margin-top:10px}
+.jr .cm{font:undefined;margin-top:18px;opacity:.6}
+
+/* ---- transcript surface */
+.tw{border-radius:24px;overflow:hidden}
+.thead{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;
+ border-bottom:1.5px solid rgba(127,127,127,.14)}
+.tscroll{height:400px;overflow:hidden;padding:24px 32px;position:relative}
+.tline{font:400 30px/1.55 'Satoshi',sans-serif;margin-bottom:18px;opacity:.9}
+.tline.hit{font-weight:900}
+.wave{display:flex;align-items:flex-end;gap:4px;height:92px;padding:18px 28px}
+.wave i{flex:1;height:var(--h);border-radius:3px;transform-origin:bottom}
+
+/* ---- working / progress theater */
+.wrow{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:14px}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(127,127,127,.2);
+ border-top-color:currentColor}
+.wrow[data-state=done] .spin{display:none}
+.chk{width:30px;height:30px;margin-left:auto;opacity:0}
+.chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- chips that converge (constellation) */
+.chip{padding:13px 22px;border-radius:999px;font-size:23px;font-weight:600;
+ white-space:nowrap}
+
+/* ---- cursor. The real product cursors, lifted from
+   nebius-hackathon/apps/web/public/cursors/ - not a hand-drawn triangle.
+   pointer.svg is the dark arrow with a light outline, so it survives on both
+   the blue and the white stage without a second asset. Sized large on purpose:
+   at 34px it read as a speck on a 1920 frame. */
+/* 168px, not 96. On a 1920 frame a cursor is a focal object, not an ornament:
+   at 96 it still read as a UI speck rather than "someone is using this". */
+.cursor{position:absolute;z-index:75;width:168px;height:168px;pointer-events:none;
+ background-repeat:no-repeat;background-position:top left;background-size:contain;
+ background-image:url('assets/cursors/pointer.svg')}
+
+/* ---- how a Twenty object is NAMED on screen.
+   The camelCase API name was being set in the same weight and size as the
+   human title beside it, in a different case pattern, at low opacity. Three
+   competing shapes of type for one idea. The rule now: the human title is the
+   display element, and the API name is a small uppercase monospace-ish tag in
+   a translucent chip - present for accuracy, visually subordinate. */
+.apichip{display:inline-block;font:500 19px/1 'Satoshi',system-ui,sans-serif;
+ letter-spacing:.02em;padding:9px 14px;border-radius:8px;
+ background:rgba(42,140,255,.10);border:1.5px solid rgba(42,140,255,.22);
+ color:#2A8CFF;white-space:nowrap;vertical-align:middle}
+.on-blue .apichip,.apichip.on-blue{background:rgba(255,255,255,.14);
+ border-color:rgba(255,255,255,.30);color:#FFFFFF}
+
+/* ---- stage centre: every beat composes around the middle of the frame, never
+   a fixed top-left corner. */
+.stagec{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;gap:34px;padding:110px 120px 150px;z-index:20;text-align:center}
+.stagec .row{text-align:left}
+.stagec .bar{text-align:left}
+
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+   GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
+   element would be overwritten the moment it scales. */
+.ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
+.ovbox{z-index:3}
+.ovcard{position:absolute;left:50%;top:50%;margin:-52px 0 0 -260px;z-index:2;text-align:center}
+
+/* zoom-out reveal */
+.zw{display:flex;flex-direction:column;align-items:center;gap:40px}
+.myst{display:flex;align-items:center;justify-content:center}
+
+/* record panel + note callout */
+.pan{z-index:2}
+.note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.relsvg{z-index:1}
+
+/* agent work */
+.wk{z-index:2}
+
+/* sentiment */
+.sb{z-index:2;width:1120px}
+.sb .note{right:auto;left:120px;top:auto;bottom:120px;transform:none;width:700px}
+
+/* converge */
+.cvf{display:flex;align-items:center;justify-content:center}
+.cvchip{z-index:1}
+
+/* journey cards */
+.jcard{z-index:2;text-align:left}
+
+/* typewriter */
+.twl-line{display:flex;align-items:center;justify-content:center;min-height:64px}
+.caret{margin-left:6px}
+
+/* split */
+.sp{z-index:2;text-align:left}
+.spdiv{align-self:center;height:300px}
+</style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-calls" data-start="0" data-duration="201.400" data-width="1920" data-height="1080" data-fps="30">
+      <div class="stages" data-a="stages">
+        <div class="stage white" data-s="0" style="opacity:0"></div>
+        <div class="stage " data-s="1" style="opacity:0"></div>
+        <div class="stage white" data-s="2" style="opacity:0"></div>
+        <div class="stage " data-s="3" style="opacity:0"></div>
+        <div class="stage white" data-s="4" style="opacity:0"></div>
+        <div class="stage " data-s="5" style="opacity:0"></div>
+        <div class="stage white" data-s="6" style="opacity:0"></div>
+        <div class="stage " data-s="7" style="opacity:0"></div>
+        <div class="stage white" data-s="8" style="opacity:0"></div>
+        <div class="stage " data-s="9" style="opacity:0"></div>
+        <div class="stage white" data-s="10" style="opacity:0"></div>
+        <div class="stage " data-s="11" style="opacity:0"></div>
+        <div class="stage white" data-s="12" style="opacity:0"></div>
+        <div class="stage " data-s="13" style="opacity:0"></div>
+        <div class="stage white" data-s="14" style="opacity:0"></div>
+        <div class="stage " data-s="15" style="opacity:0"></div>
+        <div class="stage white" data-s="16" style="opacity:0"></div>
+        <div class="stage " data-s="17" style="opacity:0"></div>
+        <div class="stage " data-s="18" style="opacity:0"></div>
+      </div>
+      <div id="dither"></div>
+
+      <div class="clip beat" id="beat-0" data-b="0" data-composition-id="agency-calls-b0" data-composition-src="compositions/agency-calls/b0.html" data-start="0.8" data-duration="7" data-track-index="1"></div>
+      <div class="clip beat" id="beat-1" data-b="1" data-composition-id="agency-calls-b1" data-composition-src="compositions/agency-calls/b1.html" data-start="6.25" data-duration="15.5" data-track-index="2"></div>
+      <div class="clip beat" id="beat-2" data-b="2" data-composition-id="agency-calls-b2" data-composition-src="compositions/agency-calls/b2.html" data-start="20.75" data-duration="10.7" data-track-index="3"></div>
+      <div class="clip beat" id="beat-3" data-b="3" data-composition-id="agency-calls-b3" data-composition-src="compositions/agency-calls/b3.html" data-start="30.45" data-duration="8.8" data-track-index="4"></div>
+      <div class="clip beat" id="beat-4" data-b="4" data-composition-id="agency-calls-b4" data-composition-src="compositions/agency-calls/b4.html" data-start="38.25" data-duration="6" data-track-index="5"></div>
+      <div class="clip beat" id="beat-5" data-b="5" data-composition-id="agency-calls-b5" data-composition-src="compositions/agency-calls/b5.html" data-start="43.25" data-duration="8" data-track-index="6"></div>
+      <div class="clip beat" id="beat-6" data-b="6" data-composition-id="agency-calls-b6" data-composition-src="compositions/agency-calls/b6.html" data-start="50.25" data-duration="11.3" data-track-index="7"></div>
+      <div class="clip beat" id="beat-7" data-b="7" data-composition-id="agency-calls-b7" data-composition-src="compositions/agency-calls/b7.html" data-start="60.55" data-duration="10.1" data-track-index="8"></div>
+      <div class="clip beat" id="beat-8" data-b="8" data-composition-id="agency-calls-b8" data-composition-src="compositions/agency-calls/b8.html" data-start="69.65" data-duration="14.5" data-track-index="9"></div>
+      <div class="clip beat" id="beat-9" data-b="9" data-composition-id="agency-calls-b9" data-composition-src="compositions/agency-calls/b9.html" data-start="83.15" data-duration="7.2" data-track-index="10"></div>
+      <div class="clip beat" id="beat-10" data-b="10" data-composition-id="agency-calls-b10" data-composition-src="compositions/agency-calls/b10.html" data-start="89.35" data-duration="15.5" data-track-index="11"></div>
+      <div class="clip beat" id="beat-11" data-b="11" data-composition-id="agency-calls-b11" data-composition-src="compositions/agency-calls/b11.html" data-start="103.85" data-duration="13.6" data-track-index="12"></div>
+      <div class="clip beat" id="beat-12" data-b="12" data-composition-id="agency-calls-b12" data-composition-src="compositions/agency-calls/b12.html" data-start="116.45" data-duration="7.7" data-track-index="13"></div>
+      <div class="clip beat" id="beat-13" data-b="13" data-composition-id="agency-calls-b13" data-composition-src="compositions/agency-calls/b13.html" data-start="123.15" data-duration="15.8" data-track-index="14"></div>
+      <div class="clip beat" id="beat-14" data-b="14" data-composition-id="agency-calls-b14" data-composition-src="compositions/agency-calls/b14.html" data-start="137.95" data-duration="12.2" data-track-index="15"></div>
+      <div class="clip beat" id="beat-15" data-b="15" data-composition-id="agency-calls-b15" data-composition-src="compositions/agency-calls/b15.html" data-start="149.15" data-duration="16.9" data-track-index="16"></div>
+      <div class="clip beat" id="beat-16" data-b="16" data-composition-id="agency-calls-b16" data-composition-src="compositions/agency-calls/b16.html" data-start="165.05" data-duration="14.8" data-track-index="17"></div>
+      <div class="clip beat" id="beat-17" data-b="17" data-composition-id="agency-calls-b17" data-composition-src="compositions/agency-calls/b17.html" data-start="178.85" data-duration="15" data-track-index="18"></div>
+      <div class="clip beat" id="beat-18" data-b="18" data-composition-id="agency-calls-b18" data-composition-src="compositions/agency-calls/b18.html" data-start="192.85" data-duration="8.55" data-track-index="19"></div>
+
+      <div class="clip cap" data-start="0.800" data-duration="2.960" data-track-index="90"><span>A call record is one outbound telephone call we</span></div>
+      <div class="clip cap" data-start="3.760" data-duration="1.440" data-track-index="90"><span>placed through Telnyx.</span></div>
+      <div class="clip cap" data-start="5.200" data-duration="1.520" data-track-index="90"><span>We have 29 of them.</span></div>
+      <div class="clip cap" data-start="6.720" data-duration="1.920" data-track-index="90"><span>It might sound like a small number, but this</span></div>
+      <div class="clip cap" data-start="8.640" data-duration="3.280" data-track-index="90"><span>object is disproportionately important because this is the evidence</span></div>
+      <div class="clip cap" data-start="11.920" data-duration="2.720" data-track-index="90"><span>trail for the entire cold calling motion.</span></div>
+      <div class="clip cap" data-start="14.640" data-duration="2.895" data-track-index="90"><span>Without it, cold calling is a black box.</span></div>
+      <div class="clip cap" data-start="17.535" data-duration="2.480" data-track-index="90"><span>Somebody says they rang 40 shops this week and</span></div>
+      <div class="clip cap" data-start="20.015" data-duration="1.680" data-track-index="90"><span>you have no way to check.</span></div>
+      <div class="clip cap" data-start="21.695" data-duration="2.640" data-track-index="90"><span>With it, every single call leaves a permanent record</span></div>
+      <div class="clip cap" data-start="24.335" data-duration="2.240" data-track-index="90"><span>that somebody can read back and learn from.</span></div>
+      <div class="clip cap" data-start="26.575" data-duration="1.785" data-track-index="90"><span>So this is not a log for its own</span></div>
+      <div class="clip cap" data-start="28.360" data-duration="0.800" data-track-index="90"><span>sake.</span></div>
+      <div class="clip cap" data-start="29.160" data-duration="2.160" data-track-index="90"><span>It is how the sales team gets better.</span></div>
+      <div class="clip cap" data-start="31.320" data-duration="2.640" data-track-index="90"><span>Inside a call record, you get the mechanical facts</span></div>
+      <div class="clip cap" data-start="33.960" data-duration="0.880" data-track-index="90"><span>first.</span></div>
+      <div class="clip cap" data-start="34.840" data-duration="2.320" data-track-index="90"><span>The direction, so we know whether we called out</span></div>
+      <div class="clip cap" data-start="37.160" data-duration="1.840" data-track-index="90"><span>or somebody called in.</span></div>
+      <div class="clip cap" data-start="39.000" data-duration="2.720" data-track-index="90"><span>The status, so we know whether it actually connected</span></div>
+      <div class="clip cap" data-start="41.720" data-duration="2.265" data-track-index="90"><span>or bounced or went to voicemail.</span></div>
+      <div class="clip cap" data-start="43.985" data-duration="1.840" data-track-index="90"><span>The from number, which is one of our own</span></div>
+      <div class="clip cap" data-start="45.825" data-duration="2.640" data-track-index="90"><span>numbers out of the agency phones object, and the</span></div>
+      <div class="clip cap" data-start="48.465" data-duration="2.400" data-track-index="90"><span>to number, which is the prospect's.</span></div>
+      <div class="clip cap" data-start="50.865" data-duration="1.360" data-track-index="90"><span>Then the useful part.</span></div>
+      <div class="clip cap" data-start="52.225" data-duration="2.160" data-track-index="90"><span>There is a full transcript of what was actually</span></div>
+      <div class="clip cap" data-start="54.385" data-duration="0.800" data-track-index="90"><span>said.</span></div>
+      <div class="clip cap" data-start="55.185" data-duration="2.000" data-track-index="90"><span>There is a recording URL, so if you want</span></div>
+      <div class="clip cap" data-start="57.185" data-duration="2.295" data-track-index="90"><span>to hear the actual conversation rather than read a</span></div>
+      <div class="clip cap" data-start="59.480" data-duration="1.920" data-track-index="90"><span>machine's version of it, you can.</span></div>
+      <div class="clip cap" data-start="61.400" data-duration="2.720" data-track-index="90"><span>And then there are the two AI fields: an</span></div>
+      <div class="clip cap" data-start="64.120" data-duration="2.400" data-track-index="90"><span>AI summary, which is a short paragraph of what</span></div>
+      <div class="clip cap" data-start="66.520" data-duration="2.800" data-track-index="90"><span>the call was about, and an AI sentiment, which</span></div>
+      <div class="clip cap" data-start="69.320" data-duration="1.120" data-track-index="90"><span>reads the tone.</span></div>
+      <div class="clip cap" data-start="70.440" data-duration="2.705" data-track-index="90"><span>Why does an AI summary and sentiment score on</span></div>
+      <div class="clip cap" data-start="73.145" data-duration="2.160" data-track-index="90"><span>a phone call sound like small potatoes?</span></div>
+      <div class="clip cap" data-start="75.305" data-duration="1.360" data-track-index="90"><span>It is not.</span></div>
+      <div class="clip cap" data-start="76.665" data-duration="3.600" data-track-index="90"><span>Transcribing and summarizing every call automatically means nobody</span></div>
+      <div class="clip cap" data-start="80.265" data-duration="2.800" data-track-index="90"><span>has to spend twenty minutes listening to recordings after</span></div>
+      <div class="clip cap" data-start="83.065" data-duration="0.960" data-track-index="90"><span>a shift.</span></div>
+      <div class="clip cap" data-start="84.025" data-duration="3.075" data-track-index="90"><span>The sentiment field tells us, in aggregate, whether we</span></div>
+      <div class="clip cap" data-start="87.100" data-duration="3.040" data-track-index="90"><span>are landing warmly or being treated as a nuisance.</span></div>
+      <div class="clip cap" data-start="90.140" data-duration="2.560" data-track-index="90"><span>And the transcript is where objections live.</span></div>
+      <div class="clip cap" data-start="92.700" data-duration="2.640" data-track-index="90"><span>If 12 calls this month all mention the same</span></div>
+      <div class="clip cap" data-start="95.340" data-duration="4.365" data-track-index="90"><span>concern about canceling a contract, that is not twelve</span></div>
+      <div class="clip cap" data-start="99.705" data-duration="1.520" data-track-index="90"><span>a positioning problem.</span></div>
+      <div class="clip cap" data-start="101.225" data-duration="2.080" data-track-index="90"><span>This object is how we catch it before it</span></div>
+      <div class="clip cap" data-start="103.305" data-duration="1.360" data-track-index="90"><span>costs us a quarter.</span></div>
+      <div class="clip cap" data-start="104.665" data-duration="2.320" data-track-index="90"><span>Where does this get used day to day?</span></div>
+      <div class="clip cap" data-start="106.985" data-duration="1.520" data-track-index="90"><span>In two directions.</span></div>
+      <div class="clip cap" data-start="108.505" data-duration="2.960" data-track-index="90"><span>Before a call, somebody opens the previous call records</span></div>
+      <div class="clip cap" data-start="111.465" data-duration="2.045" data-track-index="90"><span>for that number, so they know what they were</span></div>
+      <div class="clip cap" data-start="113.510" data-duration="2.000" data-track-index="90"><span>told last time and can pick up the thread</span></div>
+      <div class="clip cap" data-start="115.510" data-duration="1.760" data-track-index="90"><span>rather than starting cold.</span></div>
+      <div class="clip cap" data-start="117.270" data-duration="2.320" data-track-index="90"><span>And after a call, the summary and the sentiment</span></div>
+      <div class="clip cap" data-start="119.590" data-duration="2.160" data-track-index="90"><span>get read so the next person to dial that</span></div>
+      <div class="clip cap" data-start="121.750" data-duration="2.240" data-track-index="90"><span>number knows the mood of the shop.</span></div>
+      <div class="clip cap" data-start="123.990" data-duration="1.920" data-track-index="90"><span>If you are new and you want to understand</span></div>
+      <div class="clip cap" data-start="125.910" data-duration="3.055" data-track-index="90"><span>how this business actually sells, read 10 of these</span></div>
+      <div class="clip cap" data-start="128.965" data-duration="2.720" data-track-index="90"><span>records end to end including the transcript.</span></div>
+      <div class="clip cap" data-start="131.685" data-duration="2.640" data-track-index="90"><span>It is the most honest documentation of our sales</span></div>
+      <div class="clip cap" data-start="134.325" data-duration="2.800" data-track-index="90"><span>process that we have, and it is written by</span></div>
+      <div class="clip cap" data-start="137.125" data-duration="1.680" data-track-index="90"><span>the prospects themselves.</span></div>
+      <div class="clip cap" data-start="138.805" data-duration="2.375" data-track-index="90"><span>When you open a call record, do not start</span></div>
+      <div class="clip cap" data-start="141.180" data-duration="1.440" data-track-index="90"><span>with the transcript.</span></div>
+      <div class="clip cap" data-start="142.620" data-duration="2.240" data-track-index="90"><span>Start at the bottom, with the summary and the</span></div>
+      <div class="clip cap" data-start="144.860" data-duration="3.520" data-track-index="90"><span>sentiment, because that is the compressed version somebody already</span></div>
+      <div class="clip cap" data-start="148.380" data-duration="1.520" data-track-index="90"><span>did the work on.</span></div>
+      <div class="clip cap" data-start="149.900" data-duration="2.720" data-track-index="90"><span>Then read the transcript to check whether the compression</span></div>
+      <div class="clip cap" data-start="152.620" data-duration="1.315" data-track-index="90"><span>was honest.</span></div>
+      <div class="clip cap" data-start="153.935" data-duration="2.000" data-track-index="90"><span>Is a real skill, and it is the whole</span></div>
+      <div class="clip cap" data-start="155.935" data-duration="1.280" data-track-index="90"><span>job here.</span></div>
+      <div class="clip cap" data-start="157.215" data-duration="2.640" data-track-index="90"><span>The summary is going to be occasionally wrong, because</span></div>
+      <div class="clip cap" data-start="159.855" data-duration="2.320" data-track-index="90"><span>the interesting part of a sales call is rarely</span></div>
+      <div class="clip cap" data-start="162.175" data-duration="2.560" data-track-index="90"><span>what was agreed it is what was implied, and</span></div>
+      <div class="clip cap" data-start="164.735" data-duration="1.385" data-track-index="90"><span>then avoided.</span></div>
+      <div class="clip cap" data-start="166.120" data-duration="2.000" data-track-index="90"><span>Look for the moment where the caller named a</span></div>
+      <div class="clip cap" data-start="168.120" data-duration="2.560" data-track-index="90"><span>price and the prospect did not flinch.</span></div>
+      <div class="clip cap" data-start="170.680" data-duration="1.600" data-track-index="90"><span>That is your signal.</span></div>
+      <div class="clip cap" data-start="172.280" data-duration="2.000" data-track-index="90"><span>Look for the moment where they asked a question</span></div>
+      <div class="clip cap" data-start="174.280" data-duration="2.480" data-track-index="90"><span>and got a vague answer about timing.</span></div>
+      <div class="clip cap" data-start="176.760" data-duration="2.960" data-track-index="90"><span>That is your objection, whatever they called it.</span></div>
+      <div class="clip cap" data-start="179.720" data-duration="2.245" data-track-index="90"><span>And check the direction field before you read a</span></div>
+      <div class="clip cap" data-start="181.965" data-duration="3.120" data-track-index="90"><span>word, because inbound and outbound calls are two different</span></div>
+      <div class="clip cap" data-start="185.085" data-duration="2.480" data-track-index="90"><span>conversations that happen to share a table.</span></div>
+      <div class="clip cap" data-start="187.565" data-duration="2.000" data-track-index="90"><span>Once you have done that on a handful of</span></div>
+      <div class="clip cap" data-start="189.565" data-duration="2.960" data-track-index="90"><span>records, the table stops being a log and starts</span></div>
+      <div class="clip cap" data-start="192.525" data-duration="1.040" data-track-index="90"><span>being a training set.</span></div>
+
+      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i><i data-c="18"><b></b></i></div>
+
+      <audio id="agency-calls-audio" src="assets/audio/agency-calls.mp3" data-start="0.8" data-duration="192.765" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-calls"] = tl;
+
+      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":7,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook"},{"i":1,"sel":".beat[data-b=\"1\"]","start":6.25,"dur":15.5,"tone":"blue","name":"overwhelm","blueprint":"overwhelm-surround","type":"pain_point"},{"i":2,"sel":".beat[data-b=\"2\"]","start":20.75,"dur":10.7,"tone":"white","name":"zoom-out","blueprint":"zoom-out-workspace-reveal","type":"benefit_highlight"},{"i":3,"sel":".beat[data-b=\"3\"]","start":30.45,"dur":8.8,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":4,"sel":".beat[data-b=\"4\"]","start":38.25,"dur":6,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":5,"sel":".beat[data-b=\"5\"]","start":43.25,"dur":8,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase"},{"i":6,"sel":".beat[data-b=\"6\"]","start":50.25,"dur":11.3,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase"},{"i":7,"sel":".beat[data-b=\"7\"]","start":60.55,"dur":10.1,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature"},{"i":8,"sel":".beat[data-b=\"8\"]","start":69.65,"dur":14.5,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight"},{"i":9,"sel":".beat[data-b=\"9\"]","start":83.15,"dur":7.2,"tone":"blue","name":"sentiment","blueprint":"stat-bars-and-fills","type":"benefit_highlight"},{"i":10,"sel":".beat[data-b=\"10\"]","start":89.35,"dur":15.5,"tone":"white","name":"converge","blueprint":"center-outward-expansion","type":"social_proof"},{"i":11,"sel":".beat[data-b=\"11\"]","start":103.85,"dur":13.6,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":12,"sel":".beat[data-b=\"12\"]","start":116.45,"dur":7.7,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature"},{"i":13,"sel":".beat[data-b=\"13\"]","start":123.15,"dur":15.8,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature"},{"i":14,"sel":".beat[data-b=\"14\"]","start":137.95,"dur":12.2,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase"},{"i":15,"sel":".beat[data-b=\"15\"]","start":149.15,"dur":16.9,"tone":"blue","name":"split","blueprint":"comparison-split","type":"benefit_highlight"},{"i":16,"sel":".beat[data-b=\"16\"]","start":165.05,"dur":14.8,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase"},{"i":17,"sel":".beat[data-b=\"17\"]","start":178.85,"dur":15,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase"},{"i":18,"sel":".beat[data-b=\"18\"]","start":192.85,"dur":8.55,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta"}];
+      const XF = 0.45;
+      const LEAD = 0.55;
+      const TOTAL = 201.400;
+      const OUTRO_END = TOTAL - 2.4;
+      const root = document.getElementById("root");
+
+      tl.to({}, { duration: TOTAL }, 0);
+
+      const stages = Array.from(root.querySelectorAll(".stage"));
+      const chips = Array.from(root.querySelectorAll(".chapter i b"));
+
+      function toneAt(i) { return PLAN[i].tone; }
+
+      // Stage colour, caption ink, dither palette and the chapter rail. The scene
+      // bodies live in their own sub-compositions and time themselves; this is the
+      // frame around them.
+      PLAN.forEach((b, i) => {
+        const st = stages[b.i];
+        const tone = toneAt(i);
+        if (st) {
+          if (i === 0) tl.set(st, { opacity: 1 }, 0);
+          else {
+            tl.fromTo(st, { opacity: 0 }, { opacity: 1, duration: XF, ease: "power1.inOut" }, b.start);
+            tl.to(stages[i - 1], { opacity: 0, duration: XF, ease: "power1.inOut" }, b.start);
+          }
+        }
+        if (i > 0) {
+          tl.call(() => {
+            root.classList.toggle("tone-white", tone === "white");
+            const dth = document.getElementById("dither");
+            if (dth) dth.classList.toggle("on-white", tone === "white");
+          }, null, b.start);
+        }
+        const chip = chips[i];
+        if (chip) {
+          tl.set(chip, { scaleX: 0 }, b.start);
+          tl.to(chip, { scaleX: 1, duration: b.dur, ease: "none" }, b.start);
+        }
+      });
+
+      // Crossfade the beats themselves. Scenes only animate IN, so without this
+      // the XF overlap window shows the outgoing and incoming scene at full
+      // opacity at the same time - two visual treatments stacked in one frame.
+      Array.from(root.querySelectorAll(".beat")).forEach((el) => {
+        const s = parseFloat(el.dataset.start);
+        const d = parseFloat(el.dataset.duration);
+        tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: XF, ease: "power1.inOut" }, s + d - XF);
+      });
+
+      Array.from(root.querySelectorAll(".cap")).forEach((c) => {
+        const at = parseFloat(c.dataset.start);
+        const sp = c.querySelector("span");
+        if (sp) tl.fromTo(sp, { y: 16, scale: 0.97 }, { y: 0, scale: 1, duration: 0.22, ease: "power2.out" }, at);
+      });
+
+      tl.to(".cap", { opacity: 0, duration: 0.4 }, OUTRO_END - 0.1);
+      tl.to(".chapter", { opacity: 0, duration: 0.4 }, OUTRO_END - 0.1);
+
+      tl.seek(0);
+    </script>
+  </body>
+</html>

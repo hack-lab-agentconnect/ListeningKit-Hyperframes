@@ -263,27 +263,38 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-prospects-b0" data-start="0" data-duration="16.500" data-width="1920" data-height="1080" data-fps="30">
+    <div id="root" data-composition-id="agency-calls-b5" data-start="0" data-duration="8.000" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="eyebrow blue" data-a="label" style="opacity:0">Agency Prospects</div>
-        <div class="count" data-a="count"><span class="n blue" style="opacity:0">0</span></div>
-        <div class="body blue dim" data-a="sub" style="opacity:0">One row, one real business we might be able to win.</div>
+        <div class="pan" style="max-width:1180px;background:#FFFFFF;border-radius:24px;box-shadow:0 6px 0 0 rgba(13,42,76,0.24);color:#0F172A;;position:absolute;left:300px;top:586px;overflow:hidden">
+          <div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid #E2E8F0"><span class="h3" style="font-weight:900">Call</span><span class="apichip">agencyCalls</span></div>
+          <div style="padding:26px 30px 30px"><div class="rows"><div class="row irow" data-row="fromNumber"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"/></svg></span><span class="rk">fromNumber</span><span class="rv">(xxx) xxx-0147</span><span class="rdot"></span></div><div class="row irow" data-row="toNumber"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M20.25 3.75v4.5m0-4.5h-4.5m4.5 0-6 6m3 12c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"/></svg></span><span class="rk">toNumber</span><span class="rv">(xxx) xxx-9920</span><span class="rdot"></span></div></div></div>
+        </div>
+        <svg class="relsvg" viewBox="0 0 1920 1080" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><path class="connector" data-p="0" d="M 1000 620 Q 1165 523.28 1330 464"/><path class="connector" data-p="1" d="M 1000 660 Q 1165 687.28 1330 704"/></svg>
+        <div class="node relnode" data-node="0" style="max-width:430px;background:rgba(255,255,255,0.10);border-radius:128px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);20;position:absolute;left:1330px;top:400px;opacity:0"><span class="nk white">agencyPhones</span><span class="nv white">one of our own numbers</span></div><div class="node relnode" data-node="1" style="max-width:430px;background:rgba(255,255,255,0.10);border-radius:128px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);20;position:absolute;left:1330px;top:640px;opacity:0"><span class="nk white">agencyProspect</span><span class="nv white">the shop on the other end</span></div>
       </div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["agency-prospects-b0"] = tl;
+      window.__timelines["agency-calls-b5"] = tl;
       const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
-        const n = q('[data-a="count"] .n');
-        tl.fromTo(q('[data-a="label"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(n, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
-        const c = { v: 0 };
-        tl.to(c, { v: count, duration: 2.1, ease: "power2.out", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 0.3);
-        tl.fromTo(q('[data-a="sub"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.1);
-        // constant motion: the number keeps a slow breathe so the frame never dies
-        tl.to(n, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3);
-      });})({"label":"Agency Prospects","count":200,"sub":"One row, one real business we might be able to win."});
+        tl.fromTo(q(".pan"), { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, t0);
+        qq(".relsvg path").forEach((p, i) => {
+          const len = p.getTotalLength();
+          tl.set(p, { strokeDasharray: len, strokeDashoffset: len }, t0);
+          tl.to(p, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, t0 + 0.9 + i * 0.6);
+          const node = qq(".relnode")[i];
+          if (node) {
+            tl.fromTo(node, { opacity: 0, x: 60, scale: 0.8 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 1.5 + i * 0.6);
+            tl.to(node, { y: i ? 12 : -12, duration: 1.7 + i * 0.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2.2 + i * 0.6);
+          }
+          if (node) tl.to(p, { strokeOpacity: 0.45, duration: 1.3, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2.6 + i * 0.6);
+        });
+      });})({"r":[["fromNumber","(xxx) xxx-0147"],["toNumber","(xxx) xxx-9920"]],"links":[["agencyPhones","one of our own numbers"],["agencyProspect","the shop on the other end"]]});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

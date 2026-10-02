@@ -263,27 +263,27 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-prospects-b0" data-start="0" data-duration="16.500" data-width="1920" data-height="1080" data-fps="30">
+    <div id="root" data-composition-id="agency-calls-b8" data-start="0" data-duration="14.500" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="eyebrow blue" data-a="label" style="opacity:0">Agency Prospects</div>
-        <div class="count" data-a="count"><span class="n blue" style="opacity:0">0</span></div>
-        <div class="body blue dim" data-a="sub" style="opacity:0">One row, one real business we might be able to win.</div>
+        <div class="eyebrow blue" data-a="l" style="opacity:0">Time spent on playback, per call, after a shift</div>
+        <div class="count" data-a="c"><span class="n blue" style="opacity:0">20</span><span class="u blue" data-a="u" style="opacity:0">min</span></div>
+        <div class="body blue dim" data-a="s" style="opacity:0">Nobody does it by hand.</div>
       </div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["agency-prospects-b0"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
-        const n = q('[data-a="count"] .n');
-        tl.fromTo(q('[data-a="label"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(n, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
-        const c = { v: 0 };
-        tl.to(c, { v: count, duration: 2.1, ease: "power2.out", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 0.3);
-        tl.fromTo(q('[data-a="sub"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.1);
-        // constant motion: the number keeps a slow breathe so the frame never dies
-        tl.to(n, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3);
-      });})({"label":"Agency Prospects","count":200,"sub":"One row, one real business we might be able to win."});
+      window.__timelines["agency-calls-b8"] = tl;
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q }) {
+        const n = q('[data-a="c"] .n');
+        tl.fromTo(n, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, t0);
+        tl.fromTo(q('[data-a="l"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+        tl.fromTo(q('[data-a="u"]'), { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4 }, t0 + 1.6);
+        const c = { v: from };
+        tl.to(c, { v: to, duration: 2.3, ease: "power2.inOut", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 1.7);
+        tl.fromTo(q('[data-a="s"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.2);
+        tl.to(q('[data-a="c"]'), { scale: 1.02, duration: 1.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 4.2);
+      });})({"label":"Time spent on playback, per call, after a shift","from":20,"to":0,"unit":"min","sub":"Nobody does it by hand."});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

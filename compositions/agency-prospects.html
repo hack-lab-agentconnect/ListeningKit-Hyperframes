@@ -66,8 +66,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .lockup img{width:64px;height:64px;border-radius:18px;display:block}
 .lockup .word{font-size:30px;font-weight:900;letter-spacing:0;text-transform:uppercase}
 .lockup .obj{font-size:30px;font-weight:500;opacity:.72}
+/* The logo is a blue tile with a white mark, so it needs NO filter on either
+   stage — brightness(0) invert(1) (which used to be here) flattens both the
+   background and the mark to solid white. */
 .lockup.on-white img{filter:none}
-.lockup.on-blue img{filter:brightness(0) invert(1)}
 
 /* ---- endcard lockup. The logo IS a blue tile with a white mark
    (apps/web/public/logo.svg), so on the blue stage it needs no backing plate -

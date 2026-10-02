@@ -263,27 +263,28 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-prospects-b0" data-start="0" data-duration="16.500" data-width="1920" data-height="1080" data-fps="30">
+    <div id="root" data-composition-id="agency-calls-b9" data-start="0" data-duration="7.200" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="eyebrow blue" data-a="label" style="opacity:0">Agency Prospects</div>
-        <div class="count" data-a="count"><span class="n blue" style="opacity:0">0</span></div>
-        <div class="body blue dim" data-a="sub" style="opacity:0">One row, one real business we might be able to win.</div>
+        <div class="eyebrow white" data-a="k" style="opacity:0">In aggregate, are we landing warmly</div>
+        <div class="sb" style="max-width:1120px;background:rgba(255,255,255,0.10);border-radius:24px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);padding:24px 30px">
+          <div class="bar"><span class="bl white">wk 1</span><span class="bt" style="background:rgba(255,255,255,.14)"><i class="bf" data-w="86%" style="background:linear-gradient(90deg,#3B9BFF,#2B7FFF)"></i></span><span class="bv white">warm</span></div><div class="bar"><span class="bl white">wk 2</span><span class="bt" style="background:rgba(255,255,255,.14)"><i class="bf" data-w="78%" style="background:linear-gradient(90deg,#3B9BFF,#2B7FFF)"></i></span><span class="bv white">warm</span></div><div class="bar"><span class="bl white">wk 3</span><span class="bt" style="background:rgba(255,255,255,.14)"><i class="bf" data-w="71%" style="background:linear-gradient(90deg,#3B9BFF,#2B7FFF)"></i></span><span class="bv white">warm</span></div><div class="bar"><span class="bl white">wk 4</span><span class="bt" style="background:rgba(255,255,255,.14)"><i class="bf" data-w="64%" style="background:linear-gradient(90deg,#3B9BFF,#2B7FFF)"></i></span><span class="bv white">cooling</span></div><div class="bar"><span class="bl white">wk 5</span><span class="bt" style="background:rgba(255,255,255,.14)"><i class="bf" data-w="52%" style="background:linear-gradient(90deg,#3B9BFF,#2B7FFF)"></i></span><span class="bv white">nuisance</span></div>
+        </div>
+        <div class="note" data-a="n" style="max-width:700px;background:rgba(255,255,255,0.10);border-radius:20px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);padding:24px 28px;opacity:0"><div class="label white">aiSentiment</div><div class="body white" style="font-weight:500;margin-top:8px">Five weeks, and the tone is dropping. You only see that because every call was recorded.</div></div>
       </div>
     </div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      window.__timelines["agency-prospects-b0"] = tl;
+      window.__timelines["agency-calls-b9"] = tl;
       const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
-        const n = q('[data-a="count"] .n');
-        tl.fromTo(q('[data-a="label"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(n, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
-        const c = { v: 0 };
-        tl.to(c, { v: count, duration: 2.1, ease: "power2.out", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 0.3);
-        tl.fromTo(q('[data-a="sub"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.1);
-        // constant motion: the number keeps a slow breathe so the frame never dies
-        tl.to(n, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3);
-      });})({"label":"Agency Prospects","count":200,"sub":"One row, one real business we might be able to win."});
+        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+        tl.fromTo(q(".sb"), { opacity: 0, y: 60, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, t0 + 0.1);
+        qq(".bf").forEach((f, i) => {
+          tl.fromTo(f, { width: "0%" }, { width: f.dataset.w, duration: 0.85, ease: "power3.out" }, t0 + 0.7 + i * 0.42);
+          tl.to(f.parentElement, { opacity: 0.82, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2 + i * 0.42);
+        });
+        tl.fromTo(q('[data-a="n"]'), { opacity: 0, y: 46 }, { opacity: 1, y: 0, duration: 0.45 }, t0 + 3);
+      });})({"kicker":"In aggregate, are we landing warmly","bars":[["wk 1","86%","warm"],["wk 2","78%","warm"],["wk 3","71%","warm"],["wk 4","64%","cooling"],["wk 5","52%","nuisance"]],"note":"Five weeks, and the tone is dropping. You only see that because every call was recorded."});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),
