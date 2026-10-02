@@ -1,0 +1,49 @@
+{
+  "slug": "agency-offers",
+  "narration": {
+    "title": "Agency Offer",
+    "api": "agencyOffers",
+    "recordCount": "1",
+    "keyFields": [
+      "name",
+      "brandName",
+      "heroH1",
+      "ctaType",
+      "status",
+      "calendlyUrl",
+      "metaPixelId"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "The thing we are actually selling",
+        "body": "One sellable package, one version of the pitch",
+        "say": "An Agency Offer is a sellable package we offer to a client. We have one at the moment, and that is because we are still working out what the product actually is, which is normal and healthy at this stage. This object is the commercial centre of the whole system. Everything else exists to help us sell one of these. A prospect is somebody we might sell it to. A lead is somebody we are talking to about it. A call is where we pitch it. An opportunity is where they agree to buy it. The offer is the thing being bought."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "The words on the page, and the two links that convert",
+        "body": "Copy, booking link, and tracking pixel in one row",
+        "say": "The fields tell you how an offer reaches a human. There is the name and the brand name, so we know whose product this is. Then hero H one, which is the big headline that appears at the top of the offer page. Then the call to action type, so the system knows whether the button should book a call, or buy, or start a chat. Then the status, which controls whether the page is live, draft, or paused. And the two fields that actually make money. The Calendly URL, which is the booking link the customer lands on. And the Meta pixel ID, which is the tracking identifier that lets us attribute an advert all the way to a booked call."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "One source, so the pitch is identical everywhere",
+        "body": "Page, ad creative and booking link all read from here",
+        "say": "Why hold the pitch copy and the tracking inside a CRM record rather than in a website builder? Because consistency, and because attribution. If the offer page says one thing and the advert says another and the sales call says a third, the customer is being confused and we are losing the credit. This record is the single source for the offer page, the advert creative, and the calendar link. And the pixel ID being here means we can answer the only question that matters about marketing, which is which advert actually produced booked calls, rather than which advert produced clicks."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "On the page, in the advert, and on the call",
+        "body": "The three places a customer hears the pitch",
+        "say": "So where do you meet an offer in practice? In three places. On the website, where the offer page renders from this record and the booking button uses the Calendly link. In the advertising, where the creative is generated from the same copy and carries the same pixel. And on the call, where the sales Script object is written against what this offer actually contains. Having only one active offer is genuinely useful, because it forces one sharp description of what we do. When the second one appears, this object is where you will model it, and the fields here tell you exactly what you have to fill in before you can launch it."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "Why one offer beats five offers",
+        "body": "One record, every surface",
+        "say": "So the discipline this object enforces is that there is exactly one version of the offer, and every surface reads from it. The page reads the hero headline and the call to action. The advert reads the same words. The person on the phone reads the same words. That is not tidiness, that is a conversion rate. Every time the pitch is rewritten by hand for a new channel, it drifts a little further from what actually works, and nobody notices because the drift is invisible in any single place. Having it here means the correction happens once. When we learn that a headline works better, we change it in this one row and the whole system is corrected by tomorrow. The booking link and the tracking pixel live here too, for the same reason. One link, one place it is defined, so a click from any surface is measurable and a booking from any surface lands in the same calendar."
+      }
+    ]
+  }
+}

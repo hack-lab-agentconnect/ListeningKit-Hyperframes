@@ -1,0 +1,49 @@
+{
+  "slug": "agency-leads",
+  "narration": {
+    "title": "Agency Lead",
+    "api": "agencyLeads",
+    "recordCount": "18",
+    "keyFields": [
+      "name",
+      "contactName",
+      "source",
+      "status",
+      "qualificationStatus",
+      "coldCallStatus",
+      "outboundMessage"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "A prospect is a company, a lead is a person",
+        "body": "One row per human we want on a call",
+        "say": "An Agency Lead is one specific human being at a prospect account that we are trying to book a call with. We have eighteen of them at the moment. The single most useful thing to hold on to here is the distinction. A prospect is the company. A lead is the person inside that company. A shop in Leeds might be one prospect and three leads, because there is an owner, a service manager, and a body shop manager, and each of them is a different conversation. This is also the object where the commercial state lives. Once something is a lead, it has a status and it can move. Before that, it is just a row of shops in a database."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "The person, where they came from, how far along they are",
+        "body": "Identity, source, and two independent status tracks",
+        "say": "Inside a lead row you will find the contact name, so we know exactly who we are talking to. You will find the source field, which records where this lead came from, whether that was a campaign, an inbound enquiry, or something we found ourselves. Then there are two status fields that people often confuse. The status field is the general state of the relationship. The qualification status is our own internal judgement of whether this person is actually worth pursuing, whether they are in a position to say yes. And then there is the cold call status, which tracks specifically how the phone calls have gone. There is also an outbound message field, which holds the message we sent them."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "It is the only object that is actually about revenue",
+        "body": "The link between a shop and a signed piece of work",
+        "say": "Why does a lead matter more than a prospect? Because this is where we start spending money and time. Prospects are cheap, they are just rows. A lead is somebody we have decided to ring, message, and chase. And critically, the lead is the hinge between a shop and an actual signed piece of work. That signed work lives in the Agency Opportunity object, which sits on top of a lead. So if you ever look at a number in a report and want to know where it came from, it almost always traces back through a lead. There are only eighteen, and some of them will not convert. That is fine. That is what the status field is for."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "The call queue, and the qualification argument",
+        "body": "Cold calling and outbound messaging both work from here",
+        "say": "Where do we use leads day to day? Two places, mainly. First, the call queue. When the dialer picks up a job, it is picking up a lead, and it is reading the cold call status to know whether that number has already been rung today. Second, the qualification argument. Before we spend a consultant hour on a shop, somebody has to decide if they are real, in-market, and able to pay. That decision gets recorded on the qualification status. So the practical summary is this. A prospect is a maybe. A lead is a maybe we are actively working. An opportunity is a yes."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "Reading the status fields honestly",
+        "body": "Three statuses, and only one is money",
+        "say": "So when you open a lead, read the three status fields together, because they answer three different questions and confusing them is the most common mistake new people make with this table. The status is the ordinary lifecycle. Is this a real person we are working, or a name on a list. The qualification status is the verdict. Are they actually a fit, and if not, why not, because the reason is what stops you re-qualifying the same bad fit six weeks from now. And the cold call status is the operational truth. Have we rung them, did it connect, were we left on voicemail. A lead can be perfectly qualified and never been called, and that combination is the most valuable thing in this entire database. It is a qualified business nobody has rung yet. When you build your day, build it out of that."
+      }
+    ]
+  }
+}

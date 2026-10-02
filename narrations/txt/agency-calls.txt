@@ -1,0 +1,41 @@
+﻿CALL
+====
+
+API object:   agencyCalls
+Records:      29
+Key fields:   direction, status, fromNumber, toNumber, transcript, recordingUrl, aiSummary, aiSentiment
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    Every outbound call we place, and what came of it
+    The evidence trail behind cold calling
+
+    A Call record is one outbound telephone call we placed through Telnyx. We have twenty-nine of them. It might sound like a small number, but this object is disproportionately important, because this is the evidence trail for the entire cold calling motion. Without it, cold calling is a black box. Somebody says they rang forty shops this week and you have no way to check. With it, every single call leaves a permanent record that somebody can read back and learn from. So this is not a log for its own sake. It is how the sales team gets better.
+
+[2] What goes inside it
+    The numbers, the words, and the AI's read of them
+    Raw transcript, recording, summary and sentiment
+
+    Inside a call record you get the mechanical facts first. The direction, so we know whether we called out or somebody called in. The status, so we know whether it actually connected or bounced or went to voicemail. The from number, which is one of our own numbers out of the Agency Phones object, and the to number, which is the prospect's. Then the useful part. There is a full transcript of what was actually said. There is a recording URL, so if you want to hear the actual conversation rather than read a machine's version of it, you can. And then there are the two AI fields. An AI summary, which is a short paragraph of what the call was about. And an AI sentiment, which reads the tone.
+
+[3] Why it matters
+    It is how the sales team gets measurably better
+    Objections repeat, and this is where we catch them
+
+    Why does an AI summary and a sentiment score on a phone call sound like small potatoes? It is not. Transcribing and summarising every call automatically means nobody has to spend twenty minutes listening to recordings after a shift. The sentiment field tells us, in aggregate, whether we are landing warmly or being treated as a nuisance. And the transcript is where objections live. If twelve calls this month all mention the same concern about cancelling a contract, that is not twelve data points, that is a positioning problem. This object is how we catch it before it costs us a quarter.
+
+[4] Where it is used
+    Before you dial, and after you hang up
+    The read before the call, the training after it
+
+    Where does this get used day to day? In two directions. Before a call, somebody opens the previous call records for that number, so they know what they were told last time and can pick up the thread rather than starting cold. And after a call, the summary and the sentiment get read so the next person to dial that number knows the mood of the shop. If you are new and you want to understand how this business actually sells, read ten of these records end to end, including the transcripts. It is the most honest documentation of our sales process that we have, and it is written by the prospects themselves.
+
+[5] Before you use it
+    What to read on the row you are about to open
+    The transcript and the read on it
+
+    When you open a call record, do not start with the transcript. Start at the bottom, with the summary and the sentiment, because that is the compressed version somebody already did the work on. Then read the transcript to check whether the compression was honest. That is a real skill, and it is the whole job here. The summary is going to be occasionally wrong, because the interesting part of a sales call is rarely what was agreed, it is what was implied and then avoided. Look for the moment where the caller named a price and the prospect did not flinch. That is your signal. Look for the moment where they asked a question and got a vague answer about timing. That is your objection, whatever they called it. And check the direction field before you read a word, because inbound and outbound calls are two different conversations that happen to share a table. Once you have done that on a handful of records, the table stops being a log and starts being a training set.
+
+

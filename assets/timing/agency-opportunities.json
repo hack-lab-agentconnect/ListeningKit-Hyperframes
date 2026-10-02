@@ -1,0 +1,6367 @@
+{
+  "metadata": {
+    "transaction_key": "deprecated",
+    "request_id": "01a0fde2-3028-72f0-89a2-073edb6e953c",
+    "sha256": "cca84dddbd7972af64d1757ef6902df3c0147ffc748050a18333f1301c118694",
+    "created": "2026-10-02T18:30:55.411Z",
+    "duration": 144.09593,
+    "channels": 1,
+    "models": [
+      "2187e11a-3532-4498-b076-81fa530bdd49"
+    ],
+    "model_info": {
+      "2187e11a-3532-4498-b076-81fa530bdd49": {
+        "name": "general-nova-3",
+        "version": "2025-07-31.0",
+        "arch": "nova-3"
+      }
+    }
+  },
+  "results": {
+    "channels": [
+      {
+        "alternatives": [
+          {
+            "transcript": "An agency opportunity is a specific commercial deal that is in flight. Right now there are zero, and that is not a bug. That is just where we are honestly at. An opportunity is the moment a lead stops being a conversation and becomes a priced, staged, owned piece of work. It sits on top of a lead, always. It cannot exist on its own because an opportunity without a person to sell to and a company to sell for is just a number in a spreadsheet. If somebody asks you why the count is zero, that is a fact about where the business is, not a data problem. There are only four fields on an opportunity, and every one of them earns its place. The name is the deal's identity, usually the client name and the package name. The stage is where it sits in the pipeline, and this is the field that actually drives forecasting. The description is the short written summary of what is being sold, and at what price. And the owner is the single most important field on the object. An opportunity without a named owner is a deal nobody is chasing, and those quietly die. The owner is who picks up the phone. Why build a separate object for this rather than just a status on the lead? Because it separates activity from money. Everything else in this library is activity. Prospects were found. Leads were rung. Calls were placed. Scripts were read. None of that is revenue. An opportunity is the first object in the system that represents money we might actually receive. That is why it gets its own stage field, its own owner field, and its own record. It is also why the stage field has to be kept honest, because every forecast anybody gives is a rollup of opportunity stages. So where will this object get used once it is populated? In two places. The first is forecasting, which is simply grouping opportunities by stage to answer the question how much money is coming and when. The second is the handover. When a client agrees to buy, somebody creates the opportunity off the agency offer object, sets the stage, and assigns the owner. It is the moment the sales conversation becomes a commitment. And because it is empty right now, it is worth understanding honestly. Zero opportunities with 18 leads means the motion is running, but the closing conversation has not landed yet.",
+            "confidence": 1,
+            "words": [
+              {
+                "word": "an",
+                "start": 0.24,
+                "end": 0.56,
+                "confidence": 0.9921875,
+                "punctuated_word": "An"
+              },
+              {
+                "word": "agency",
+                "start": 0.56,
+                "end": 1.04,
+                "confidence": 0.9707031,
+                "punctuated_word": "agency"
+              },
+              {
+                "word": "opportunity",
+                "start": 1.04,
+                "end": 1.5999999,
+                "confidence": 0.99121094,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "is",
+                "start": 1.5999999,
+                "end": 1.92,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "a",
+                "start": 1.92,
+                "end": 2.08,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "specific",
+                "start": 2.08,
+                "end": 2.48,
+                "confidence": 1,
+                "punctuated_word": "specific"
+              },
+              {
+                "word": "commercial",
+                "start": 2.48,
+                "end": 2.96,
+                "confidence": 0.99902344,
+                "punctuated_word": "commercial"
+              },
+              {
+                "word": "deal",
+                "start": 2.96,
+                "end": 3.28,
+                "confidence": 1,
+                "punctuated_word": "deal"
+              },
+              {
+                "word": "that",
+                "start": 3.28,
+                "end": 3.52,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "is",
+                "start": 3.52,
+                "end": 3.6799998,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "in",
+                "start": 3.6799998,
+                "end": 3.84,
+                "confidence": 0.99609375,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "flight",
+                "start": 3.84,
+                "end": 4.48,
+                "confidence": 0.9951172,
+                "punctuated_word": "flight."
+              },
+              {
+                "word": "right",
+                "start": 4.64,
+                "end": 4.96,
+                "confidence": 0.99902344,
+                "punctuated_word": "Right"
+              },
+              {
+                "word": "now",
+                "start": 4.96,
+                "end": 5.12,
+                "confidence": 1,
+                "punctuated_word": "now"
+              },
+              {
+                "word": "there",
+                "start": 5.12,
+                "end": 5.3599997,
+                "confidence": 0.6201172,
+                "punctuated_word": "there"
+              },
+              {
+                "word": "are",
+                "start": 5.3599997,
+                "end": 5.6,
+                "confidence": 1,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "zero",
+                "start": 5.6,
+                "end": 6.16,
+                "confidence": 0.9326172,
+                "punctuated_word": "zero,"
+              },
+              {
+                "word": "and",
+                "start": 6.16,
+                "end": 6.3199997,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "that",
+                "start": 6.3199997,
+                "end": 6.56,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "is",
+                "start": 6.56,
+                "end": 6.72,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "not",
+                "start": 6.72,
+                "end": 6.8799996,
+                "confidence": 0.99902344,
+                "punctuated_word": "not"
+              },
+              {
+                "word": "a",
+                "start": 6.8799996,
+                "end": 7.04,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "bug",
+                "start": 7.04,
+                "end": 7.68,
+                "confidence": 0.7084961,
+                "punctuated_word": "bug."
+              },
+              {
+                "word": "that",
+                "start": 7.68,
+                "end": 7.9199996,
+                "confidence": 0.9970703,
+                "punctuated_word": "That"
+              },
+              {
+                "word": "is",
+                "start": 7.9199996,
+                "end": 8.08,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "just",
+                "start": 8.08,
+                "end": 8.32,
+                "confidence": 1,
+                "punctuated_word": "just"
+              },
+              {
+                "word": "where",
+                "start": 8.32,
+                "end": 8.559999,
+                "confidence": 1,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "we",
+                "start": 8.559999,
+                "end": 8.639999,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "are",
+                "start": 8.639999,
+                "end": 8.8,
+                "confidence": 1,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "honestly",
+                "start": 8.8,
+                "end": 9.2,
+                "confidence": 0.9951172,
+                "punctuated_word": "honestly"
+              },
+              {
+                "word": "at",
+                "start": 9.2,
+                "end": 9.839999,
+                "confidence": 0.99560547,
+                "punctuated_word": "at."
+              },
+              {
+                "word": "an",
+                "start": 10,
+                "end": 10.24,
+                "confidence": 0.9980469,
+                "punctuated_word": "An"
+              },
+              {
+                "word": "opportunity",
+                "start": 10.24,
+                "end": 10.8,
+                "confidence": 0.9970703,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "is",
+                "start": 10.8,
+                "end": 11.12,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 11.12,
+                "end": 11.28,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "moment",
+                "start": 11.28,
+                "end": 11.599999,
+                "confidence": 1,
+                "punctuated_word": "moment"
+              },
+              {
+                "word": "a",
+                "start": 11.599999,
+                "end": 11.84,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "lead",
+                "start": 11.84,
+                "end": 12.16,
+                "confidence": 1,
+                "punctuated_word": "lead"
+              },
+              {
+                "word": "stops",
+                "start": 12.16,
+                "end": 12.559999,
+                "confidence": 1,
+                "punctuated_word": "stops"
+              },
+              {
+                "word": "being",
+                "start": 12.559999,
+                "end": 12.88,
+                "confidence": 1,
+                "punctuated_word": "being"
+              },
+              {
+                "word": "a",
+                "start": 12.88,
+                "end": 13.12,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "conversation",
+                "start": 13.12,
+                "end": 13.679999,
+                "confidence": 1,
+                "punctuated_word": "conversation"
+              },
+              {
+                "word": "and",
+                "start": 13.755,
+                "end": 14.155,
+                "confidence": 0.98535156,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "becomes",
+                "start": 14.155,
+                "end": 14.635,
+                "confidence": 1,
+                "punctuated_word": "becomes"
+              },
+              {
+                "word": "a",
+                "start": 14.635,
+                "end": 14.875,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "priced",
+                "start": 14.875,
+                "end": 15.595,
+                "confidence": 0.9836426,
+                "punctuated_word": "priced,"
+              },
+              {
+                "word": "staged",
+                "start": 15.595,
+                "end": 16.395,
+                "confidence": 0.99853516,
+                "punctuated_word": "staged,"
+              },
+              {
+                "word": "owned",
+                "start": 16.395,
+                "end": 16.715,
+                "confidence": 0.99902344,
+                "punctuated_word": "owned"
+              },
+              {
+                "word": "piece",
+                "start": 16.715,
+                "end": 17.035,
+                "confidence": 0.99121094,
+                "punctuated_word": "piece"
+              },
+              {
+                "word": "of",
+                "start": 17.035,
+                "end": 17.195,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "work",
+                "start": 17.195,
+                "end": 17.755,
+                "confidence": 0.9995117,
+                "punctuated_word": "work."
+              },
+              {
+                "word": "it",
+                "start": 18.075,
+                "end": 18.235,
+                "confidence": 1,
+                "punctuated_word": "It"
+              },
+              {
+                "word": "sits",
+                "start": 18.235,
+                "end": 18.555,
+                "confidence": 1,
+                "punctuated_word": "sits"
+              },
+              {
+                "word": "on",
+                "start": 18.555,
+                "end": 18.715,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "top",
+                "start": 18.715,
+                "end": 18.955,
+                "confidence": 1,
+                "punctuated_word": "top"
+              },
+              {
+                "word": "of",
+                "start": 18.955,
+                "end": 19.035,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "a",
+                "start": 19.035,
+                "end": 19.195,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "lead",
+                "start": 19.195,
+                "end": 19.755,
+                "confidence": 0.8911133,
+                "punctuated_word": "lead,"
+              },
+              {
+                "word": "always",
+                "start": 19.755001,
+                "end": 20.474998,
+                "confidence": 0.99902344,
+                "punctuated_word": "always."
+              },
+              {
+                "word": "it",
+                "start": 20.715,
+                "end": 20.875,
+                "confidence": 0.99902344,
+                "punctuated_word": "It"
+              },
+              {
+                "word": "cannot",
+                "start": 20.875,
+                "end": 21.275,
+                "confidence": 1,
+                "punctuated_word": "cannot"
+              },
+              {
+                "word": "exist",
+                "start": 21.275,
+                "end": 21.515,
+                "confidence": 1,
+                "punctuated_word": "exist"
+              },
+              {
+                "word": "on",
+                "start": 21.515,
+                "end": 21.755001,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "its",
+                "start": 21.755001,
+                "end": 21.915,
+                "confidence": 1,
+                "punctuated_word": "its"
+              },
+              {
+                "word": "own",
+                "start": 21.915,
+                "end": 22.154999,
+                "confidence": 1,
+                "punctuated_word": "own"
+              },
+              {
+                "word": "because",
+                "start": 22.154999,
+                "end": 22.475,
+                "confidence": 0.93115234,
+                "punctuated_word": "because"
+              },
+              {
+                "word": "an",
+                "start": 22.475,
+                "end": 22.715,
+                "confidence": 1,
+                "punctuated_word": "an"
+              },
+              {
+                "word": "opportunity",
+                "start": 22.715,
+                "end": 23.275,
+                "confidence": 1,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "without",
+                "start": 23.275,
+                "end": 23.595001,
+                "confidence": 0.99902344,
+                "punctuated_word": "without"
+              },
+              {
+                "word": "a",
+                "start": 23.595001,
+                "end": 23.755001,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "person",
+                "start": 23.755001,
+                "end": 24.075,
+                "confidence": 1,
+                "punctuated_word": "person"
+              },
+              {
+                "word": "to",
+                "start": 24.075,
+                "end": 24.235,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "sell",
+                "start": 24.235,
+                "end": 24.474998,
+                "confidence": 1,
+                "punctuated_word": "sell"
+              },
+              {
+                "word": "to",
+                "start": 24.474998,
+                "end": 24.875,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "and",
+                "start": 24.875,
+                "end": 25.195,
+                "confidence": 0.96435547,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "a",
+                "start": 25.195,
+                "end": 25.435,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "company",
+                "start": 25.435,
+                "end": 25.755001,
+                "confidence": 1,
+                "punctuated_word": "company"
+              },
+              {
+                "word": "to",
+                "start": 25.755001,
+                "end": 25.915,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "sell",
+                "start": 25.915,
+                "end": 26.154999,
+                "confidence": 1,
+                "punctuated_word": "sell"
+              },
+              {
+                "word": "for",
+                "start": 26.154999,
+                "end": 26.474998,
+                "confidence": 1,
+                "punctuated_word": "for"
+              },
+              {
+                "word": "is",
+                "start": 26.474998,
+                "end": 26.795,
+                "confidence": 0.99902344,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "just",
+                "start": 26.795,
+                "end": 27.035,
+                "confidence": 1,
+                "punctuated_word": "just"
+              },
+              {
+                "word": "a",
+                "start": 27.035,
+                "end": 27.755001,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "number",
+                "start": 27.12,
+                "end": 27.44,
+                "confidence": 1,
+                "punctuated_word": "number"
+              },
+              {
+                "word": "in",
+                "start": 27.44,
+                "end": 27.68,
+                "confidence": 1,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "a",
+                "start": 27.68,
+                "end": 27.84,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "spreadsheet",
+                "start": 27.84,
+                "end": 28.480001,
+                "confidence": 0.9980469,
+                "punctuated_word": "spreadsheet."
+              },
+              {
+                "word": "if",
+                "start": 28.480001,
+                "end": 28.800001,
+                "confidence": 0.99902344,
+                "punctuated_word": "If"
+              },
+              {
+                "word": "somebody",
+                "start": 28.800001,
+                "end": 29.12,
+                "confidence": 1,
+                "punctuated_word": "somebody"
+              },
+              {
+                "word": "asks",
+                "start": 29.12,
+                "end": 29.52,
+                "confidence": 1,
+                "punctuated_word": "asks"
+              },
+              {
+                "word": "you",
+                "start": 29.52,
+                "end": 29.68,
+                "confidence": 1,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "why",
+                "start": 29.68,
+                "end": 29.92,
+                "confidence": 1,
+                "punctuated_word": "why"
+              },
+              {
+                "word": "the",
+                "start": 29.92,
+                "end": 30.080002,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "count",
+                "start": 30.080002,
+                "end": 30.32,
+                "confidence": 0.99316406,
+                "punctuated_word": "count"
+              },
+              {
+                "word": "is",
+                "start": 30.32,
+                "end": 30.560001,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "zero",
+                "start": 30.560001,
+                "end": 31.12,
+                "confidence": 0.9946289,
+                "punctuated_word": "zero,"
+              },
+              {
+                "word": "that",
+                "start": 31.28,
+                "end": 31.44,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "is",
+                "start": 31.44,
+                "end": 31.6,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "a",
+                "start": 31.6,
+                "end": 31.76,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "fact",
+                "start": 31.76,
+                "end": 31.92,
+                "confidence": 1,
+                "punctuated_word": "fact"
+              },
+              {
+                "word": "about",
+                "start": 31.92,
+                "end": 32.16,
+                "confidence": 1,
+                "punctuated_word": "about"
+              },
+              {
+                "word": "where",
+                "start": 32.16,
+                "end": 32.48,
+                "confidence": 1,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "the",
+                "start": 32.48,
+                "end": 32.64,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "business",
+                "start": 32.64,
+                "end": 32.96,
+                "confidence": 0.9980469,
+                "punctuated_word": "business"
+              },
+              {
+                "word": "is",
+                "start": 32.96,
+                "end": 33.6,
+                "confidence": 0.98706055,
+                "punctuated_word": "is,"
+              },
+              {
+                "word": "not",
+                "start": 33.760002,
+                "end": 34,
+                "confidence": 1,
+                "punctuated_word": "not"
+              },
+              {
+                "word": "a",
+                "start": 34,
+                "end": 34.16,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "data",
+                "start": 34.16,
+                "end": 34.48,
+                "confidence": 0.99902344,
+                "punctuated_word": "data"
+              },
+              {
+                "word": "problem",
+                "start": 34.48,
+                "end": 35.12,
+                "confidence": 0.99902344,
+                "punctuated_word": "problem."
+              },
+              {
+                "word": "there",
+                "start": 35.28,
+                "end": 35.440002,
+                "confidence": 1,
+                "punctuated_word": "There"
+              },
+              {
+                "word": "are",
+                "start": 35.440002,
+                "end": 35.68,
+                "confidence": 1,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "only",
+                "start": 35.68,
+                "end": 35.920002,
+                "confidence": 1,
+                "punctuated_word": "only"
+              },
+              {
+                "word": "four",
+                "start": 35.920002,
+                "end": 36.16,
+                "confidence": 1,
+                "punctuated_word": "four"
+              },
+              {
+                "word": "fields",
+                "start": 36.16,
+                "end": 36.48,
+                "confidence": 1,
+                "punctuated_word": "fields"
+              },
+              {
+                "word": "on",
+                "start": 36.48,
+                "end": 36.72,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "an",
+                "start": 36.72,
+                "end": 36.88,
+                "confidence": 1,
+                "punctuated_word": "an"
+              },
+              {
+                "word": "opportunity",
+                "start": 36.88,
+                "end": 37.68,
+                "confidence": 0.97802734,
+                "punctuated_word": "opportunity,"
+              },
+              {
+                "word": "and",
+                "start": 37.84,
+                "end": 38,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "every",
+                "start": 38,
+                "end": 38.32,
+                "confidence": 0.99902344,
+                "punctuated_word": "every"
+              },
+              {
+                "word": "one",
+                "start": 38.32,
+                "end": 38.48,
+                "confidence": 1,
+                "punctuated_word": "one"
+              },
+              {
+                "word": "of",
+                "start": 38.48,
+                "end": 38.64,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "them",
+                "start": 38.64,
+                "end": 38.8,
+                "confidence": 1,
+                "punctuated_word": "them"
+              },
+              {
+                "word": "earns",
+                "start": 38.8,
+                "end": 39.2,
+                "confidence": 1,
+                "punctuated_word": "earns"
+              },
+              {
+                "word": "its",
+                "start": 39.2,
+                "end": 39.36,
+                "confidence": 1,
+                "punctuated_word": "its"
+              },
+              {
+                "word": "place",
+                "start": 39.36,
+                "end": 39.92,
+                "confidence": 0.9975586,
+                "punctuated_word": "place."
+              },
+              {
+                "word": "the",
+                "start": 40.24,
+                "end": 40.4,
+                "confidence": 1,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "name",
+                "start": 40.4,
+                "end": 40.72,
+                "confidence": 0.984375,
+                "punctuated_word": "name"
+              },
+              {
+                "word": "is",
+                "start": 40.72,
+                "end": 40.88,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 40.88,
+                "end": 41.120003,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "deal's",
+                "start": 41.055,
+                "end": 41.535,
+                "confidence": 0.96362305,
+                "punctuated_word": "deal's"
+              },
+              {
+                "word": "identity",
+                "start": 41.535,
+                "end": 42.335,
+                "confidence": 0.77783203,
+                "punctuated_word": "identity,"
+              },
+              {
+                "word": "usually",
+                "start": 42.415,
+                "end": 42.815,
+                "confidence": 0.9980469,
+                "punctuated_word": "usually"
+              },
+              {
+                "word": "the",
+                "start": 42.815,
+                "end": 43.055,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "client",
+                "start": 43.055,
+                "end": 43.375,
+                "confidence": 0.9970703,
+                "punctuated_word": "client"
+              },
+              {
+                "word": "name",
+                "start": 43.375,
+                "end": 43.695,
+                "confidence": 1,
+                "punctuated_word": "name"
+              },
+              {
+                "word": "and",
+                "start": 43.695,
+                "end": 44.015,
+                "confidence": 0.9873047,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "the",
+                "start": 44.015,
+                "end": 44.095,
+                "confidence": 0.9980469,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "package",
+                "start": 44.095,
+                "end": 44.495,
+                "confidence": 1,
+                "punctuated_word": "package"
+              },
+              {
+                "word": "name",
+                "start": 44.495,
+                "end": 45.135,
+                "confidence": 0.9980469,
+                "punctuated_word": "name."
+              },
+              {
+                "word": "the",
+                "start": 45.295,
+                "end": 45.455,
+                "confidence": 0.99902344,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "stage",
+                "start": 45.455,
+                "end": 45.775,
+                "confidence": 0.98291016,
+                "punctuated_word": "stage"
+              },
+              {
+                "word": "is",
+                "start": 45.775,
+                "end": 45.935,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "where",
+                "start": 45.935,
+                "end": 46.095,
+                "confidence": 1,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "it",
+                "start": 46.095,
+                "end": 46.255,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "sits",
+                "start": 46.255,
+                "end": 46.495,
+                "confidence": 0.99902344,
+                "punctuated_word": "sits"
+              },
+              {
+                "word": "in",
+                "start": 46.495,
+                "end": 46.655,
+                "confidence": 1,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "the",
+                "start": 46.655,
+                "end": 46.815,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "pipeline",
+                "start": 46.815,
+                "end": 47.455,
+                "confidence": 0.9880371,
+                "punctuated_word": "pipeline,"
+              },
+              {
+                "word": "and",
+                "start": 47.535,
+                "end": 47.695,
+                "confidence": 0.99902344,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "this",
+                "start": 47.695,
+                "end": 47.935,
+                "confidence": 0.99902344,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "is",
+                "start": 47.935,
+                "end": 48.015,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 48.015,
+                "end": 48.175,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "field",
+                "start": 48.175,
+                "end": 48.495,
+                "confidence": 0.99902344,
+                "punctuated_word": "field"
+              },
+              {
+                "word": "that",
+                "start": 48.495,
+                "end": 48.735,
+                "confidence": 0.9980469,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "actually",
+                "start": 48.735,
+                "end": 49.135002,
+                "confidence": 0.9970703,
+                "punctuated_word": "actually"
+              },
+              {
+                "word": "drives",
+                "start": 49.135002,
+                "end": 49.535,
+                "confidence": 0.99902344,
+                "punctuated_word": "drives"
+              },
+              {
+                "word": "forecasting",
+                "start": 49.535,
+                "end": 50.575,
+                "confidence": 0.9975586,
+                "punctuated_word": "forecasting."
+              },
+              {
+                "word": "the",
+                "start": 50.655,
+                "end": 50.815002,
+                "confidence": 0.9970703,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "description",
+                "start": 50.815002,
+                "end": 51.375,
+                "confidence": 0.9760742,
+                "punctuated_word": "description"
+              },
+              {
+                "word": "is",
+                "start": 51.375,
+                "end": 51.614998,
+                "confidence": 0.9951172,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 51.614998,
+                "end": 51.775,
+                "confidence": 0.99316406,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "short",
+                "start": 51.775,
+                "end": 52.095,
+                "confidence": 0.9921875,
+                "punctuated_word": "short"
+              },
+              {
+                "word": "written",
+                "start": 52.095,
+                "end": 52.495,
+                "confidence": 0.9790039,
+                "punctuated_word": "written"
+              },
+              {
+                "word": "summary",
+                "start": 52.495,
+                "end": 52.895,
+                "confidence": 0.99609375,
+                "punctuated_word": "summary"
+              },
+              {
+                "word": "of",
+                "start": 52.895,
+                "end": 54.095,
+                "confidence": 0.9921875,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "what",
+                "start": 54.190002,
+                "end": 54.510002,
+                "confidence": 0.99902344,
+                "punctuated_word": "what"
+              },
+              {
+                "word": "is",
+                "start": 54.510002,
+                "end": 54.670002,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "being",
+                "start": 54.670002,
+                "end": 54.99,
+                "confidence": 1,
+                "punctuated_word": "being"
+              },
+              {
+                "word": "sold",
+                "start": 54.99,
+                "end": 55.55,
+                "confidence": 0.9921875,
+                "punctuated_word": "sold,"
+              },
+              {
+                "word": "and",
+                "start": 55.55,
+                "end": 55.870003,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "at",
+                "start": 55.870003,
+                "end": 56.030003,
+                "confidence": 1,
+                "punctuated_word": "at"
+              },
+              {
+                "word": "what",
+                "start": 56.030003,
+                "end": 56.27,
+                "confidence": 1,
+                "punctuated_word": "what"
+              },
+              {
+                "word": "price",
+                "start": 56.27,
+                "end": 56.91,
+                "confidence": 0.83154297,
+                "punctuated_word": "price."
+              },
+              {
+                "word": "and",
+                "start": 57.07,
+                "end": 57.23,
+                "confidence": 0.9902344,
+                "punctuated_word": "And"
+              },
+              {
+                "word": "the",
+                "start": 57.23,
+                "end": 57.39,
+                "confidence": 0.9970703,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "owner",
+                "start": 57.39,
+                "end": 57.71,
+                "confidence": 0.9941406,
+                "punctuated_word": "owner"
+              },
+              {
+                "word": "is",
+                "start": 57.71,
+                "end": 57.95,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 57.95,
+                "end": 58.11,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "single",
+                "start": 58.11,
+                "end": 58.43,
+                "confidence": 0.99902344,
+                "punctuated_word": "single"
+              },
+              {
+                "word": "most",
+                "start": 58.43,
+                "end": 58.83,
+                "confidence": 0.99902344,
+                "punctuated_word": "most"
+              },
+              {
+                "word": "important",
+                "start": 58.83,
+                "end": 59.23,
+                "confidence": 1,
+                "punctuated_word": "important"
+              },
+              {
+                "word": "field",
+                "start": 59.23,
+                "end": 59.63,
+                "confidence": 1,
+                "punctuated_word": "field"
+              },
+              {
+                "word": "on",
+                "start": 59.63,
+                "end": 59.870003,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "the",
+                "start": 59.870003,
+                "end": 60.03,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "object",
+                "start": 60.03,
+                "end": 60.75,
+                "confidence": 0.9980469,
+                "punctuated_word": "object."
+              },
+              {
+                "word": "an",
+                "start": 61.07,
+                "end": 61.31,
+                "confidence": 0.99609375,
+                "punctuated_word": "An"
+              },
+              {
+                "word": "opportunity",
+                "start": 61.31,
+                "end": 61.870003,
+                "confidence": 0.9980469,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "without",
+                "start": 61.870003,
+                "end": 62.190002,
+                "confidence": 1,
+                "punctuated_word": "without"
+              },
+              {
+                "word": "a",
+                "start": 62.190002,
+                "end": 62.35,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "named",
+                "start": 62.35,
+                "end": 62.59,
+                "confidence": 1,
+                "punctuated_word": "named"
+              },
+              {
+                "word": "owner",
+                "start": 62.59,
+                "end": 63.07,
+                "confidence": 0.99902344,
+                "punctuated_word": "owner"
+              },
+              {
+                "word": "is",
+                "start": 63.07,
+                "end": 63.39,
+                "confidence": 0.9980469,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "a",
+                "start": 63.39,
+                "end": 63.550003,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "deal",
+                "start": 63.550003,
+                "end": 63.79,
+                "confidence": 0.9970703,
+                "punctuated_word": "deal"
+              },
+              {
+                "word": "nobody",
+                "start": 63.79,
+                "end": 64.270004,
+                "confidence": 0.9980469,
+                "punctuated_word": "nobody"
+              },
+              {
+                "word": "is",
+                "start": 64.270004,
+                "end": 64.51,
+                "confidence": 0.99902344,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "chasing",
+                "start": 64.51,
+                "end": 65.15,
+                "confidence": 0.9741211,
+                "punctuated_word": "chasing,"
+              },
+              {
+                "word": "and",
+                "start": 65.31,
+                "end": 65.47,
+                "confidence": 0.9980469,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "those",
+                "start": 65.47,
+                "end": 65.79,
+                "confidence": 0.9970703,
+                "punctuated_word": "those"
+              },
+              {
+                "word": "quietly",
+                "start": 65.79,
+                "end": 66.67,
+                "confidence": 0.9980469,
+                "punctuated_word": "quietly"
+              },
+              {
+                "word": "die",
+                "start": 66.405,
+                "end": 66.965,
+                "confidence": 0.99853516,
+                "punctuated_word": "die."
+              },
+              {
+                "word": "the",
+                "start": 67.365,
+                "end": 67.525,
+                "confidence": 0.99902344,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "owner",
+                "start": 67.525,
+                "end": 67.765,
+                "confidence": 0.99902344,
+                "punctuated_word": "owner"
+              },
+              {
+                "word": "is",
+                "start": 67.765,
+                "end": 67.924995,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "who",
+                "start": 67.924995,
+                "end": 68.165,
+                "confidence": 1,
+                "punctuated_word": "who"
+              },
+              {
+                "word": "picks",
+                "start": 68.165,
+                "end": 68.405,
+                "confidence": 1,
+                "punctuated_word": "picks"
+              },
+              {
+                "word": "up",
+                "start": 68.405,
+                "end": 68.565,
+                "confidence": 1,
+                "punctuated_word": "up"
+              },
+              {
+                "word": "the",
+                "start": 68.565,
+                "end": 68.725,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "phone",
+                "start": 68.725,
+                "end": 69.284996,
+                "confidence": 0.9995117,
+                "punctuated_word": "phone."
+              },
+              {
+                "word": "why",
+                "start": 69.525,
+                "end": 69.765,
+                "confidence": 1,
+                "punctuated_word": "Why"
+              },
+              {
+                "word": "build",
+                "start": 69.765,
+                "end": 70.085,
+                "confidence": 0.9980469,
+                "punctuated_word": "build"
+              },
+              {
+                "word": "a",
+                "start": 70.085,
+                "end": 70.244995,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "separate",
+                "start": 70.244995,
+                "end": 70.485,
+                "confidence": 1,
+                "punctuated_word": "separate"
+              },
+              {
+                "word": "object",
+                "start": 70.485,
+                "end": 70.965,
+                "confidence": 1,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "for",
+                "start": 70.965,
+                "end": 71.125,
+                "confidence": 1,
+                "punctuated_word": "for"
+              },
+              {
+                "word": "this",
+                "start": 71.125,
+                "end": 71.284996,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "rather",
+                "start": 71.284996,
+                "end": 71.604996,
+                "confidence": 0.9980469,
+                "punctuated_word": "rather"
+              },
+              {
+                "word": "than",
+                "start": 71.604996,
+                "end": 71.765,
+                "confidence": 1,
+                "punctuated_word": "than"
+              },
+              {
+                "word": "just",
+                "start": 71.765,
+                "end": 72.005,
+                "confidence": 1,
+                "punctuated_word": "just"
+              },
+              {
+                "word": "a",
+                "start": 72.005,
+                "end": 72.165,
+                "confidence": 0.9951172,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "status",
+                "start": 72.165,
+                "end": 72.565,
+                "confidence": 1,
+                "punctuated_word": "status"
+              },
+              {
+                "word": "on",
+                "start": 72.565,
+                "end": 72.725,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "the",
+                "start": 72.725,
+                "end": 72.805,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "lead",
+                "start": 72.805,
+                "end": 73.445,
+                "confidence": 0.99853516,
+                "punctuated_word": "lead?"
+              },
+              {
+                "word": "because",
+                "start": 73.685,
+                "end": 74.005,
+                "confidence": 0.99902344,
+                "punctuated_word": "Because"
+              },
+              {
+                "word": "it",
+                "start": 74.005,
+                "end": 74.165,
+                "confidence": 0.99902344,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "separates",
+                "start": 74.165,
+                "end": 74.645,
+                "confidence": 1,
+                "punctuated_word": "separates"
+              },
+              {
+                "word": "activity",
+                "start": 74.645,
+                "end": 75.205,
+                "confidence": 0.99316406,
+                "punctuated_word": "activity"
+              },
+              {
+                "word": "from",
+                "start": 75.205,
+                "end": 75.365,
+                "confidence": 0.98291016,
+                "punctuated_word": "from"
+              },
+              {
+                "word": "money",
+                "start": 75.365,
+                "end": 76.005,
+                "confidence": 0.99853516,
+                "punctuated_word": "money."
+              },
+              {
+                "word": "everything",
+                "start": 76.405,
+                "end": 76.884995,
+                "confidence": 1,
+                "punctuated_word": "Everything"
+              },
+              {
+                "word": "else",
+                "start": 76.884995,
+                "end": 77.125,
+                "confidence": 1,
+                "punctuated_word": "else"
+              },
+              {
+                "word": "in",
+                "start": 77.125,
+                "end": 77.284996,
+                "confidence": 1,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "this",
+                "start": 77.284996,
+                "end": 77.445,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "library",
+                "start": 77.445,
+                "end": 78.005,
+                "confidence": 0.9980469,
+                "punctuated_word": "library"
+              },
+              {
+                "word": "is",
+                "start": 78.005,
+                "end": 78.244995,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "activity",
+                "start": 78.244995,
+                "end": 78.725,
+                "confidence": 0.99365234,
+                "punctuated_word": "activity."
+              },
+              {
+                "word": "prospects",
+                "start": 79.630005,
+                "end": 80.03001,
+                "confidence": 0.99853516,
+                "punctuated_word": "Prospects"
+              },
+              {
+                "word": "were",
+                "start": 80.03001,
+                "end": 80.350006,
+                "confidence": 1,
+                "punctuated_word": "were"
+              },
+              {
+                "word": "found",
+                "start": 80.350006,
+                "end": 80.91,
+                "confidence": 0.86987305,
+                "punctuated_word": "found."
+              },
+              {
+                "word": "leads",
+                "start": 81.15,
+                "end": 81.55,
+                "confidence": 0.9980469,
+                "punctuated_word": "Leads"
+              },
+              {
+                "word": "were",
+                "start": 81.55,
+                "end": 81.71001,
+                "confidence": 1,
+                "punctuated_word": "were"
+              },
+              {
+                "word": "rung",
+                "start": 81.71001,
+                "end": 82.43,
+                "confidence": 0.89208984,
+                "punctuated_word": "rung."
+              },
+              {
+                "word": "calls",
+                "start": 82.51,
+                "end": 82.83,
+                "confidence": 0.9980469,
+                "punctuated_word": "Calls"
+              },
+              {
+                "word": "were",
+                "start": 82.83,
+                "end": 83.07,
+                "confidence": 1,
+                "punctuated_word": "were"
+              },
+              {
+                "word": "placed",
+                "start": 83.07,
+                "end": 83.79,
+                "confidence": 0.99902344,
+                "punctuated_word": "placed."
+              },
+              {
+                "word": "scripts",
+                "start": 84.03001,
+                "end": 84.43,
+                "confidence": 0.9980469,
+                "punctuated_word": "Scripts"
+              },
+              {
+                "word": "were",
+                "start": 84.43,
+                "end": 84.75,
+                "confidence": 1,
+                "punctuated_word": "were"
+              },
+              {
+                "word": "read",
+                "start": 84.75,
+                "end": 85.310005,
+                "confidence": 0.9885254,
+                "punctuated_word": "read."
+              },
+              {
+                "word": "none",
+                "start": 85.71001,
+                "end": 85.950005,
+                "confidence": 0.9970703,
+                "punctuated_word": "None"
+              },
+              {
+                "word": "of",
+                "start": 85.950005,
+                "end": 86.11,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "that",
+                "start": 86.11,
+                "end": 86.270004,
+                "confidence": 0.99902344,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "is",
+                "start": 86.270004,
+                "end": 86.43,
+                "confidence": 0.99902344,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "revenue",
+                "start": 86.43,
+                "end": 87.15,
+                "confidence": 0.9902344,
+                "punctuated_word": "revenue."
+              },
+              {
+                "word": "an",
+                "start": 87.47,
+                "end": 87.71001,
+                "confidence": 0.8442383,
+                "punctuated_word": "An"
+              },
+              {
+                "word": "opportunity",
+                "start": 87.71001,
+                "end": 88.19,
+                "confidence": 0.90625,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "is",
+                "start": 88.19,
+                "end": 88.590004,
+                "confidence": 0.9970703,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 88.590004,
+                "end": 88.75,
+                "confidence": 0.9980469,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "first",
+                "start": 88.75,
+                "end": 89.07001,
+                "confidence": 0.99121094,
+                "punctuated_word": "first"
+              },
+              {
+                "word": "object",
+                "start": 89.07001,
+                "end": 89.47,
+                "confidence": 0.9941406,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "in",
+                "start": 89.47,
+                "end": 89.630005,
+                "confidence": 0.9970703,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "the",
+                "start": 89.630005,
+                "end": 89.79,
+                "confidence": 0.99316406,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "system",
+                "start": 89.79,
+                "end": 90.11,
+                "confidence": 0.98291016,
+                "punctuated_word": "system"
+              },
+              {
+                "word": "that",
+                "start": 90.11,
+                "end": 90.43,
+                "confidence": 0.9863281,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "represents",
+                "start": 90.43,
+                "end": 90.91,
+                "confidence": 0.9223633,
+                "punctuated_word": "represents"
+              },
+              {
+                "word": "money",
+                "start": 90.91,
+                "end": 91.23,
+                "confidence": 0.98535156,
+                "punctuated_word": "money"
+              },
+              {
+                "word": "we",
+                "start": 91.23,
+                "end": 91.47,
+                "confidence": 0.9863281,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "might",
+                "start": 91.47,
+                "end": 92.51,
+                "confidence": 0.9350586,
+                "punctuated_word": "might"
+              },
+              {
+                "word": "actually",
+                "start": 91.845,
+                "end": 92.085,
+                "confidence": 0.9892578,
+                "punctuated_word": "actually"
+              },
+              {
+                "word": "receive",
+                "start": 92.085,
+                "end": 92.805,
+                "confidence": 0.98583984,
+                "punctuated_word": "receive."
+              },
+              {
+                "word": "that",
+                "start": 93.205,
+                "end": 93.445,
+                "confidence": 1,
+                "punctuated_word": "That"
+              },
+              {
+                "word": "is",
+                "start": 93.445,
+                "end": 93.605,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "why",
+                "start": 93.605,
+                "end": 93.765,
+                "confidence": 1,
+                "punctuated_word": "why"
+              },
+              {
+                "word": "it",
+                "start": 93.765,
+                "end": 93.925,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "gets",
+                "start": 93.925,
+                "end": 94.165,
+                "confidence": 1,
+                "punctuated_word": "gets"
+              },
+              {
+                "word": "its",
+                "start": 94.165,
+                "end": 94.405,
+                "confidence": 0.99902344,
+                "punctuated_word": "its"
+              },
+              {
+                "word": "own",
+                "start": 94.405,
+                "end": 94.565,
+                "confidence": 1,
+                "punctuated_word": "own"
+              },
+              {
+                "word": "stage",
+                "start": 94.565,
+                "end": 94.965004,
+                "confidence": 0.96533203,
+                "punctuated_word": "stage"
+              },
+              {
+                "word": "field",
+                "start": 94.965004,
+                "end": 95.525,
+                "confidence": 0.99853516,
+                "punctuated_word": "field,"
+              },
+              {
+                "word": "its",
+                "start": 95.525,
+                "end": 95.765,
+                "confidence": 0.9951172,
+                "punctuated_word": "its"
+              },
+              {
+                "word": "own",
+                "start": 95.765,
+                "end": 96.005005,
+                "confidence": 0.98828125,
+                "punctuated_word": "own"
+              },
+              {
+                "word": "owner",
+                "start": 96.005005,
+                "end": 96.325005,
+                "confidence": 0.9951172,
+                "punctuated_word": "owner"
+              },
+              {
+                "word": "field",
+                "start": 96.325005,
+                "end": 96.885,
+                "confidence": 0.99609375,
+                "punctuated_word": "field,"
+              },
+              {
+                "word": "and",
+                "start": 96.885,
+                "end": 97.045,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "its",
+                "start": 97.045,
+                "end": 97.285,
+                "confidence": 0.99902344,
+                "punctuated_word": "its"
+              },
+              {
+                "word": "own",
+                "start": 97.285,
+                "end": 97.445,
+                "confidence": 1,
+                "punctuated_word": "own"
+              },
+              {
+                "word": "record",
+                "start": 97.445,
+                "end": 98.085,
+                "confidence": 0.99902344,
+                "punctuated_word": "record."
+              },
+              {
+                "word": "it",
+                "start": 98.325005,
+                "end": 98.485,
+                "confidence": 1,
+                "punctuated_word": "It"
+              },
+              {
+                "word": "is",
+                "start": 98.485,
+                "end": 98.645004,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "also",
+                "start": 98.645004,
+                "end": 98.885,
+                "confidence": 1,
+                "punctuated_word": "also"
+              },
+              {
+                "word": "why",
+                "start": 98.885,
+                "end": 99.125,
+                "confidence": 1,
+                "punctuated_word": "why"
+              },
+              {
+                "word": "the",
+                "start": 99.125,
+                "end": 99.285,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "stage",
+                "start": 99.285,
+                "end": 99.525,
+                "confidence": 0.9819336,
+                "punctuated_word": "stage"
+              },
+              {
+                "word": "field",
+                "start": 99.525,
+                "end": 99.845,
+                "confidence": 1,
+                "punctuated_word": "field"
+              },
+              {
+                "word": "has",
+                "start": 99.845,
+                "end": 100.165,
+                "confidence": 1,
+                "punctuated_word": "has"
+              },
+              {
+                "word": "to",
+                "start": 100.165,
+                "end": 100.325,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "be",
+                "start": 100.325,
+                "end": 100.405,
+                "confidence": 1,
+                "punctuated_word": "be"
+              },
+              {
+                "word": "kept",
+                "start": 100.405,
+                "end": 100.645004,
+                "confidence": 1,
+                "punctuated_word": "kept"
+              },
+              {
+                "word": "honest",
+                "start": 100.645004,
+                "end": 101.365,
+                "confidence": 0.95288086,
+                "punctuated_word": "honest,"
+              },
+              {
+                "word": "because",
+                "start": 101.525,
+                "end": 101.845,
+                "confidence": 1,
+                "punctuated_word": "because"
+              },
+              {
+                "word": "every",
+                "start": 101.845,
+                "end": 102.165,
+                "confidence": 1,
+                "punctuated_word": "every"
+              },
+              {
+                "word": "forecast",
+                "start": 102.165,
+                "end": 102.725,
+                "confidence": 1,
+                "punctuated_word": "forecast"
+              },
+              {
+                "word": "anybody",
+                "start": 102.725,
+                "end": 103.285,
+                "confidence": 1,
+                "punctuated_word": "anybody"
+              },
+              {
+                "word": "gives",
+                "start": 103.285,
+                "end": 103.605,
+                "confidence": 1,
+                "punctuated_word": "gives"
+              },
+              {
+                "word": "is",
+                "start": 103.605,
+                "end": 103.845,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "a",
+                "start": 103.845,
+                "end": 104.005005,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "rollup",
+                "start": 104.005005,
+                "end": 104.485,
+                "confidence": 0.7729492,
+                "punctuated_word": "rollup"
+              },
+              {
+                "word": "of",
+                "start": 104.485,
+                "end": 104.645004,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "opportunity",
+                "start": 104.645004,
+                "end": 105.205,
+                "confidence": 0.9394531,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "stages",
+                "start": 105.205,
+                "end": 105.685,
+                "confidence": 0.99902344,
+                "punctuated_word": "stages."
+              },
+              {
+                "word": "so",
+                "start": 106.3,
+                "end": 106.62,
+                "confidence": 1,
+                "punctuated_word": "So"
+              },
+              {
+                "word": "where",
+                "start": 106.62,
+                "end": 106.86,
+                "confidence": 0.99902344,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "will",
+                "start": 106.86,
+                "end": 107.020004,
+                "confidence": 1,
+                "punctuated_word": "will"
+              },
+              {
+                "word": "this",
+                "start": 107.020004,
+                "end": 107.26,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "object",
+                "start": 107.26,
+                "end": 107.66,
+                "confidence": 1,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "get",
+                "start": 107.66,
+                "end": 107.9,
+                "confidence": 1,
+                "punctuated_word": "get"
+              },
+              {
+                "word": "used",
+                "start": 107.9,
+                "end": 108.22,
+                "confidence": 1,
+                "punctuated_word": "used"
+              },
+              {
+                "word": "once",
+                "start": 108.22,
+                "end": 108.54,
+                "confidence": 1,
+                "punctuated_word": "once"
+              },
+              {
+                "word": "it",
+                "start": 108.54,
+                "end": 108.700005,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "is",
+                "start": 108.700005,
+                "end": 108.86,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "populated",
+                "start": 108.86,
+                "end": 109.66,
+                "confidence": 0.9975586,
+                "punctuated_word": "populated?"
+              },
+              {
+                "word": "in",
+                "start": 110.14,
+                "end": 110.380005,
+                "confidence": 0.99609375,
+                "punctuated_word": "In"
+              },
+              {
+                "word": "two",
+                "start": 110.380005,
+                "end": 110.62,
+                "confidence": 1,
+                "punctuated_word": "two"
+              },
+              {
+                "word": "places",
+                "start": 110.62,
+                "end": 111.340004,
+                "confidence": 0.95336914,
+                "punctuated_word": "places."
+              },
+              {
+                "word": "the",
+                "start": 111.58,
+                "end": 111.74,
+                "confidence": 0.99902344,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "first",
+                "start": 111.74,
+                "end": 111.98,
+                "confidence": 1,
+                "punctuated_word": "first"
+              },
+              {
+                "word": "is",
+                "start": 111.98,
+                "end": 112.22,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "forecasting",
+                "start": 112.22,
+                "end": 113.18,
+                "confidence": 0.9926758,
+                "punctuated_word": "forecasting,"
+              },
+              {
+                "word": "which",
+                "start": 113.26,
+                "end": 113.5,
+                "confidence": 1,
+                "punctuated_word": "which"
+              },
+              {
+                "word": "is",
+                "start": 113.5,
+                "end": 113.58,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "simply",
+                "start": 113.58,
+                "end": 113.98,
+                "confidence": 1,
+                "punctuated_word": "simply"
+              },
+              {
+                "word": "grouping",
+                "start": 113.98,
+                "end": 114.3,
+                "confidence": 1,
+                "punctuated_word": "grouping"
+              },
+              {
+                "word": "opportunities",
+                "start": 114.3,
+                "end": 115.1,
+                "confidence": 1,
+                "punctuated_word": "opportunities"
+              },
+              {
+                "word": "by",
+                "start": 115.1,
+                "end": 115.42,
+                "confidence": 1,
+                "punctuated_word": "by"
+              },
+              {
+                "word": "stage",
+                "start": 115.42,
+                "end": 115.82,
+                "confidence": 1,
+                "punctuated_word": "stage"
+              },
+              {
+                "word": "to",
+                "start": 115.82,
+                "end": 116.22,
+                "confidence": 0.8183594,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "answer",
+                "start": 116.22,
+                "end": 116.54,
+                "confidence": 1,
+                "punctuated_word": "answer"
+              },
+              {
+                "word": "the",
+                "start": 116.54,
+                "end": 116.700005,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "question",
+                "start": 116.700005,
+                "end": 117.020004,
+                "confidence": 1,
+                "punctuated_word": "question"
+              },
+              {
+                "word": "how",
+                "start": 117.020004,
+                "end": 117.340004,
+                "confidence": 0.98535156,
+                "punctuated_word": "how"
+              },
+              {
+                "word": "much",
+                "start": 117.340004,
+                "end": 117.58,
+                "confidence": 1,
+                "punctuated_word": "much"
+              },
+              {
+                "word": "money",
+                "start": 117.58,
+                "end": 117.82,
+                "confidence": 1,
+                "punctuated_word": "money"
+              },
+              {
+                "word": "is",
+                "start": 117.82,
+                "end": 117.98,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "coming",
+                "start": 117.98,
+                "end": 118.3,
+                "confidence": 1,
+                "punctuated_word": "coming"
+              },
+              {
+                "word": "and",
+                "start": 118.3,
+                "end": 118.54,
+                "confidence": 0.9873047,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "when",
+                "start": 118.54,
+                "end": 119.18,
+                "confidence": 0.9597168,
+                "punctuated_word": "when."
+              },
+              {
+                "word": "the",
+                "start": 119.58,
+                "end": 119.82,
+                "confidence": 1,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "second",
+                "start": 119.82,
+                "end": 120.14,
+                "confidence": 1,
+                "punctuated_word": "second"
+              },
+              {
+                "word": "is",
+                "start": 120.14,
+                "end": 120.3,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 120.3,
+                "end": 120.46,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "handover",
+                "start": 120.46,
+                "end": 121.020004,
+                "confidence": 0.98095703,
+                "punctuated_word": "handover."
+              },
+              {
+                "word": "when",
+                "start": 121.415,
+                "end": 121.735,
+                "confidence": 1,
+                "punctuated_word": "When"
+              },
+              {
+                "word": "a",
+                "start": 121.735,
+                "end": 121.815,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "client",
+                "start": 121.815,
+                "end": 122.135,
+                "confidence": 1,
+                "punctuated_word": "client"
+              },
+              {
+                "word": "agrees",
+                "start": 122.135,
+                "end": 122.534996,
+                "confidence": 1,
+                "punctuated_word": "agrees"
+              },
+              {
+                "word": "to",
+                "start": 122.534996,
+                "end": 122.695,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "buy",
+                "start": 122.695,
+                "end": 123.255,
+                "confidence": 0.9995117,
+                "punctuated_word": "buy,"
+              },
+              {
+                "word": "somebody",
+                "start": 123.255,
+                "end": 123.735,
+                "confidence": 1,
+                "punctuated_word": "somebody"
+              },
+              {
+                "word": "creates",
+                "start": 123.735,
+                "end": 124.135,
+                "confidence": 1,
+                "punctuated_word": "creates"
+              },
+              {
+                "word": "the",
+                "start": 124.135,
+                "end": 124.375,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "opportunity",
+                "start": 124.375,
+                "end": 124.935,
+                "confidence": 0.99609375,
+                "punctuated_word": "opportunity"
+              },
+              {
+                "word": "off",
+                "start": 124.935,
+                "end": 125.255,
+                "confidence": 0.9838867,
+                "punctuated_word": "off"
+              },
+              {
+                "word": "the",
+                "start": 125.255,
+                "end": 125.415,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "agency",
+                "start": 125.415,
+                "end": 125.815,
+                "confidence": 0.9716797,
+                "punctuated_word": "agency"
+              },
+              {
+                "word": "offer",
+                "start": 125.815,
+                "end": 126.215,
+                "confidence": 0.9658203,
+                "punctuated_word": "offer"
+              },
+              {
+                "word": "object",
+                "start": 126.215,
+                "end": 126.935,
+                "confidence": 0.99658203,
+                "punctuated_word": "object,"
+              },
+              {
+                "word": "sets",
+                "start": 127.095,
+                "end": 127.415,
+                "confidence": 1,
+                "punctuated_word": "sets"
+              },
+              {
+                "word": "the",
+                "start": 127.415,
+                "end": 127.575,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "stage",
+                "start": 127.575,
+                "end": 128.135,
+                "confidence": 0.8823242,
+                "punctuated_word": "stage,"
+              },
+              {
+                "word": "and",
+                "start": 128.135,
+                "end": 128.215,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "assigns",
+                "start": 128.215,
+                "end": 128.69499,
+                "confidence": 0.9995117,
+                "punctuated_word": "assigns"
+              },
+              {
+                "word": "the",
+                "start": 128.69499,
+                "end": 128.855,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "owner",
+                "start": 128.855,
+                "end": 129.49501,
+                "confidence": 0.9995117,
+                "punctuated_word": "owner."
+              },
+              {
+                "word": "it",
+                "start": 129.735,
+                "end": 129.895,
+                "confidence": 0.99902344,
+                "punctuated_word": "It"
+              },
+              {
+                "word": "is",
+                "start": 129.895,
+                "end": 130.055,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 130.055,
+                "end": 130.215,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "moment",
+                "start": 130.215,
+                "end": 130.455,
+                "confidence": 0.99902344,
+                "punctuated_word": "moment"
+              },
+              {
+                "word": "the",
+                "start": 130.455,
+                "end": 130.69499,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "sales",
+                "start": 130.69499,
+                "end": 131.015,
+                "confidence": 0.9970703,
+                "punctuated_word": "sales"
+              },
+              {
+                "word": "conversation",
+                "start": 131.015,
+                "end": 131.655,
+                "confidence": 0.9980469,
+                "punctuated_word": "conversation"
+              },
+              {
+                "word": "becomes",
+                "start": 131.655,
+                "end": 132.055,
+                "confidence": 0.99902344,
+                "punctuated_word": "becomes"
+              },
+              {
+                "word": "a",
+                "start": 132.055,
+                "end": 132.215,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "commitment",
+                "start": 132.215,
+                "end": 132.93501,
+                "confidence": 0.92285156,
+                "punctuated_word": "commitment."
+              },
+              {
+                "word": "and",
+                "start": 133.015,
+                "end": 133.175,
+                "confidence": 0.9980469,
+                "punctuated_word": "And"
+              },
+              {
+                "word": "because",
+                "start": 133.175,
+                "end": 133.495,
+                "confidence": 0.9970703,
+                "punctuated_word": "because"
+              },
+              {
+                "word": "it",
+                "start": 133.495,
+                "end": 133.655,
+                "confidence": 0.99609375,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "is",
+                "start": 133.655,
+                "end": 133.815,
+                "confidence": 0.99316406,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "empty",
+                "start": 133.815,
+                "end": 134.135,
+                "confidence": 0.99121094,
+                "punctuated_word": "empty"
+              },
+              {
+                "word": "right",
+                "start": 134.135,
+                "end": 134.375,
+                "confidence": 0.9892578,
+                "punctuated_word": "right"
+              },
+              {
+                "word": "now",
+                "start": 134.375,
+                "end": 134.775,
+                "confidence": 0.95654297,
+                "punctuated_word": "now,"
+              },
+              {
+                "word": "it",
+                "start": 134.775,
+                "end": 134.855,
+                "confidence": 0.98291016,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "is",
+                "start": 134.855,
+                "end": 135.015,
+                "confidence": 0.97802734,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "worth",
+                "start": 135.015,
+                "end": 135.895,
+                "confidence": 0.97998047,
+                "punctuated_word": "worth"
+              },
+              {
+                "word": "understanding",
+                "start": 135.56088,
+                "end": 135.88089,
+                "confidence": 0.8852539,
+                "punctuated_word": "understanding"
+              },
+              {
+                "word": "honestly",
+                "start": 135.88089,
+                "end": 136.7609,
+                "confidence": 0.8691406,
+                "punctuated_word": "honestly."
+              },
+              {
+                "word": "zero",
+                "start": 137.16089,
+                "end": 137.48088,
+                "confidence": 0.96972656,
+                "punctuated_word": "Zero"
+              },
+              {
+                "word": "opportunities",
+                "start": 137.48088,
+                "end": 138.20088,
+                "confidence": 0.9980469,
+                "punctuated_word": "opportunities"
+              },
+              {
+                "word": "with",
+                "start": 138.20088,
+                "end": 138.52089,
+                "confidence": 0.99902344,
+                "punctuated_word": "with"
+              },
+              {
+                "word": "18",
+                "start": 138.52089,
+                "end": 138.92088,
+                "confidence": 0.9980469,
+                "punctuated_word": "18"
+              },
+              {
+                "word": "leads",
+                "start": 138.92088,
+                "end": 139.56088,
+                "confidence": 0.99902344,
+                "punctuated_word": "leads"
+              },
+              {
+                "word": "means",
+                "start": 139.56088,
+                "end": 139.96088,
+                "confidence": 0.94921875,
+                "punctuated_word": "means"
+              },
+              {
+                "word": "the",
+                "start": 139.96088,
+                "end": 140.12088,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "motion",
+                "start": 140.12088,
+                "end": 140.44089,
+                "confidence": 0.9951172,
+                "punctuated_word": "motion"
+              },
+              {
+                "word": "is",
+                "start": 140.44089,
+                "end": 140.68088,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "running",
+                "start": 140.68088,
+                "end": 141.32088,
+                "confidence": 0.9790039,
+                "punctuated_word": "running,"
+              },
+              {
+                "word": "but",
+                "start": 141.32088,
+                "end": 141.48088,
+                "confidence": 0.99902344,
+                "punctuated_word": "but"
+              },
+              {
+                "word": "the",
+                "start": 141.48088,
+                "end": 141.64088,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "closing",
+                "start": 141.64088,
+                "end": 142.04088,
+                "confidence": 1,
+                "punctuated_word": "closing"
+              },
+              {
+                "word": "conversation",
+                "start": 142.04088,
+                "end": 142.76088,
+                "confidence": 0.99902344,
+                "punctuated_word": "conversation"
+              },
+              {
+                "word": "has",
+                "start": 142.76088,
+                "end": 143.00089,
+                "confidence": 1,
+                "punctuated_word": "has"
+              },
+              {
+                "word": "not",
+                "start": 143.00089,
+                "end": 143.24088,
+                "confidence": 1,
+                "punctuated_word": "not"
+              },
+              {
+                "word": "landed",
+                "start": 143.24088,
+                "end": 143.56088,
+                "confidence": 1,
+                "punctuated_word": "landed"
+              },
+              {
+                "word": "yet",
+                "start": 143.56088,
+                "end": 143.88089,
+                "confidence": 0.99658203,
+                "punctuated_word": "yet."
+              }
+            ],
+            "paragraphs": {
+              "transcript": "\nAn agency opportunity is a specific commercial deal that is in flight. Right now there are zero, and that is not a bug. That is just where we are honestly at. An opportunity is the moment a lead stops being a conversation and becomes a priced, staged, owned piece of work. It sits on top of a lead, always.\n\nIt cannot exist on its own because an opportunity without a person to sell to and a company to sell for is just a number in a spreadsheet. If somebody asks you why the count is zero, that is a fact about where the business is, not a data problem. There are only four fields on an opportunity, and every one of them earns its place. The name is the deal's identity, usually the client name and the package name. The stage is where it sits in the pipeline, and this is the field that actually drives forecasting.\n\nThe description is the short written summary of what is being sold, and at what price. And the owner is the single most important field on the object. An opportunity without a named owner is a deal nobody is chasing, and those quietly die. The owner is who picks up the phone. Why build a separate object for this rather than just a status on the lead?\n\nBecause it separates activity from money. Everything else in this library is activity. Prospects were found. Leads were rung. Calls were placed.\n\nScripts were read. None of that is revenue. An opportunity is the first object in the system that represents money we might actually receive. That is why it gets its own stage field, its own owner field, and its own record. It is also why the stage field has to be kept honest, because every forecast anybody gives is a rollup of opportunity stages.\n\nSo where will this object get used once it is populated? In two places. The first is forecasting, which is simply grouping opportunities by stage to answer the question how much money is coming and when. The second is the handover. When a client agrees to buy, somebody creates the opportunity off the agency offer object, sets the stage, and assigns the owner.\n\nIt is the moment the sales conversation becomes a commitment. And because it is empty right now, it is worth understanding honestly. Zero opportunities with 18 leads means the motion is running, but the closing conversation has not landed yet.",
+              "paragraphs": [
+                {
+                  "sentences": [
+                    {
+                      "text": "An agency opportunity is a specific commercial deal that is in flight.",
+                      "start": 0.24,
+                      "end": 4.48
+                    },
+                    {
+                      "text": "Right now there are zero, and that is not a bug.",
+                      "start": 4.64,
+                      "end": 7.68
+                    },
+                    {
+                      "text": "That is just where we are honestly at.",
+                      "start": 7.68,
+                      "end": 9.839999
+                    },
+                    {
+                      "text": "An opportunity is the moment a lead stops being a conversation and becomes a priced, staged, owned piece of work.",
+                      "start": 10,
+                      "end": 17.755
+                    },
+                    {
+                      "text": "It sits on top of a lead, always.",
+                      "start": 18.075,
+                      "end": 20.474998
+                    }
+                  ],
+                  "num_words": 59,
+                  "start": 0.24,
+                  "end": 20.474998
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "It cannot exist on its own because an opportunity without a person to sell to and a company to sell for is just a number in a spreadsheet.",
+                      "start": 20.715,
+                      "end": 28.480001
+                    },
+                    {
+                      "text": "If somebody asks you why the count is zero, that is a fact about where the business is, not a data problem.",
+                      "start": 28.480001,
+                      "end": 35.12
+                    },
+                    {
+                      "text": "There are only four fields on an opportunity, and every one of them earns its place.",
+                      "start": 35.28,
+                      "end": 39.92
+                    },
+                    {
+                      "text": "The name is the deal's identity, usually the client name and the package name.",
+                      "start": 40.24,
+                      "end": 45.135
+                    },
+                    {
+                      "text": "The stage is where it sits in the pipeline, and this is the field that actually drives forecasting.",
+                      "start": 45.295,
+                      "end": 50.575
+                    }
+                  ],
+                  "num_words": 98,
+                  "start": 20.715,
+                  "end": 50.575
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "The description is the short written summary of what is being sold, and at what price.",
+                      "start": 50.655,
+                      "end": 56.91
+                    },
+                    {
+                      "text": "And the owner is the single most important field on the object.",
+                      "start": 57.07,
+                      "end": 60.75
+                    },
+                    {
+                      "text": "An opportunity without a named owner is a deal nobody is chasing, and those quietly die.",
+                      "start": 61.07,
+                      "end": 66.965
+                    },
+                    {
+                      "text": "The owner is who picks up the phone.",
+                      "start": 67.365,
+                      "end": 69.284996
+                    },
+                    {
+                      "text": "Why build a separate object for this rather than just a status on the lead?",
+                      "start": 69.525,
+                      "end": 73.445
+                    }
+                  ],
+                  "num_words": 67,
+                  "start": 50.655,
+                  "end": 73.445
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "Because it separates activity from money.",
+                      "start": 73.685,
+                      "end": 76.005
+                    },
+                    {
+                      "text": "Everything else in this library is activity.",
+                      "start": 76.405,
+                      "end": 78.725
+                    },
+                    {
+                      "text": "Prospects were found.",
+                      "start": 79.630005,
+                      "end": 80.91
+                    },
+                    {
+                      "text": "Leads were rung.",
+                      "start": 81.15,
+                      "end": 82.43
+                    },
+                    {
+                      "text": "Calls were placed.",
+                      "start": 82.51,
+                      "end": 83.79
+                    }
+                  ],
+                  "num_words": 22,
+                  "start": 73.685,
+                  "end": 83.79
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "Scripts were read.",
+                      "start": 84.03001,
+                      "end": 85.310005
+                    },
+                    {
+                      "text": "None of that is revenue.",
+                      "start": 85.71001,
+                      "end": 87.15
+                    },
+                    {
+                      "text": "An opportunity is the first object in the system that represents money we might actually receive.",
+                      "start": 87.47,
+                      "end": 92.805
+                    },
+                    {
+                      "text": "That is why it gets its own stage field, its own owner field, and its own record.",
+                      "start": 93.205,
+                      "end": 98.085
+                    },
+                    {
+                      "text": "It is also why the stage field has to be kept honest, because every forecast anybody gives is a rollup of opportunity stages.",
+                      "start": 98.325005,
+                      "end": 105.685
+                    }
+                  ],
+                  "num_words": 64,
+                  "start": 84.03001,
+                  "end": 105.685
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "So where will this object get used once it is populated?",
+                      "start": 106.3,
+                      "end": 109.66
+                    },
+                    {
+                      "text": "In two places.",
+                      "start": 110.14,
+                      "end": 111.340004
+                    },
+                    {
+                      "text": "The first is forecasting, which is simply grouping opportunities by stage to answer the question how much money is coming and when.",
+                      "start": 111.58,
+                      "end": 119.18
+                    },
+                    {
+                      "text": "The second is the handover.",
+                      "start": 119.58,
+                      "end": 121.020004
+                    },
+                    {
+                      "text": "When a client agrees to buy, somebody creates the opportunity off the agency offer object, sets the stage, and assigns the owner.",
+                      "start": 121.415,
+                      "end": 129.49501
+                    }
+                  ],
+                  "num_words": 63,
+                  "start": 106.3,
+                  "end": 129.49501
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "It is the moment the sales conversation becomes a commitment.",
+                      "start": 129.735,
+                      "end": 132.93501
+                    },
+                    {
+                      "text": "And because it is empty right now, it is worth understanding honestly.",
+                      "start": 133.015,
+                      "end": 136.7609
+                    },
+                    {
+                      "text": "Zero opportunities with 18 leads means the motion is running, but the closing conversation has not landed yet.",
+                      "start": 137.16089,
+                      "end": 143.88089
+                    }
+                  ],
+                  "num_words": 40,
+                  "start": 129.735,
+                  "end": 143.88089
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "utterances": [
+      {
+        "start": 0.24,
+        "end": 9.839999,
+        "confidence": 0.97391635,
+        "channel": 0,
+        "transcript": "An agency opportunity is a specific commercial deal that is in flight. Right now there are zero, and that is not a bug. That is just where we are honestly at.",
+        "words": [
+          {
+            "word": "an",
+            "start": 0.24,
+            "end": 0.56,
+            "confidence": 0.9921875,
+            "punctuated_word": "An"
+          },
+          {
+            "word": "agency",
+            "start": 0.56,
+            "end": 1.04,
+            "confidence": 0.9707031,
+            "punctuated_word": "agency"
+          },
+          {
+            "word": "opportunity",
+            "start": 1.04,
+            "end": 1.5999999,
+            "confidence": 0.99121094,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "is",
+            "start": 1.5999999,
+            "end": 1.92,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "a",
+            "start": 1.92,
+            "end": 2.08,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "specific",
+            "start": 2.08,
+            "end": 2.48,
+            "confidence": 1,
+            "punctuated_word": "specific"
+          },
+          {
+            "word": "commercial",
+            "start": 2.48,
+            "end": 2.96,
+            "confidence": 0.99902344,
+            "punctuated_word": "commercial"
+          },
+          {
+            "word": "deal",
+            "start": 2.96,
+            "end": 3.28,
+            "confidence": 1,
+            "punctuated_word": "deal"
+          },
+          {
+            "word": "that",
+            "start": 3.28,
+            "end": 3.52,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "is",
+            "start": 3.52,
+            "end": 3.6799998,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "in",
+            "start": 3.6799998,
+            "end": 3.84,
+            "confidence": 0.99609375,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "flight",
+            "start": 3.84,
+            "end": 4.48,
+            "confidence": 0.9951172,
+            "punctuated_word": "flight."
+          },
+          {
+            "word": "right",
+            "start": 4.64,
+            "end": 4.96,
+            "confidence": 0.99902344,
+            "punctuated_word": "Right"
+          },
+          {
+            "word": "now",
+            "start": 4.96,
+            "end": 5.12,
+            "confidence": 1,
+            "punctuated_word": "now"
+          },
+          {
+            "word": "there",
+            "start": 5.12,
+            "end": 5.3599997,
+            "confidence": 0.6201172,
+            "punctuated_word": "there"
+          },
+          {
+            "word": "are",
+            "start": 5.3599997,
+            "end": 5.6,
+            "confidence": 1,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "zero",
+            "start": 5.6,
+            "end": 6.16,
+            "confidence": 0.9326172,
+            "punctuated_word": "zero,"
+          },
+          {
+            "word": "and",
+            "start": 6.16,
+            "end": 6.3199997,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "that",
+            "start": 6.3199997,
+            "end": 6.56,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "is",
+            "start": 6.56,
+            "end": 6.72,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "not",
+            "start": 6.72,
+            "end": 6.8799996,
+            "confidence": 0.99902344,
+            "punctuated_word": "not"
+          },
+          {
+            "word": "a",
+            "start": 6.8799996,
+            "end": 7.04,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "bug",
+            "start": 7.04,
+            "end": 7.68,
+            "confidence": 0.7084961,
+            "punctuated_word": "bug."
+          },
+          {
+            "word": "that",
+            "start": 7.68,
+            "end": 7.9199996,
+            "confidence": 0.9970703,
+            "punctuated_word": "That"
+          },
+          {
+            "word": "is",
+            "start": 7.9199996,
+            "end": 8.08,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "just",
+            "start": 8.08,
+            "end": 8.32,
+            "confidence": 1,
+            "punctuated_word": "just"
+          },
+          {
+            "word": "where",
+            "start": 8.32,
+            "end": 8.559999,
+            "confidence": 1,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "we",
+            "start": 8.559999,
+            "end": 8.639999,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "are",
+            "start": 8.639999,
+            "end": 8.8,
+            "confidence": 1,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "honestly",
+            "start": 8.8,
+            "end": 9.2,
+            "confidence": 0.9951172,
+            "punctuated_word": "honestly"
+          },
+          {
+            "word": "at",
+            "start": 9.2,
+            "end": 9.839999,
+            "confidence": 0.99560547,
+            "punctuated_word": "at."
+          }
+        ],
+        "id": "3530d178-7104-4b0a-95ab-f7fae3099417"
+      },
+      {
+        "start": 10,
+        "end": 16.395,
+        "confidence": 0.9974823,
+        "channel": 0,
+        "transcript": "An opportunity is the moment a lead stops being a conversation and becomes a priced, staged,",
+        "words": [
+          {
+            "word": "an",
+            "start": 10,
+            "end": 10.24,
+            "confidence": 0.9980469,
+            "punctuated_word": "An"
+          },
+          {
+            "word": "opportunity",
+            "start": 10.24,
+            "end": 10.8,
+            "confidence": 0.9970703,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "is",
+            "start": 10.8,
+            "end": 11.12,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 11.12,
+            "end": 11.28,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "moment",
+            "start": 11.28,
+            "end": 11.599999,
+            "confidence": 1,
+            "punctuated_word": "moment"
+          },
+          {
+            "word": "a",
+            "start": 11.599999,
+            "end": 11.84,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "lead",
+            "start": 11.84,
+            "end": 12.16,
+            "confidence": 1,
+            "punctuated_word": "lead"
+          },
+          {
+            "word": "stops",
+            "start": 12.16,
+            "end": 12.559999,
+            "confidence": 1,
+            "punctuated_word": "stops"
+          },
+          {
+            "word": "being",
+            "start": 12.559999,
+            "end": 12.88,
+            "confidence": 1,
+            "punctuated_word": "being"
+          },
+          {
+            "word": "a",
+            "start": 12.88,
+            "end": 13.12,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "conversation",
+            "start": 13.12,
+            "end": 13.679999,
+            "confidence": 1,
+            "punctuated_word": "conversation"
+          },
+          {
+            "word": "and",
+            "start": 13.755,
+            "end": 14.155,
+            "confidence": 0.98535156,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "becomes",
+            "start": 14.155,
+            "end": 14.635,
+            "confidence": 1,
+            "punctuated_word": "becomes"
+          },
+          {
+            "word": "a",
+            "start": 14.635,
+            "end": 14.875,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "priced",
+            "start": 14.875,
+            "end": 15.595,
+            "confidence": 0.9836426,
+            "punctuated_word": "priced,"
+          },
+          {
+            "word": "staged",
+            "start": 15.595,
+            "end": 16.395,
+            "confidence": 0.99853516,
+            "punctuated_word": "staged,"
+          }
+        ],
+        "id": "4a0acbaf-9425-4522-a807-d12f498efc2f"
+      },
+      {
+        "start": 16.395,
+        "end": 17.755,
+        "confidence": 0.9974365,
+        "channel": 0,
+        "transcript": "owned piece of work.",
+        "words": [
+          {
+            "word": "owned",
+            "start": 16.395,
+            "end": 16.715,
+            "confidence": 0.99902344,
+            "punctuated_word": "owned"
+          },
+          {
+            "word": "piece",
+            "start": 16.715,
+            "end": 17.035,
+            "confidence": 0.99121094,
+            "punctuated_word": "piece"
+          },
+          {
+            "word": "of",
+            "start": 17.035,
+            "end": 17.195,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "work",
+            "start": 17.195,
+            "end": 17.755,
+            "confidence": 0.9995117,
+            "punctuated_word": "work."
+          }
+        ],
+        "id": "ce2a82e7-800b-469c-b1ea-c4f2c16e59fa"
+      },
+      {
+        "start": 18.075,
+        "end": 20.474998,
+        "confidence": 0.9862671,
+        "channel": 0,
+        "transcript": "It sits on top of a lead, always.",
+        "words": [
+          {
+            "word": "it",
+            "start": 18.075,
+            "end": 18.235,
+            "confidence": 1,
+            "punctuated_word": "It"
+          },
+          {
+            "word": "sits",
+            "start": 18.235,
+            "end": 18.555,
+            "confidence": 1,
+            "punctuated_word": "sits"
+          },
+          {
+            "word": "on",
+            "start": 18.555,
+            "end": 18.715,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "top",
+            "start": 18.715,
+            "end": 18.955,
+            "confidence": 1,
+            "punctuated_word": "top"
+          },
+          {
+            "word": "of",
+            "start": 18.955,
+            "end": 19.035,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "a",
+            "start": 19.035,
+            "end": 19.195,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "lead",
+            "start": 19.195,
+            "end": 19.755,
+            "confidence": 0.8911133,
+            "punctuated_word": "lead,"
+          },
+          {
+            "word": "always",
+            "start": 19.755001,
+            "end": 20.474998,
+            "confidence": 0.99902344,
+            "punctuated_word": "always."
+          }
+        ],
+        "id": "42fa7a75-a898-4f6b-93d0-6f66702577c8"
+      },
+      {
+        "start": 20.715,
+        "end": 33.6,
+        "confidence": 0.99701196,
+        "channel": 0,
+        "transcript": "It cannot exist on its own because an opportunity without a person to sell to and a company to sell for is just a number in a spreadsheet. If somebody asks you why the count is zero, that is a fact about where the business is,",
+        "words": [
+          {
+            "word": "it",
+            "start": 20.715,
+            "end": 20.875,
+            "confidence": 0.99902344,
+            "punctuated_word": "It"
+          },
+          {
+            "word": "cannot",
+            "start": 20.875,
+            "end": 21.275,
+            "confidence": 1,
+            "punctuated_word": "cannot"
+          },
+          {
+            "word": "exist",
+            "start": 21.275,
+            "end": 21.515,
+            "confidence": 1,
+            "punctuated_word": "exist"
+          },
+          {
+            "word": "on",
+            "start": 21.515,
+            "end": 21.755001,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "its",
+            "start": 21.755001,
+            "end": 21.915,
+            "confidence": 1,
+            "punctuated_word": "its"
+          },
+          {
+            "word": "own",
+            "start": 21.915,
+            "end": 22.154999,
+            "confidence": 1,
+            "punctuated_word": "own"
+          },
+          {
+            "word": "because",
+            "start": 22.154999,
+            "end": 22.475,
+            "confidence": 0.93115234,
+            "punctuated_word": "because"
+          },
+          {
+            "word": "an",
+            "start": 22.475,
+            "end": 22.715,
+            "confidence": 1,
+            "punctuated_word": "an"
+          },
+          {
+            "word": "opportunity",
+            "start": 22.715,
+            "end": 23.275,
+            "confidence": 1,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "without",
+            "start": 23.275,
+            "end": 23.595001,
+            "confidence": 0.99902344,
+            "punctuated_word": "without"
+          },
+          {
+            "word": "a",
+            "start": 23.595001,
+            "end": 23.755001,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "person",
+            "start": 23.755001,
+            "end": 24.075,
+            "confidence": 1,
+            "punctuated_word": "person"
+          },
+          {
+            "word": "to",
+            "start": 24.075,
+            "end": 24.235,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "sell",
+            "start": 24.235,
+            "end": 24.474998,
+            "confidence": 1,
+            "punctuated_word": "sell"
+          },
+          {
+            "word": "to",
+            "start": 24.474998,
+            "end": 24.875,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "and",
+            "start": 24.875,
+            "end": 25.195,
+            "confidence": 0.96435547,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "a",
+            "start": 25.195,
+            "end": 25.435,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "company",
+            "start": 25.435,
+            "end": 25.755001,
+            "confidence": 1,
+            "punctuated_word": "company"
+          },
+          {
+            "word": "to",
+            "start": 25.755001,
+            "end": 25.915,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "sell",
+            "start": 25.915,
+            "end": 26.154999,
+            "confidence": 1,
+            "punctuated_word": "sell"
+          },
+          {
+            "word": "for",
+            "start": 26.154999,
+            "end": 26.474998,
+            "confidence": 1,
+            "punctuated_word": "for"
+          },
+          {
+            "word": "is",
+            "start": 26.474998,
+            "end": 26.795,
+            "confidence": 0.99902344,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "just",
+            "start": 26.795,
+            "end": 27.035,
+            "confidence": 1,
+            "punctuated_word": "just"
+          },
+          {
+            "word": "a",
+            "start": 27.035,
+            "end": 27.755001,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "number",
+            "start": 27.12,
+            "end": 27.44,
+            "confidence": 1,
+            "punctuated_word": "number"
+          },
+          {
+            "word": "in",
+            "start": 27.44,
+            "end": 27.68,
+            "confidence": 1,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "a",
+            "start": 27.68,
+            "end": 27.84,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "spreadsheet",
+            "start": 27.84,
+            "end": 28.480001,
+            "confidence": 0.9980469,
+            "punctuated_word": "spreadsheet."
+          },
+          {
+            "word": "if",
+            "start": 28.480001,
+            "end": 28.800001,
+            "confidence": 0.99902344,
+            "punctuated_word": "If"
+          },
+          {
+            "word": "somebody",
+            "start": 28.800001,
+            "end": 29.12,
+            "confidence": 1,
+            "punctuated_word": "somebody"
+          },
+          {
+            "word": "asks",
+            "start": 29.12,
+            "end": 29.52,
+            "confidence": 1,
+            "punctuated_word": "asks"
+          },
+          {
+            "word": "you",
+            "start": 29.52,
+            "end": 29.68,
+            "confidence": 1,
+            "punctuated_word": "you"
+          },
+          {
+            "word": "why",
+            "start": 29.68,
+            "end": 29.92,
+            "confidence": 1,
+            "punctuated_word": "why"
+          },
+          {
+            "word": "the",
+            "start": 29.92,
+            "end": 30.080002,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "count",
+            "start": 30.080002,
+            "end": 30.32,
+            "confidence": 0.99316406,
+            "punctuated_word": "count"
+          },
+          {
+            "word": "is",
+            "start": 30.32,
+            "end": 30.560001,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "zero",
+            "start": 30.560001,
+            "end": 31.12,
+            "confidence": 0.9946289,
+            "punctuated_word": "zero,"
+          },
+          {
+            "word": "that",
+            "start": 31.28,
+            "end": 31.44,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "is",
+            "start": 31.44,
+            "end": 31.6,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "a",
+            "start": 31.6,
+            "end": 31.76,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "fact",
+            "start": 31.76,
+            "end": 31.92,
+            "confidence": 1,
+            "punctuated_word": "fact"
+          },
+          {
+            "word": "about",
+            "start": 31.92,
+            "end": 32.16,
+            "confidence": 1,
+            "punctuated_word": "about"
+          },
+          {
+            "word": "where",
+            "start": 32.16,
+            "end": 32.48,
+            "confidence": 1,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "the",
+            "start": 32.48,
+            "end": 32.64,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "business",
+            "start": 32.64,
+            "end": 32.96,
+            "confidence": 0.9980469,
+            "punctuated_word": "business"
+          },
+          {
+            "word": "is",
+            "start": 32.96,
+            "end": 33.6,
+            "confidence": 0.98706055,
+            "punctuated_word": "is,"
+          }
+        ],
+        "id": "58f42694-f4d3-4cb3-9b00-8f15738b38ce"
+      },
+      {
+        "start": 33.760002,
+        "end": 37.68,
+        "confidence": 0.99800617,
+        "channel": 0,
+        "transcript": "not a data problem. There are only four fields on an opportunity,",
+        "words": [
+          {
+            "word": "not",
+            "start": 33.760002,
+            "end": 34,
+            "confidence": 1,
+            "punctuated_word": "not"
+          },
+          {
+            "word": "a",
+            "start": 34,
+            "end": 34.16,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "data",
+            "start": 34.16,
+            "end": 34.48,
+            "confidence": 0.99902344,
+            "punctuated_word": "data"
+          },
+          {
+            "word": "problem",
+            "start": 34.48,
+            "end": 35.12,
+            "confidence": 0.99902344,
+            "punctuated_word": "problem."
+          },
+          {
+            "word": "there",
+            "start": 35.28,
+            "end": 35.440002,
+            "confidence": 1,
+            "punctuated_word": "There"
+          },
+          {
+            "word": "are",
+            "start": 35.440002,
+            "end": 35.68,
+            "confidence": 1,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "only",
+            "start": 35.68,
+            "end": 35.920002,
+            "confidence": 1,
+            "punctuated_word": "only"
+          },
+          {
+            "word": "four",
+            "start": 35.920002,
+            "end": 36.16,
+            "confidence": 1,
+            "punctuated_word": "four"
+          },
+          {
+            "word": "fields",
+            "start": 36.16,
+            "end": 36.48,
+            "confidence": 1,
+            "punctuated_word": "fields"
+          },
+          {
+            "word": "on",
+            "start": 36.48,
+            "end": 36.72,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "an",
+            "start": 36.72,
+            "end": 36.88,
+            "confidence": 1,
+            "punctuated_word": "an"
+          },
+          {
+            "word": "opportunity",
+            "start": 36.88,
+            "end": 37.68,
+            "confidence": 0.97802734,
+            "punctuated_word": "opportunity,"
+          }
+        ],
+        "id": "b5458ca3-1891-4743-8030-4f74850c7be8"
+      },
+      {
+        "start": 37.84,
+        "end": 39.92,
+        "confidence": 0.99957275,
+        "channel": 0,
+        "transcript": "and every one of them earns its place.",
+        "words": [
+          {
+            "word": "and",
+            "start": 37.84,
+            "end": 38,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "every",
+            "start": 38,
+            "end": 38.32,
+            "confidence": 0.99902344,
+            "punctuated_word": "every"
+          },
+          {
+            "word": "one",
+            "start": 38.32,
+            "end": 38.48,
+            "confidence": 1,
+            "punctuated_word": "one"
+          },
+          {
+            "word": "of",
+            "start": 38.48,
+            "end": 38.64,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "them",
+            "start": 38.64,
+            "end": 38.8,
+            "confidence": 1,
+            "punctuated_word": "them"
+          },
+          {
+            "word": "earns",
+            "start": 38.8,
+            "end": 39.2,
+            "confidence": 1,
+            "punctuated_word": "earns"
+          },
+          {
+            "word": "its",
+            "start": 39.2,
+            "end": 39.36,
+            "confidence": 1,
+            "punctuated_word": "its"
+          },
+          {
+            "word": "place",
+            "start": 39.36,
+            "end": 39.92,
+            "confidence": 0.9975586,
+            "punctuated_word": "place."
+          }
+        ],
+        "id": "0948b813-8bdf-4eb2-8bc7-634ca7717e6b"
+      },
+      {
+        "start": 40.24,
+        "end": 42.335,
+        "confidence": 0.954305,
+        "channel": 0,
+        "transcript": "The name is the deal's identity,",
+        "words": [
+          {
+            "word": "the",
+            "start": 40.24,
+            "end": 40.4,
+            "confidence": 1,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "name",
+            "start": 40.4,
+            "end": 40.72,
+            "confidence": 0.984375,
+            "punctuated_word": "name"
+          },
+          {
+            "word": "is",
+            "start": 40.72,
+            "end": 40.88,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 40.88,
+            "end": 41.120003,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "deal's",
+            "start": 41.055,
+            "end": 41.535,
+            "confidence": 0.96362305,
+            "punctuated_word": "deal's"
+          },
+          {
+            "word": "identity",
+            "start": 41.535,
+            "end": 42.335,
+            "confidence": 0.77783203,
+            "punctuated_word": "identity,"
+          }
+        ],
+        "id": "313be147-a953-45a7-8846-4a575a1acce1"
+      },
+      {
+        "start": 42.415,
+        "end": 50.575,
+        "confidence": 0.9974365,
+        "channel": 0,
+        "transcript": "usually the client name and the package name. The stage is where it sits in the pipeline, and this is the field that actually drives forecasting.",
+        "words": [
+          {
+            "word": "usually",
+            "start": 42.415,
+            "end": 42.815,
+            "confidence": 0.9980469,
+            "punctuated_word": "usually"
+          },
+          {
+            "word": "the",
+            "start": 42.815,
+            "end": 43.055,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "client",
+            "start": 43.055,
+            "end": 43.375,
+            "confidence": 0.9970703,
+            "punctuated_word": "client"
+          },
+          {
+            "word": "name",
+            "start": 43.375,
+            "end": 43.695,
+            "confidence": 1,
+            "punctuated_word": "name"
+          },
+          {
+            "word": "and",
+            "start": 43.695,
+            "end": 44.015,
+            "confidence": 0.9873047,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "the",
+            "start": 44.015,
+            "end": 44.095,
+            "confidence": 0.9980469,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "package",
+            "start": 44.095,
+            "end": 44.495,
+            "confidence": 1,
+            "punctuated_word": "package"
+          },
+          {
+            "word": "name",
+            "start": 44.495,
+            "end": 45.135,
+            "confidence": 0.9980469,
+            "punctuated_word": "name."
+          },
+          {
+            "word": "the",
+            "start": 45.295,
+            "end": 45.455,
+            "confidence": 0.99902344,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "stage",
+            "start": 45.455,
+            "end": 45.775,
+            "confidence": 0.98291016,
+            "punctuated_word": "stage"
+          },
+          {
+            "word": "is",
+            "start": 45.775,
+            "end": 45.935,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "where",
+            "start": 45.935,
+            "end": 46.095,
+            "confidence": 1,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "it",
+            "start": 46.095,
+            "end": 46.255,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "sits",
+            "start": 46.255,
+            "end": 46.495,
+            "confidence": 0.99902344,
+            "punctuated_word": "sits"
+          },
+          {
+            "word": "in",
+            "start": 46.495,
+            "end": 46.655,
+            "confidence": 1,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "the",
+            "start": 46.655,
+            "end": 46.815,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "pipeline",
+            "start": 46.815,
+            "end": 47.455,
+            "confidence": 0.9880371,
+            "punctuated_word": "pipeline,"
+          },
+          {
+            "word": "and",
+            "start": 47.535,
+            "end": 47.695,
+            "confidence": 0.99902344,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "this",
+            "start": 47.695,
+            "end": 47.935,
+            "confidence": 0.99902344,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "is",
+            "start": 47.935,
+            "end": 48.015,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 48.015,
+            "end": 48.175,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "field",
+            "start": 48.175,
+            "end": 48.495,
+            "confidence": 0.99902344,
+            "punctuated_word": "field"
+          },
+          {
+            "word": "that",
+            "start": 48.495,
+            "end": 48.735,
+            "confidence": 0.9980469,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "actually",
+            "start": 48.735,
+            "end": 49.135002,
+            "confidence": 0.9970703,
+            "punctuated_word": "actually"
+          },
+          {
+            "word": "drives",
+            "start": 49.135002,
+            "end": 49.535,
+            "confidence": 0.99902344,
+            "punctuated_word": "drives"
+          },
+          {
+            "word": "forecasting",
+            "start": 49.535,
+            "end": 50.575,
+            "confidence": 0.9975586,
+            "punctuated_word": "forecasting."
+          }
+        ],
+        "id": "119b99fe-0e96-4b7b-a25c-69d27c692bc1"
+      },
+      {
+        "start": 50.655,
+        "end": 54.095,
+        "confidence": 0.9901123,
+        "channel": 0,
+        "transcript": "The description is the short written summary of",
+        "words": [
+          {
+            "word": "the",
+            "start": 50.655,
+            "end": 50.815002,
+            "confidence": 0.9970703,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "description",
+            "start": 50.815002,
+            "end": 51.375,
+            "confidence": 0.9760742,
+            "punctuated_word": "description"
+          },
+          {
+            "word": "is",
+            "start": 51.375,
+            "end": 51.614998,
+            "confidence": 0.9951172,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 51.614998,
+            "end": 51.775,
+            "confidence": 0.99316406,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "short",
+            "start": 51.775,
+            "end": 52.095,
+            "confidence": 0.9921875,
+            "punctuated_word": "short"
+          },
+          {
+            "word": "written",
+            "start": 52.095,
+            "end": 52.495,
+            "confidence": 0.9790039,
+            "punctuated_word": "written"
+          },
+          {
+            "word": "summary",
+            "start": 52.495,
+            "end": 52.895,
+            "confidence": 0.99609375,
+            "punctuated_word": "summary"
+          },
+          {
+            "word": "of",
+            "start": 52.895,
+            "end": 54.095,
+            "confidence": 0.9921875,
+            "punctuated_word": "of"
+          }
+        ],
+        "id": "99d6461d-cf16-4003-8834-3e9d3cfb4067"
+      },
+      {
+        "start": 54.190002,
+        "end": 60.75,
+        "confidence": 0.9900147,
+        "channel": 0,
+        "transcript": "what is being sold, and at what price. And the owner is the single most important field on the object.",
+        "words": [
+          {
+            "word": "what",
+            "start": 54.190002,
+            "end": 54.510002,
+            "confidence": 0.99902344,
+            "punctuated_word": "what"
+          },
+          {
+            "word": "is",
+            "start": 54.510002,
+            "end": 54.670002,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "being",
+            "start": 54.670002,
+            "end": 54.99,
+            "confidence": 1,
+            "punctuated_word": "being"
+          },
+          {
+            "word": "sold",
+            "start": 54.99,
+            "end": 55.55,
+            "confidence": 0.9921875,
+            "punctuated_word": "sold,"
+          },
+          {
+            "word": "and",
+            "start": 55.55,
+            "end": 55.870003,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "at",
+            "start": 55.870003,
+            "end": 56.030003,
+            "confidence": 1,
+            "punctuated_word": "at"
+          },
+          {
+            "word": "what",
+            "start": 56.030003,
+            "end": 56.27,
+            "confidence": 1,
+            "punctuated_word": "what"
+          },
+          {
+            "word": "price",
+            "start": 56.27,
+            "end": 56.91,
+            "confidence": 0.83154297,
+            "punctuated_word": "price."
+          },
+          {
+            "word": "and",
+            "start": 57.07,
+            "end": 57.23,
+            "confidence": 0.9902344,
+            "punctuated_word": "And"
+          },
+          {
+            "word": "the",
+            "start": 57.23,
+            "end": 57.39,
+            "confidence": 0.9970703,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "owner",
+            "start": 57.39,
+            "end": 57.71,
+            "confidence": 0.9941406,
+            "punctuated_word": "owner"
+          },
+          {
+            "word": "is",
+            "start": 57.71,
+            "end": 57.95,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 57.95,
+            "end": 58.11,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "single",
+            "start": 58.11,
+            "end": 58.43,
+            "confidence": 0.99902344,
+            "punctuated_word": "single"
+          },
+          {
+            "word": "most",
+            "start": 58.43,
+            "end": 58.83,
+            "confidence": 0.99902344,
+            "punctuated_word": "most"
+          },
+          {
+            "word": "important",
+            "start": 58.83,
+            "end": 59.23,
+            "confidence": 1,
+            "punctuated_word": "important"
+          },
+          {
+            "word": "field",
+            "start": 59.23,
+            "end": 59.63,
+            "confidence": 1,
+            "punctuated_word": "field"
+          },
+          {
+            "word": "on",
+            "start": 59.63,
+            "end": 59.870003,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "the",
+            "start": 59.870003,
+            "end": 60.03,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "object",
+            "start": 60.03,
+            "end": 60.75,
+            "confidence": 0.9980469,
+            "punctuated_word": "object."
+          }
+        ],
+        "id": "13b4218c-06e8-4059-833d-e2691c2ece72"
+      },
+      {
+        "start": 61.07,
+        "end": 66.965,
+        "confidence": 0.9968872,
+        "channel": 0,
+        "transcript": "An opportunity without a named owner is a deal nobody is chasing, and those quietly die.",
+        "words": [
+          {
+            "word": "an",
+            "start": 61.07,
+            "end": 61.31,
+            "confidence": 0.99609375,
+            "punctuated_word": "An"
+          },
+          {
+            "word": "opportunity",
+            "start": 61.31,
+            "end": 61.870003,
+            "confidence": 0.9980469,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "without",
+            "start": 61.870003,
+            "end": 62.190002,
+            "confidence": 1,
+            "punctuated_word": "without"
+          },
+          {
+            "word": "a",
+            "start": 62.190002,
+            "end": 62.35,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "named",
+            "start": 62.35,
+            "end": 62.59,
+            "confidence": 1,
+            "punctuated_word": "named"
+          },
+          {
+            "word": "owner",
+            "start": 62.59,
+            "end": 63.07,
+            "confidence": 0.99902344,
+            "punctuated_word": "owner"
+          },
+          {
+            "word": "is",
+            "start": 63.07,
+            "end": 63.39,
+            "confidence": 0.9980469,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "a",
+            "start": 63.39,
+            "end": 63.550003,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "deal",
+            "start": 63.550003,
+            "end": 63.79,
+            "confidence": 0.9970703,
+            "punctuated_word": "deal"
+          },
+          {
+            "word": "nobody",
+            "start": 63.79,
+            "end": 64.270004,
+            "confidence": 0.9980469,
+            "punctuated_word": "nobody"
+          },
+          {
+            "word": "is",
+            "start": 64.270004,
+            "end": 64.51,
+            "confidence": 0.99902344,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "chasing",
+            "start": 64.51,
+            "end": 65.15,
+            "confidence": 0.9741211,
+            "punctuated_word": "chasing,"
+          },
+          {
+            "word": "and",
+            "start": 65.31,
+            "end": 65.47,
+            "confidence": 0.9980469,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "those",
+            "start": 65.47,
+            "end": 65.79,
+            "confidence": 0.9970703,
+            "punctuated_word": "those"
+          },
+          {
+            "word": "quietly",
+            "start": 65.79,
+            "end": 66.67,
+            "confidence": 0.9980469,
+            "punctuated_word": "quietly"
+          },
+          {
+            "word": "die",
+            "start": 66.405,
+            "end": 66.965,
+            "confidence": 0.99853516,
+            "punctuated_word": "die."
+          }
+        ],
+        "id": "762965d9-405a-4a37-b122-367e51b8dd10"
+      },
+      {
+        "start": 67.365,
+        "end": 69.284996,
+        "confidence": 0.9996948,
+        "channel": 0,
+        "transcript": "The owner is who picks up the phone.",
+        "words": [
+          {
+            "word": "the",
+            "start": 67.365,
+            "end": 67.525,
+            "confidence": 0.99902344,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "owner",
+            "start": 67.525,
+            "end": 67.765,
+            "confidence": 0.99902344,
+            "punctuated_word": "owner"
+          },
+          {
+            "word": "is",
+            "start": 67.765,
+            "end": 67.924995,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "who",
+            "start": 67.924995,
+            "end": 68.165,
+            "confidence": 1,
+            "punctuated_word": "who"
+          },
+          {
+            "word": "picks",
+            "start": 68.165,
+            "end": 68.405,
+            "confidence": 1,
+            "punctuated_word": "picks"
+          },
+          {
+            "word": "up",
+            "start": 68.405,
+            "end": 68.565,
+            "confidence": 1,
+            "punctuated_word": "up"
+          },
+          {
+            "word": "the",
+            "start": 68.565,
+            "end": 68.725,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "phone",
+            "start": 68.725,
+            "end": 69.284996,
+            "confidence": 0.9995117,
+            "punctuated_word": "phone."
+          }
+        ],
+        "id": "97ef6ae9-39c3-48cc-9cf7-43dc59beeeab"
+      },
+      {
+        "start": 69.525,
+        "end": 73.445,
+        "confidence": 0.9992513,
+        "channel": 0,
+        "transcript": "Why build a separate object for this rather than just a status on the lead?",
+        "words": [
+          {
+            "word": "why",
+            "start": 69.525,
+            "end": 69.765,
+            "confidence": 1,
+            "punctuated_word": "Why"
+          },
+          {
+            "word": "build",
+            "start": 69.765,
+            "end": 70.085,
+            "confidence": 0.9980469,
+            "punctuated_word": "build"
+          },
+          {
+            "word": "a",
+            "start": 70.085,
+            "end": 70.244995,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "separate",
+            "start": 70.244995,
+            "end": 70.485,
+            "confidence": 1,
+            "punctuated_word": "separate"
+          },
+          {
+            "word": "object",
+            "start": 70.485,
+            "end": 70.965,
+            "confidence": 1,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "for",
+            "start": 70.965,
+            "end": 71.125,
+            "confidence": 1,
+            "punctuated_word": "for"
+          },
+          {
+            "word": "this",
+            "start": 71.125,
+            "end": 71.284996,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "rather",
+            "start": 71.284996,
+            "end": 71.604996,
+            "confidence": 0.9980469,
+            "punctuated_word": "rather"
+          },
+          {
+            "word": "than",
+            "start": 71.604996,
+            "end": 71.765,
+            "confidence": 1,
+            "punctuated_word": "than"
+          },
+          {
+            "word": "just",
+            "start": 71.765,
+            "end": 72.005,
+            "confidence": 1,
+            "punctuated_word": "just"
+          },
+          {
+            "word": "a",
+            "start": 72.005,
+            "end": 72.165,
+            "confidence": 0.9951172,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "status",
+            "start": 72.165,
+            "end": 72.565,
+            "confidence": 1,
+            "punctuated_word": "status"
+          },
+          {
+            "word": "on",
+            "start": 72.565,
+            "end": 72.725,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "the",
+            "start": 72.725,
+            "end": 72.805,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "lead",
+            "start": 72.805,
+            "end": 73.445,
+            "confidence": 0.99853516,
+            "punctuated_word": "lead?"
+          }
+        ],
+        "id": "4b116200-41aa-4eb7-9ac7-e64755523a42"
+      },
+      {
+        "start": 73.685,
+        "end": 76.005,
+        "confidence": 0.9954427,
+        "channel": 0,
+        "transcript": "Because it separates activity from money.",
+        "words": [
+          {
+            "word": "because",
+            "start": 73.685,
+            "end": 74.005,
+            "confidence": 0.99902344,
+            "punctuated_word": "Because"
+          },
+          {
+            "word": "it",
+            "start": 74.005,
+            "end": 74.165,
+            "confidence": 0.99902344,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "separates",
+            "start": 74.165,
+            "end": 74.645,
+            "confidence": 1,
+            "punctuated_word": "separates"
+          },
+          {
+            "word": "activity",
+            "start": 74.645,
+            "end": 75.205,
+            "confidence": 0.99316406,
+            "punctuated_word": "activity"
+          },
+          {
+            "word": "from",
+            "start": 75.205,
+            "end": 75.365,
+            "confidence": 0.98291016,
+            "punctuated_word": "from"
+          },
+          {
+            "word": "money",
+            "start": 75.365,
+            "end": 76.005,
+            "confidence": 0.99853516,
+            "punctuated_word": "money."
+          }
+        ],
+        "id": "04fc440e-0ffd-44ea-829f-67c5905d2c83"
+      },
+      {
+        "start": 76.405,
+        "end": 78.725,
+        "confidence": 0.99881417,
+        "channel": 0,
+        "transcript": "Everything else in this library is activity.",
+        "words": [
+          {
+            "word": "everything",
+            "start": 76.405,
+            "end": 76.884995,
+            "confidence": 1,
+            "punctuated_word": "Everything"
+          },
+          {
+            "word": "else",
+            "start": 76.884995,
+            "end": 77.125,
+            "confidence": 1,
+            "punctuated_word": "else"
+          },
+          {
+            "word": "in",
+            "start": 77.125,
+            "end": 77.284996,
+            "confidence": 1,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "this",
+            "start": 77.284996,
+            "end": 77.445,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "library",
+            "start": 77.445,
+            "end": 78.005,
+            "confidence": 0.9980469,
+            "punctuated_word": "library"
+          },
+          {
+            "word": "is",
+            "start": 78.005,
+            "end": 78.244995,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "activity",
+            "start": 78.244995,
+            "end": 78.725,
+            "confidence": 0.99365234,
+            "punctuated_word": "activity."
+          }
+        ],
+        "id": "e52638e2-267e-483d-b03b-85439ff66244"
+      },
+      {
+        "start": 79.630005,
+        "end": 83.79,
+        "confidence": 0.97284615,
+        "channel": 0,
+        "transcript": "Prospects were found. Leads were rung. Calls were placed.",
+        "words": [
+          {
+            "word": "prospects",
+            "start": 79.630005,
+            "end": 80.03001,
+            "confidence": 0.99853516,
+            "punctuated_word": "Prospects"
+          },
+          {
+            "word": "were",
+            "start": 80.03001,
+            "end": 80.350006,
+            "confidence": 1,
+            "punctuated_word": "were"
+          },
+          {
+            "word": "found",
+            "start": 80.350006,
+            "end": 80.91,
+            "confidence": 0.86987305,
+            "punctuated_word": "found."
+          },
+          {
+            "word": "leads",
+            "start": 81.15,
+            "end": 81.55,
+            "confidence": 0.9980469,
+            "punctuated_word": "Leads"
+          },
+          {
+            "word": "were",
+            "start": 81.55,
+            "end": 81.71001,
+            "confidence": 1,
+            "punctuated_word": "were"
+          },
+          {
+            "word": "rung",
+            "start": 81.71001,
+            "end": 82.43,
+            "confidence": 0.89208984,
+            "punctuated_word": "rung."
+          },
+          {
+            "word": "calls",
+            "start": 82.51,
+            "end": 82.83,
+            "confidence": 0.9980469,
+            "punctuated_word": "Calls"
+          },
+          {
+            "word": "were",
+            "start": 82.83,
+            "end": 83.07,
+            "confidence": 1,
+            "punctuated_word": "were"
+          },
+          {
+            "word": "placed",
+            "start": 83.07,
+            "end": 83.79,
+            "confidence": 0.99902344,
+            "punctuated_word": "placed."
+          }
+        ],
+        "id": "b23793a7-c9ef-472f-9c4f-fe89b08c8064"
+      },
+      {
+        "start": 84.03001,
+        "end": 85.310005,
+        "confidence": 0.9955241,
+        "channel": 0,
+        "transcript": "Scripts were read.",
+        "words": [
+          {
+            "word": "scripts",
+            "start": 84.03001,
+            "end": 84.43,
+            "confidence": 0.9980469,
+            "punctuated_word": "Scripts"
+          },
+          {
+            "word": "were",
+            "start": 84.43,
+            "end": 84.75,
+            "confidence": 1,
+            "punctuated_word": "were"
+          },
+          {
+            "word": "read",
+            "start": 84.75,
+            "end": 85.310005,
+            "confidence": 0.9885254,
+            "punctuated_word": "read."
+          }
+        ],
+        "id": "41526a52-e23a-4ea9-9315-64004d71ec4e"
+      },
+      {
+        "start": 85.71001,
+        "end": 87.15,
+        "confidence": 0.9970703,
+        "channel": 0,
+        "transcript": "None of that is revenue.",
+        "words": [
+          {
+            "word": "none",
+            "start": 85.71001,
+            "end": 85.950005,
+            "confidence": 0.9970703,
+            "punctuated_word": "None"
+          },
+          {
+            "word": "of",
+            "start": 85.950005,
+            "end": 86.11,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "that",
+            "start": 86.11,
+            "end": 86.270004,
+            "confidence": 0.99902344,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "is",
+            "start": 86.270004,
+            "end": 86.43,
+            "confidence": 0.99902344,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "revenue",
+            "start": 86.43,
+            "end": 87.15,
+            "confidence": 0.9902344,
+            "punctuated_word": "revenue."
+          }
+        ],
+        "id": "72f77c40-017a-4e0b-897a-b4445ae8dd76"
+      },
+      {
+        "start": 87.47,
+        "end": 92.805,
+        "confidence": 0.9684143,
+        "channel": 0,
+        "transcript": "An opportunity is the first object in the system that represents money we might actually receive.",
+        "words": [
+          {
+            "word": "an",
+            "start": 87.47,
+            "end": 87.71001,
+            "confidence": 0.8442383,
+            "punctuated_word": "An"
+          },
+          {
+            "word": "opportunity",
+            "start": 87.71001,
+            "end": 88.19,
+            "confidence": 0.90625,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "is",
+            "start": 88.19,
+            "end": 88.590004,
+            "confidence": 0.9970703,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 88.590004,
+            "end": 88.75,
+            "confidence": 0.9980469,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "first",
+            "start": 88.75,
+            "end": 89.07001,
+            "confidence": 0.99121094,
+            "punctuated_word": "first"
+          },
+          {
+            "word": "object",
+            "start": 89.07001,
+            "end": 89.47,
+            "confidence": 0.9941406,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "in",
+            "start": 89.47,
+            "end": 89.630005,
+            "confidence": 0.9970703,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "the",
+            "start": 89.630005,
+            "end": 89.79,
+            "confidence": 0.99316406,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "system",
+            "start": 89.79,
+            "end": 90.11,
+            "confidence": 0.98291016,
+            "punctuated_word": "system"
+          },
+          {
+            "word": "that",
+            "start": 90.11,
+            "end": 90.43,
+            "confidence": 0.9863281,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "represents",
+            "start": 90.43,
+            "end": 90.91,
+            "confidence": 0.9223633,
+            "punctuated_word": "represents"
+          },
+          {
+            "word": "money",
+            "start": 90.91,
+            "end": 91.23,
+            "confidence": 0.98535156,
+            "punctuated_word": "money"
+          },
+          {
+            "word": "we",
+            "start": 91.23,
+            "end": 91.47,
+            "confidence": 0.9863281,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "might",
+            "start": 91.47,
+            "end": 92.51,
+            "confidence": 0.9350586,
+            "punctuated_word": "might"
+          },
+          {
+            "word": "actually",
+            "start": 91.845,
+            "end": 92.085,
+            "confidence": 0.9892578,
+            "punctuated_word": "actually"
+          },
+          {
+            "word": "receive",
+            "start": 92.085,
+            "end": 92.805,
+            "confidence": 0.98583984,
+            "punctuated_word": "receive."
+          }
+        ],
+        "id": "3e043ab7-ecc3-4de2-90ad-426e5e8e673f"
+      },
+      {
+        "start": 93.205,
+        "end": 98.085,
+        "confidence": 0.99620867,
+        "channel": 0,
+        "transcript": "That is why it gets its own stage field, its own owner field, and its own record.",
+        "words": [
+          {
+            "word": "that",
+            "start": 93.205,
+            "end": 93.445,
+            "confidence": 1,
+            "punctuated_word": "That"
+          },
+          {
+            "word": "is",
+            "start": 93.445,
+            "end": 93.605,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "why",
+            "start": 93.605,
+            "end": 93.765,
+            "confidence": 1,
+            "punctuated_word": "why"
+          },
+          {
+            "word": "it",
+            "start": 93.765,
+            "end": 93.925,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "gets",
+            "start": 93.925,
+            "end": 94.165,
+            "confidence": 1,
+            "punctuated_word": "gets"
+          },
+          {
+            "word": "its",
+            "start": 94.165,
+            "end": 94.405,
+            "confidence": 0.99902344,
+            "punctuated_word": "its"
+          },
+          {
+            "word": "own",
+            "start": 94.405,
+            "end": 94.565,
+            "confidence": 1,
+            "punctuated_word": "own"
+          },
+          {
+            "word": "stage",
+            "start": 94.565,
+            "end": 94.965004,
+            "confidence": 0.96533203,
+            "punctuated_word": "stage"
+          },
+          {
+            "word": "field",
+            "start": 94.965004,
+            "end": 95.525,
+            "confidence": 0.99853516,
+            "punctuated_word": "field,"
+          },
+          {
+            "word": "its",
+            "start": 95.525,
+            "end": 95.765,
+            "confidence": 0.9951172,
+            "punctuated_word": "its"
+          },
+          {
+            "word": "own",
+            "start": 95.765,
+            "end": 96.005005,
+            "confidence": 0.98828125,
+            "punctuated_word": "own"
+          },
+          {
+            "word": "owner",
+            "start": 96.005005,
+            "end": 96.325005,
+            "confidence": 0.9951172,
+            "punctuated_word": "owner"
+          },
+          {
+            "word": "field",
+            "start": 96.325005,
+            "end": 96.885,
+            "confidence": 0.99609375,
+            "punctuated_word": "field,"
+          },
+          {
+            "word": "and",
+            "start": 96.885,
+            "end": 97.045,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "its",
+            "start": 97.045,
+            "end": 97.285,
+            "confidence": 0.99902344,
+            "punctuated_word": "its"
+          },
+          {
+            "word": "own",
+            "start": 97.285,
+            "end": 97.445,
+            "confidence": 1,
+            "punctuated_word": "own"
+          },
+          {
+            "word": "record",
+            "start": 97.445,
+            "end": 98.085,
+            "confidence": 0.99902344,
+            "punctuated_word": "record."
+          }
+        ],
+        "id": "7b985d20-90f8-4565-9b2b-6c50cb7ab5ad"
+      },
+      {
+        "start": 98.325005,
+        "end": 101.365,
+        "confidence": 0.9945679,
+        "channel": 0,
+        "transcript": "It is also why the stage field has to be kept honest,",
+        "words": [
+          {
+            "word": "it",
+            "start": 98.325005,
+            "end": 98.485,
+            "confidence": 1,
+            "punctuated_word": "It"
+          },
+          {
+            "word": "is",
+            "start": 98.485,
+            "end": 98.645004,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "also",
+            "start": 98.645004,
+            "end": 98.885,
+            "confidence": 1,
+            "punctuated_word": "also"
+          },
+          {
+            "word": "why",
+            "start": 98.885,
+            "end": 99.125,
+            "confidence": 1,
+            "punctuated_word": "why"
+          },
+          {
+            "word": "the",
+            "start": 99.125,
+            "end": 99.285,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "stage",
+            "start": 99.285,
+            "end": 99.525,
+            "confidence": 0.9819336,
+            "punctuated_word": "stage"
+          },
+          {
+            "word": "field",
+            "start": 99.525,
+            "end": 99.845,
+            "confidence": 1,
+            "punctuated_word": "field"
+          },
+          {
+            "word": "has",
+            "start": 99.845,
+            "end": 100.165,
+            "confidence": 1,
+            "punctuated_word": "has"
+          },
+          {
+            "word": "to",
+            "start": 100.165,
+            "end": 100.325,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "be",
+            "start": 100.325,
+            "end": 100.405,
+            "confidence": 1,
+            "punctuated_word": "be"
+          },
+          {
+            "word": "kept",
+            "start": 100.405,
+            "end": 100.645004,
+            "confidence": 1,
+            "punctuated_word": "kept"
+          },
+          {
+            "word": "honest",
+            "start": 100.645004,
+            "end": 101.365,
+            "confidence": 0.95288086,
+            "punctuated_word": "honest,"
+          }
+        ],
+        "id": "5f64b48c-41fd-4906-811a-b7b9e24c2c08"
+      },
+      {
+        "start": 101.525,
+        "end": 105.685,
+        "confidence": 0.97376597,
+        "channel": 0,
+        "transcript": "because every forecast anybody gives is a rollup of opportunity stages.",
+        "words": [
+          {
+            "word": "because",
+            "start": 101.525,
+            "end": 101.845,
+            "confidence": 1,
+            "punctuated_word": "because"
+          },
+          {
+            "word": "every",
+            "start": 101.845,
+            "end": 102.165,
+            "confidence": 1,
+            "punctuated_word": "every"
+          },
+          {
+            "word": "forecast",
+            "start": 102.165,
+            "end": 102.725,
+            "confidence": 1,
+            "punctuated_word": "forecast"
+          },
+          {
+            "word": "anybody",
+            "start": 102.725,
+            "end": 103.285,
+            "confidence": 1,
+            "punctuated_word": "anybody"
+          },
+          {
+            "word": "gives",
+            "start": 103.285,
+            "end": 103.605,
+            "confidence": 1,
+            "punctuated_word": "gives"
+          },
+          {
+            "word": "is",
+            "start": 103.605,
+            "end": 103.845,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "a",
+            "start": 103.845,
+            "end": 104.005005,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "rollup",
+            "start": 104.005005,
+            "end": 104.485,
+            "confidence": 0.7729492,
+            "punctuated_word": "rollup"
+          },
+          {
+            "word": "of",
+            "start": 104.485,
+            "end": 104.645004,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "opportunity",
+            "start": 104.645004,
+            "end": 105.205,
+            "confidence": 0.9394531,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "stages",
+            "start": 105.205,
+            "end": 105.685,
+            "confidence": 0.99902344,
+            "punctuated_word": "stages."
+          }
+        ],
+        "id": "ec2a8f1b-de5a-4e13-b35e-75b9042e06c3"
+      },
+      {
+        "start": 106.3,
+        "end": 109.66,
+        "confidence": 0.9996893,
+        "channel": 0,
+        "transcript": "So where will this object get used once it is populated?",
+        "words": [
+          {
+            "word": "so",
+            "start": 106.3,
+            "end": 106.62,
+            "confidence": 1,
+            "punctuated_word": "So"
+          },
+          {
+            "word": "where",
+            "start": 106.62,
+            "end": 106.86,
+            "confidence": 0.99902344,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "will",
+            "start": 106.86,
+            "end": 107.020004,
+            "confidence": 1,
+            "punctuated_word": "will"
+          },
+          {
+            "word": "this",
+            "start": 107.020004,
+            "end": 107.26,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "object",
+            "start": 107.26,
+            "end": 107.66,
+            "confidence": 1,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "get",
+            "start": 107.66,
+            "end": 107.9,
+            "confidence": 1,
+            "punctuated_word": "get"
+          },
+          {
+            "word": "used",
+            "start": 107.9,
+            "end": 108.22,
+            "confidence": 1,
+            "punctuated_word": "used"
+          },
+          {
+            "word": "once",
+            "start": 108.22,
+            "end": 108.54,
+            "confidence": 1,
+            "punctuated_word": "once"
+          },
+          {
+            "word": "it",
+            "start": 108.54,
+            "end": 108.700005,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "is",
+            "start": 108.700005,
+            "end": 108.86,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "populated",
+            "start": 108.86,
+            "end": 109.66,
+            "confidence": 0.9975586,
+            "punctuated_word": "populated?"
+          }
+        ],
+        "id": "484ed95f-bb10-482b-aaea-649c8f6aa7d4"
+      },
+      {
+        "start": 110.14,
+        "end": 111.340004,
+        "confidence": 0.9831543,
+        "channel": 0,
+        "transcript": "In two places.",
+        "words": [
+          {
+            "word": "in",
+            "start": 110.14,
+            "end": 110.380005,
+            "confidence": 0.99609375,
+            "punctuated_word": "In"
+          },
+          {
+            "word": "two",
+            "start": 110.380005,
+            "end": 110.62,
+            "confidence": 1,
+            "punctuated_word": "two"
+          },
+          {
+            "word": "places",
+            "start": 110.62,
+            "end": 111.340004,
+            "confidence": 0.95336914,
+            "punctuated_word": "places."
+          }
+        ],
+        "id": "55490afe-5f13-4a86-8f2c-9913fd685efb"
+      },
+      {
+        "start": 111.58,
+        "end": 113.18,
+        "confidence": 0.9979248,
+        "channel": 0,
+        "transcript": "The first is forecasting,",
+        "words": [
+          {
+            "word": "the",
+            "start": 111.58,
+            "end": 111.74,
+            "confidence": 0.99902344,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "first",
+            "start": 111.74,
+            "end": 111.98,
+            "confidence": 1,
+            "punctuated_word": "first"
+          },
+          {
+            "word": "is",
+            "start": 111.98,
+            "end": 112.22,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "forecasting",
+            "start": 112.22,
+            "end": 113.18,
+            "confidence": 0.9926758,
+            "punctuated_word": "forecasting,"
+          }
+        ],
+        "id": "00e7a28a-35c6-4f18-88d7-860cc33b22e8"
+      },
+      {
+        "start": 113.26,
+        "end": 119.18,
+        "confidence": 0.9861518,
+        "channel": 0,
+        "transcript": "which is simply grouping opportunities by stage to answer the question how much money is coming and when.",
+        "words": [
+          {
+            "word": "which",
+            "start": 113.26,
+            "end": 113.5,
+            "confidence": 1,
+            "punctuated_word": "which"
+          },
+          {
+            "word": "is",
+            "start": 113.5,
+            "end": 113.58,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "simply",
+            "start": 113.58,
+            "end": 113.98,
+            "confidence": 1,
+            "punctuated_word": "simply"
+          },
+          {
+            "word": "grouping",
+            "start": 113.98,
+            "end": 114.3,
+            "confidence": 1,
+            "punctuated_word": "grouping"
+          },
+          {
+            "word": "opportunities",
+            "start": 114.3,
+            "end": 115.1,
+            "confidence": 1,
+            "punctuated_word": "opportunities"
+          },
+          {
+            "word": "by",
+            "start": 115.1,
+            "end": 115.42,
+            "confidence": 1,
+            "punctuated_word": "by"
+          },
+          {
+            "word": "stage",
+            "start": 115.42,
+            "end": 115.82,
+            "confidence": 1,
+            "punctuated_word": "stage"
+          },
+          {
+            "word": "to",
+            "start": 115.82,
+            "end": 116.22,
+            "confidence": 0.8183594,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "answer",
+            "start": 116.22,
+            "end": 116.54,
+            "confidence": 1,
+            "punctuated_word": "answer"
+          },
+          {
+            "word": "the",
+            "start": 116.54,
+            "end": 116.700005,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "question",
+            "start": 116.700005,
+            "end": 117.020004,
+            "confidence": 1,
+            "punctuated_word": "question"
+          },
+          {
+            "word": "how",
+            "start": 117.020004,
+            "end": 117.340004,
+            "confidence": 0.98535156,
+            "punctuated_word": "how"
+          },
+          {
+            "word": "much",
+            "start": 117.340004,
+            "end": 117.58,
+            "confidence": 1,
+            "punctuated_word": "much"
+          },
+          {
+            "word": "money",
+            "start": 117.58,
+            "end": 117.82,
+            "confidence": 1,
+            "punctuated_word": "money"
+          },
+          {
+            "word": "is",
+            "start": 117.82,
+            "end": 117.98,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "coming",
+            "start": 117.98,
+            "end": 118.3,
+            "confidence": 1,
+            "punctuated_word": "coming"
+          },
+          {
+            "word": "and",
+            "start": 118.3,
+            "end": 118.54,
+            "confidence": 0.9873047,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "when",
+            "start": 118.54,
+            "end": 119.18,
+            "confidence": 0.9597168,
+            "punctuated_word": "when."
+          }
+        ],
+        "id": "1a262cdd-f373-460c-bbb0-5c8720d98db7"
+      },
+      {
+        "start": 119.58,
+        "end": 121.020004,
+        "confidence": 0.9961914,
+        "channel": 0,
+        "transcript": "The second is the handover.",
+        "words": [
+          {
+            "word": "the",
+            "start": 119.58,
+            "end": 119.82,
+            "confidence": 1,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "second",
+            "start": 119.82,
+            "end": 120.14,
+            "confidence": 1,
+            "punctuated_word": "second"
+          },
+          {
+            "word": "is",
+            "start": 120.14,
+            "end": 120.3,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 120.3,
+            "end": 120.46,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "handover",
+            "start": 120.46,
+            "end": 121.020004,
+            "confidence": 0.98095703,
+            "punctuated_word": "handover."
+          }
+        ],
+        "id": "34a13fb7-c8e7-4901-9b3b-ab5bc2c6153d"
+      },
+      {
+        "start": 121.415,
+        "end": 126.935,
+        "confidence": 0.99417317,
+        "channel": 0,
+        "transcript": "When a client agrees to buy, somebody creates the opportunity off the agency offer object,",
+        "words": [
+          {
+            "word": "when",
+            "start": 121.415,
+            "end": 121.735,
+            "confidence": 1,
+            "punctuated_word": "When"
+          },
+          {
+            "word": "a",
+            "start": 121.735,
+            "end": 121.815,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "client",
+            "start": 121.815,
+            "end": 122.135,
+            "confidence": 1,
+            "punctuated_word": "client"
+          },
+          {
+            "word": "agrees",
+            "start": 122.135,
+            "end": 122.534996,
+            "confidence": 1,
+            "punctuated_word": "agrees"
+          },
+          {
+            "word": "to",
+            "start": 122.534996,
+            "end": 122.695,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "buy",
+            "start": 122.695,
+            "end": 123.255,
+            "confidence": 0.9995117,
+            "punctuated_word": "buy,"
+          },
+          {
+            "word": "somebody",
+            "start": 123.255,
+            "end": 123.735,
+            "confidence": 1,
+            "punctuated_word": "somebody"
+          },
+          {
+            "word": "creates",
+            "start": 123.735,
+            "end": 124.135,
+            "confidence": 1,
+            "punctuated_word": "creates"
+          },
+          {
+            "word": "the",
+            "start": 124.135,
+            "end": 124.375,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "opportunity",
+            "start": 124.375,
+            "end": 124.935,
+            "confidence": 0.99609375,
+            "punctuated_word": "opportunity"
+          },
+          {
+            "word": "off",
+            "start": 124.935,
+            "end": 125.255,
+            "confidence": 0.9838867,
+            "punctuated_word": "off"
+          },
+          {
+            "word": "the",
+            "start": 125.255,
+            "end": 125.415,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "agency",
+            "start": 125.415,
+            "end": 125.815,
+            "confidence": 0.9716797,
+            "punctuated_word": "agency"
+          },
+          {
+            "word": "offer",
+            "start": 125.815,
+            "end": 126.215,
+            "confidence": 0.9658203,
+            "punctuated_word": "offer"
+          },
+          {
+            "word": "object",
+            "start": 126.215,
+            "end": 126.935,
+            "confidence": 0.99658203,
+            "punctuated_word": "object,"
+          }
+        ],
+        "id": "5400474c-1240-46fc-9968-a1ef24206ba0"
+      },
+      {
+        "start": 127.095,
+        "end": 129.49501,
+        "confidence": 0.9830497,
+        "channel": 0,
+        "transcript": "sets the stage, and assigns the owner.",
+        "words": [
+          {
+            "word": "sets",
+            "start": 127.095,
+            "end": 127.415,
+            "confidence": 1,
+            "punctuated_word": "sets"
+          },
+          {
+            "word": "the",
+            "start": 127.415,
+            "end": 127.575,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "stage",
+            "start": 127.575,
+            "end": 128.135,
+            "confidence": 0.8823242,
+            "punctuated_word": "stage,"
+          },
+          {
+            "word": "and",
+            "start": 128.135,
+            "end": 128.215,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "assigns",
+            "start": 128.215,
+            "end": 128.69499,
+            "confidence": 0.9995117,
+            "punctuated_word": "assigns"
+          },
+          {
+            "word": "the",
+            "start": 128.69499,
+            "end": 128.855,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "owner",
+            "start": 128.855,
+            "end": 129.49501,
+            "confidence": 0.9995117,
+            "punctuated_word": "owner."
+          }
+        ],
+        "id": "b9dda895-12eb-4696-91e6-093c08e2b7b4"
+      },
+      {
+        "start": 129.735,
+        "end": 132.93501,
+        "confidence": 0.99130857,
+        "channel": 0,
+        "transcript": "It is the moment the sales conversation becomes a commitment.",
+        "words": [
+          {
+            "word": "it",
+            "start": 129.735,
+            "end": 129.895,
+            "confidence": 0.99902344,
+            "punctuated_word": "It"
+          },
+          {
+            "word": "is",
+            "start": 129.895,
+            "end": 130.055,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 130.055,
+            "end": 130.215,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "moment",
+            "start": 130.215,
+            "end": 130.455,
+            "confidence": 0.99902344,
+            "punctuated_word": "moment"
+          },
+          {
+            "word": "the",
+            "start": 130.455,
+            "end": 130.69499,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "sales",
+            "start": 130.69499,
+            "end": 131.015,
+            "confidence": 0.9970703,
+            "punctuated_word": "sales"
+          },
+          {
+            "word": "conversation",
+            "start": 131.015,
+            "end": 131.655,
+            "confidence": 0.9980469,
+            "punctuated_word": "conversation"
+          },
+          {
+            "word": "becomes",
+            "start": 131.655,
+            "end": 132.055,
+            "confidence": 0.99902344,
+            "punctuated_word": "becomes"
+          },
+          {
+            "word": "a",
+            "start": 132.055,
+            "end": 132.215,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "commitment",
+            "start": 132.215,
+            "end": 132.93501,
+            "confidence": 0.92285156,
+            "punctuated_word": "commitment."
+          }
+        ],
+        "id": "3bf39b4e-5ad2-4fb5-a7d0-6aac56a3a304"
+      },
+      {
+        "start": 133.015,
+        "end": 136.7609,
+        "confidence": 0.9680583,
+        "channel": 0,
+        "transcript": "And because it is empty right now, it is worth understanding honestly.",
+        "words": [
+          {
+            "word": "and",
+            "start": 133.015,
+            "end": 133.175,
+            "confidence": 0.9980469,
+            "punctuated_word": "And"
+          },
+          {
+            "word": "because",
+            "start": 133.175,
+            "end": 133.495,
+            "confidence": 0.9970703,
+            "punctuated_word": "because"
+          },
+          {
+            "word": "it",
+            "start": 133.495,
+            "end": 133.655,
+            "confidence": 0.99609375,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "is",
+            "start": 133.655,
+            "end": 133.815,
+            "confidence": 0.99316406,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "empty",
+            "start": 133.815,
+            "end": 134.135,
+            "confidence": 0.99121094,
+            "punctuated_word": "empty"
+          },
+          {
+            "word": "right",
+            "start": 134.135,
+            "end": 134.375,
+            "confidence": 0.9892578,
+            "punctuated_word": "right"
+          },
+          {
+            "word": "now",
+            "start": 134.375,
+            "end": 134.775,
+            "confidence": 0.95654297,
+            "punctuated_word": "now,"
+          },
+          {
+            "word": "it",
+            "start": 134.775,
+            "end": 134.855,
+            "confidence": 0.98291016,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "is",
+            "start": 134.855,
+            "end": 135.015,
+            "confidence": 0.97802734,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "worth",
+            "start": 135.015,
+            "end": 135.895,
+            "confidence": 0.97998047,
+            "punctuated_word": "worth"
+          },
+          {
+            "word": "understanding",
+            "start": 135.56088,
+            "end": 135.88089,
+            "confidence": 0.8852539,
+            "punctuated_word": "understanding"
+          },
+          {
+            "word": "honestly",
+            "start": 135.88089,
+            "end": 136.7609,
+            "confidence": 0.8691406,
+            "punctuated_word": "honestly."
+          }
+        ],
+        "id": "1d873f66-296a-4536-835a-36afb125d645"
+      },
+      {
+        "start": 137.16089,
+        "end": 143.88089,
+        "confidence": 0.9933811,
+        "channel": 0,
+        "transcript": "Zero opportunities with 18 leads means the motion is running, but the closing conversation has not landed yet.",
+        "words": [
+          {
+            "word": "zero",
+            "start": 137.16089,
+            "end": 137.48088,
+            "confidence": 0.96972656,
+            "punctuated_word": "Zero"
+          },
+          {
+            "word": "opportunities",
+            "start": 137.48088,
+            "end": 138.20088,
+            "confidence": 0.9980469,
+            "punctuated_word": "opportunities"
+          },
+          {
+            "word": "with",
+            "start": 138.20088,
+            "end": 138.52089,
+            "confidence": 0.99902344,
+            "punctuated_word": "with"
+          },
+          {
+            "word": "18",
+            "start": 138.52089,
+            "end": 138.92088,
+            "confidence": 0.9980469,
+            "punctuated_word": "18"
+          },
+          {
+            "word": "leads",
+            "start": 138.92088,
+            "end": 139.56088,
+            "confidence": 0.99902344,
+            "punctuated_word": "leads"
+          },
+          {
+            "word": "means",
+            "start": 139.56088,
+            "end": 139.96088,
+            "confidence": 0.94921875,
+            "punctuated_word": "means"
+          },
+          {
+            "word": "the",
+            "start": 139.96088,
+            "end": 140.12088,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "motion",
+            "start": 140.12088,
+            "end": 140.44089,
+            "confidence": 0.9951172,
+            "punctuated_word": "motion"
+          },
+          {
+            "word": "is",
+            "start": 140.44089,
+            "end": 140.68088,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "running",
+            "start": 140.68088,
+            "end": 141.32088,
+            "confidence": 0.9790039,
+            "punctuated_word": "running,"
+          },
+          {
+            "word": "but",
+            "start": 141.32088,
+            "end": 141.48088,
+            "confidence": 0.99902344,
+            "punctuated_word": "but"
+          },
+          {
+            "word": "the",
+            "start": 141.48088,
+            "end": 141.64088,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "closing",
+            "start": 141.64088,
+            "end": 142.04088,
+            "confidence": 1,
+            "punctuated_word": "closing"
+          },
+          {
+            "word": "conversation",
+            "start": 142.04088,
+            "end": 142.76088,
+            "confidence": 0.99902344,
+            "punctuated_word": "conversation"
+          },
+          {
+            "word": "has",
+            "start": 142.76088,
+            "end": 143.00089,
+            "confidence": 1,
+            "punctuated_word": "has"
+          },
+          {
+            "word": "not",
+            "start": 143.00089,
+            "end": 143.24088,
+            "confidence": 1,
+            "punctuated_word": "not"
+          },
+          {
+            "word": "landed",
+            "start": 143.24088,
+            "end": 143.56088,
+            "confidence": 1,
+            "punctuated_word": "landed"
+          },
+          {
+            "word": "yet",
+            "start": 143.56088,
+            "end": 143.88089,
+            "confidence": 0.99658203,
+            "punctuated_word": "yet."
+          }
+        ],
+        "id": "28a8e2c3-44c0-463c-af42-e26a1a1ca870"
+      }
+    ]
+  }
+}

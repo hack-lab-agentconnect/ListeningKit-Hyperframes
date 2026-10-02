@@ -1,0 +1,46 @@
+{
+  "slug": "agency-opportunities",
+  "narration": {
+    "title": "Agency Opportunity",
+    "api": "agencyOpportunities",
+    "recordCount": "0",
+    "keyFields": [
+      "name",
+      "stage",
+      "description",
+      "owner"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "A priced piece of work with an owner attached",
+        "body": "The moment a lead becomes a real deal",
+        "say": "An Agency Opportunity is a specific commercial deal that is in flight. Right now there are zero, and that is not a bug, that is just where we are honestly at. An opportunity is the moment a lead stops being a conversation and becomes a priced, staged, owned piece of work. It sits on top of a lead, always. It cannot exist on its own, because an opportunity without a person to sell to and a company to sell for is just a number in a spreadsheet. If somebody asks you why the count is zero, that is a fact about where the business is, not a data problem."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "A name, a stage, a description, and a human being",
+        "body": "Four fields, and every one of them earns its place",
+        "say": "There are only four fields on an opportunity, and every one of them earns its place. The name is the deal's identity, usually the client name and the package name. The stage is where it sits in the pipeline, and this is the field that actually drives forecasting. The description is the short written summary of what we agreed, what is being sold, and at what price. And the owner is the single most important field on the object. An opportunity without a named owner is a deal nobody is chasing, and those quietly die. The owner is who picks up the phone."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "It is the only object that represents revenue",
+        "body": "Everything else is activity, this is the money",
+        "say": "Why build a separate object for this rather than just a status on the lead? Because it separates activity from money. Everything else in this library is activity. Prospects were found. Leads were rung. Calls were placed. Scripts were read. None of that is revenue. An opportunity is the first object in the system that represents money we might actually receive. That is why it gets its own stage field, its own owner field, and its own record. It is also why the stage field has to be kept honest, because every forecast anybody gives is a roll-up of opportunity stages."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "Forecasting, and the moment of truth with the client",
+        "body": "Empty today, and that is a real signal to read",
+        "say": "So where will this object get used once it is populated? In two places. The first is forecasting, which is simply grouping opportunities by stage to answer the question how much money is coming, and when. The second is the handover. When a client agrees to buy, somebody creates the opportunity off the Agency Offer object, sets the stage, and assigns the owner. It is the moment the sales conversation becomes a commitment. And because it is empty right now, it is worth understanding honestly. Zero opportunities with eighteen leads means the motion is running but the closing conversation has not landed yet."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "What belongs in a deal and what does not",
+        "body": "Priced work with a name on it",
+        "say": "There are zero of these at the moment, and it is worth saying plainly what that means rather than glossing it. It does not mean there is no revenue. It means that revenue is currently living in leads, in calls, and in somebody's head, and it has not been promoted into this table. That promotion is the moment a lead becomes a deal, and it is the single most valuable action anybody can take in this system. So when you create one, be strict about the fields. The name is the engagement, not the client, because one client can have several. The stage is the real commercial position, not the optimistic one, because a stage that is a week ahead is a forecast you will be embarrassed by. The description is the scope in plain words that a client could read and nod at. And the owner is the human being who will have to deliver it."
+      }
+    ]
+  }
+}

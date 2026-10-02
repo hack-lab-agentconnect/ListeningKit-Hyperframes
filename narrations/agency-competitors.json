@@ -1,0 +1,49 @@
+{
+  "slug": "agency-competitors",
+  "narration": {
+    "title": "Agency Competitor",
+    "api": "agencyCompetitors",
+    "recordCount": "1",
+    "keyFields": [
+      "name",
+      "domainName",
+      "website",
+      "industry",
+      "competitiveLevel",
+      "rankedKeywords",
+      "gtmPriority"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "What we know about a rival, and where they rank",
+        "body": "The fact base, so we argue from evidence",
+        "say": "An Agency Competitor record is what we know about a business that is competing with us for the same customers. We have one right now. This object exists because comparison pages are won on facts. If we publish a page saying we are better than somebody, and we cannot back it up, that page is marketing opinion and it will not survive contact with a sceptical buyer. So this record is deliberately a fact base, not an opinion store. It is where we keep what we can actually verify about a rival, so that when we write the comparison, every claim has a source behind it."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "Domains, industry, how competitive they are, and their keywords",
+        "body": "The ranked keywords are the part that matters most",
+        "say": "The fields are mostly identifiers and measurements. The name is the company. The domain name and the website are the addresses we analyse. The industry places them against us. Competitive level is our assessment of how directly they compete, whether they are in our market and our geography or merely adjacent. Then ranked keywords, which is the most valuable field on the object, because it is the list of searches this competitor already ranks for. And finally a go to market priority, which is our own ranking of whether it is worth writing about them at all, because there is no point researching a competitor we will never mention."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "Their keywords tell us what they actually sell",
+        "body": "Their ranking list is closer to a sales report",
+        "say": "Why does the ranked keywords field matter so much? Because a competitor's keyword list is a free, honest description of what their business is actually selling. Not what they say on their website, which is aspirational, but what customers are searching for and finding them for. If they rank for cheap window tinting in Leeds, that is what their revenue looks like. It also tells us where they are weak, because the searches that appear on our list and not theirs are the openings. This single field turns competitive research from a guessing game into a comparison."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "Before writing a single line of a comparison page",
+        "body": "The pre-flight check on every competitive claim",
+        "say": "Where does this get used in practice? It is a pre-flight check. Before anybody writes a comparison page, they open this record, and every claim in the draft must map to a field in here. If the claim is not supported, it does not get published. That single discipline is what stops us from saying something embarrassing about a competitor. The record is also what feeds the Agency Content object, since comparison pages are created and tracked there like any other page. One record today, which means our competitive motion is barely started. This object is small and deliberately boring, and it is what will let us compete on facts once it is not."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "Turning a keyword list into a page",
+        "body": "From data to a comparison page",
+        "say": "So here is the practical end of this object. You have one competitor row, and it has a ranked keyword list on it. Read that list as a set of questions people are already typing. Every phrase in there is a person at a keyboard who has a problem and is comparing options. That list is the outline for a comparison page. Not the features we happen to like, not the things we are proudest of, but the things people are actively searching for, in the order they search for them. And the priority field tells you which of those phrases is worth a page of its own versus a paragraph. The competitive level tells you how hard the fight is, which decides whether you write something genuinely useful or simply accurate. The industry field is the sanity check. If a record claims to be a competitor in an industry we do not work in, it is a data error and it will quietly poison whatever you build on top of it. So verify the row before you write a word."
+      }
+    ]
+  }
+}

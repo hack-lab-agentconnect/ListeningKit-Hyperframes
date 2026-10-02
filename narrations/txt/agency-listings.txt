@@ -1,0 +1,41 @@
+﻿AGENCY LISTING
+==============
+
+API object:   agencyListings
+Records:      2
+Key fields:   title, locationQuery, status, parentListingId, supersededById, screenshotUrl
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    A directory page we publish against a location search
+    One page, one place, one thing to rank for
+
+    An Agency Listing is a directory-style page we publish in order to show up for a local search. We have two at the moment. The idea is a very old one and it still works. Somebody in Leeds searches for window tinting Leeds. We want a page of ours to be the result. Each listing is one such page. It is not a homepage and it is not a blog post. It is a thin, local, highly specific page built around a location query, and the whole point of keeping them in the CRM is that there are hundreds of them over time and they need managing.
+
+[2] What goes inside it
+    The query, the status, and the proof it is live
+    Including a screenshot, because live matters
+
+    The title is the page heading. The location query is the actual search term we are targeting, which is the field that makes the record meaningful, because a listing without a location query is just a page. Then the status, whether it is live, pending, or being worked. Then two fields that handle the messy reality of SEO. A parent listing ID and a superseded by ID. These let us tell the story of a page being rewritten, without losing the traffic the old one had earned. And finally the screenshot URL, a picture of the live page, which sounds cosmetic and is not. It is proof the page rendered, which is the first thing that breaks.
+
+[3] Why it matters
+    Local intent is the cheapest repeatable win we have
+    Hundreds of pages, each chasing one specific search
+
+    Why invest in listings rather than nicer marketing pages? Because local intent is the cheapest repeatable win available to us. A good homepage might take a year to rank. A well-built location page for a town we have never targeted can start bringing enquiries in weeks. And because the template repeats, the cost per page falls as we build more. That compounding is why these live in a structured object rather than being built ad hoc. The downside is volume creates mess, which is exactly what the parent and superseded fields exist to manage.
+
+[4] Where it is used
+    Ranking, screenshots, and proving the engine works
+    The artefact that shows the SEO engine is real
+
+    Where does a person actually use this object? Three times. When we need to prove a listing is live, the screenshot URL is the receipt, and it is faster and more reliable than asking somebody to go and check. When a page is rewritten, the parent and superseded fields stop us from throwing away rankings we spent months earning. And when the Agency Content object renders the live website, listing pages are what it is pulling. If you want to understand how the search side of this business works, this is the object. Two records today. It is very early, and it is the clearest example of a play that scales without more headcount.
+
+[5] Before you use it
+    Reading the chain, and spotting the duplicate
+    One query, one page, one status
+
+    There are only two of these, so let us use one as the lesson. Every row is a single page that we publish against a single location search. Read the title and you know what the page is arguing it will get you. Read the location query and you know the exact phrase it was built to rank for, and that matters, because it is the contract between the page and the measurement. The status tells you whether it is live. The screenshot is the proof, and it is not decoration, it is the receipt, because the day somebody asks whether this is actually ranking, the screenshot is the only honest answer available. Then look at the two linking fields, the parent and the superseded. They are how this table avoids lying to itself. When we build a better page for the same query, we retire the old one and point it at the new one. That chain is what stops you accidentally running two pages against each other and wondering why neither one ranks.
+
+

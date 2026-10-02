@@ -1,0 +1,49 @@
+{
+  "slug": "agency-campaigns",
+  "narration": {
+    "title": "Agency Campaign",
+    "api": "agencyCampaigns",
+    "recordCount": "6",
+    "keyFields": [
+      "name",
+      "status",
+      "campaignType",
+      "urlKey",
+      "funnelBaseUrl",
+      "templateBaseUrl",
+      "packDir"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "A named outbound motion that groups its own work",
+        "body": "One motion, its own prospects, leads and scripts",
+        "say": "An Agency Campaign is a named outbound motion. We have six of them. The idea is simple and it saves an enormous amount of misery later. Instead of one enormous undifferentiated pile of two hundred prospects, we group them into campaigns. So a campaign called Window Tinting Lead Gen holds the tinting shops, the leads that came out of them, and the scripts written for that motion. That means when somebody asks how tint lead gen is performing, we can answer by looking at one campaign, instead of hand-filtering the entire database and hoping they did it the same way last time."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "The name, the type, and the URLs we measure against",
+        "body": "Attribution lives on this object, not on the prospect",
+        "say": "The fields tell you two different stories. The name and the status tell you the business story, which motion is live and which are paused. The campaign type tells you the shape of the motion, cold call, text, or some blend of both. Then there are the four technical fields, and these are the ones people overlook. There is a URL key, which is a short unique identifier that gets stamped onto every link we publish for this campaign. There is a funnel base URL and a template base URL, which are where the landing pages actually live. And there is a pack directory, which is the folder of assets and templates that belong to this specific campaign."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "It is where attribution actually lives",
+        "body": "Attribution attaches here, not on the prospect row",
+        "say": "Why do the URL fields matter so much? Because attribution attaches to the campaign, not to the prospect. When we publish a listing page or run an advert for window tinting, the link that gets clicked carries this campaign's URL key. So when a shop rings us back, we can look at that key and know precisely which motion produced the conversation. Without it, every lead just looks like a lead and we are arguing about marketing on opinion. With it, we can kill the campaigns that do not work. That is the difference between a sales system and a guessing contest."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "Grouping, reporting, and pausing what does not work",
+        "body": "The first thing to check when a number looks wrong",
+        "say": "So in practice, where does a person use this object? When you open the campaign, you should be able to answer three questions without leaving the record. Which prospects are in this motion. Which leads came out of it. Which scripts are aimed at it. And then the fourth question, the real one: is it working. Compare fit scores, compare call connect rates, compare how far the leads got. Campaigns exist so that when something is underperforming, we find out by looking at one screen instead of arguing. If you only remember one thing about this object, remember that it is the unit of measurement for the whole outbound engine."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "Turning a campaign on and off without guessing",
+        "body": "Status is the only switch that matters",
+        "say": "So how does a person actually use this object day to day. Almost entirely through one field, and that is the status. A campaign sits in draft while somebody is still writing the script and building the list. It goes live when the script, the numbers and the compliance checks are all done, and not one moment before. And it goes paused when the evidence says stop, which on outbound is usually a specific and measurable thing rather than a feeling. The numbers are in here for a reason. The url key is the little identifier that appears in the link we put in the message, and the funnel and template base urls are the two places that identifier resolves to. That is how a reply or a booking gets attributed back to this exact campaign instead of just to the business. So the reason this object exists at all, in one sentence, is that it lets you switch a motion off. Most teams cannot switch anything off. This one can, and the reason they can is that the switch lives in a table instead of in somebody's head."
+      }
+    ]
+  }
+}

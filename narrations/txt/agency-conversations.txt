@@ -1,0 +1,41 @@
+﻿CONVERSATION
+============
+
+API object:   agencyConversations
+Records:      0
+Key fields:   pairKey, peerPhone, latestPreview, latestDirection, blasterConversationId
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    One thread, one phone number, the whole back and forth
+    Messages rolled up into a readable thread
+
+    A Conversation record is a rolling thread of messages with one phone number. We have zero right now. Where the Message object holds one text at a time, a conversation holds all of the texts with that one person, in order, as a single thing you can read. It is mirrored in from Blaster, which is the system that runs the actual messaging. So think of it this way. The Message object is the raw material, and the Conversation object is the finished, readable thread that a human being can actually open and understand.
+
+[2] What goes inside it
+    A stable key, the peer number, and a preview of the latest
+    Grouped by a pair key so threads never fragment
+
+    The fields are built around keeping a thread stable and readable. The pair key is the internal identifier that groups messages together, and it is what stops a thread fragmenting into a dozen separate conversations because the formatting of a phone number changed. The peer phone is the prospect's number, which is how you know whose thread you are reading. The latest preview is a short snippet of the most recent message, so you can scan a list of conversations without opening each one. The latest direction tells you whether we spoke last or they did, and that single fact changes who should be chasing. And the Blaster conversation ID ties the thread back to the system that actually owns it.
+
+[3] Why it matters
+    A scatter of messages is not a conversation
+    Context is the difference between a reply and a repeat
+
+    Why roll messages up into conversations at all? Because a scatter of individual messages is not a conversation. It is a pile. And the value in talking to a prospect is almost entirely in the context of what was already said. If somebody rings us back, the person on the phone needs to know they already texted twice about a price, and what we offered. The latest direction field makes that instant, because if the last message was ours, it is our turn and we are being ignored. If the last message was theirs, somebody needs to read it and respond.
+
+[4] Where it is used
+    The handover between the dialer and whoever replies
+    The inbox view for the whole outbound motion
+
+    Where does this get used in the day to day? It becomes the inbox view for the entire outbound motion. Instead of hunting through individual messages, somebody opens this object, sorts by latest activity, and works the top of the list. That is the handoff between the dialer, which makes the calls, and whoever is replying to the texts that come back. It is also the object a new joiner reads first to understand how the business actually talks to customers. Zero records today means messaging is not yet live. When it is, this is the screen that makes it feel like a real sales floor rather than a list of phone numbers.
+
+[5] Before you use it
+    The handover, and why the key is stable
+    Picking up a thread mid-flight
+
+    This is the object that makes the outbound motion feel human rather than automated, so it is worth being concrete about the handover. A number rings, it goes to voicemail, and an automated text goes out. Two hours later a human being replies. That reply has to land somewhere a human will actually see, attached to the business it came from, with the earlier automated message still visible above it. That is what a conversation row is. The pair key is the part people get wrong when they first look at it. It is not a database identifier, it is a stable fingerprint of this number paired with this business, and it is deliberately not something a human types. It is computed so that the same thread always lands on the same row. Change how it is computed and you orphan every existing thread. So if you are building anything that reads these, use the key as given and never parse it.
+
+

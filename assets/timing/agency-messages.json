@@ -1,0 +1,6411 @@
+{
+  "metadata": {
+    "transaction_key": "deprecated",
+    "request_id": "01a0fde0-e079-77f1-933b-b376cad5b2e6",
+    "sha256": "74944a8bd15100f05aa058382efb97d769bc10a7e9c76b17bad5b34bd0f0f776",
+    "created": "2026-10-02T18:29:29.118Z",
+    "duration": 141.16794,
+    "channels": 1,
+    "models": [
+      "2187e11a-3532-4498-b076-81fa530bdd49"
+    ],
+    "model_info": {
+      "2187e11a-3532-4498-b076-81fa530bdd49": {
+        "name": "general-nova-3",
+        "version": "2025-07-31.0",
+        "arch": "nova-3"
+      }
+    }
+  },
+  "results": {
+    "channels": [
+      {
+        "alternatives": [
+          {
+            "transcript": "A message record is one individual text message, sent to or received from a prospect or a lead. We have zero of them right now. That is worth understanding because it tells you something real about where the motion currently is. But the shape of the object is simple and it is worth understanding anyway. Where the conversation object holds a whole back and forth thread, the message object is the atom. One row per text. That granularity is deliberate and it is what makes the delivery pipeline auditable. The fields are straightforward. The body is the actual text that was written. The direction tells you whether we sent it or they did, which matters enormously when you are reconstructing a conversation. The from number and the number tie the message to a specific agency phone on our side, and a specific prospect or lead on theirs. Then the status field, which is the delivery state, whether it was queued, sent, delivered, or failed. And finally, the Telmics Message ID, which is the reference our provider gives us. That last field is the important one, because it lets us go back to the carrier and prove what actually happened to that specific message. Why does the business care this much about a text message log? Because texting is most of our outbound motion, not a side channel. When somebody rings us and misses it, we text them back. When we cannot get through on a call, we text. When a leave goes quiet, we follow-up by text. Every one of those steps is a row in this object, and each of those steps can fail silently. A message queued at midnight, a carrier filtering it, a bad number, a registration that lapsed. Without this log, we would simply believe we had followed up, when in fact nothing was ever delivered. This object is our proof that we did the thing. So where does a person actually use this object? When a lead says they never bought our text, this is the first place to look, and the Status field usually settles it immediately. When we are reconstructing a conversation with a shop, these rows are evidence And when the agency phone's record needs auditing, this is where you find out in practice whether messages are actually landing, because the failure rate shows up here long before anybody complains. Zero records today means the texting side is not running yet. It also means when it starts, this object is what makes it trustworthy.",
+            "confidence": 0.99902344,
+            "words": [
+              {
+                "word": "a",
+                "start": 0.16,
+                "end": 0.48,
+                "confidence": 0.9873047,
+                "punctuated_word": "A"
+              },
+              {
+                "word": "message",
+                "start": 0.48,
+                "end": 0.79999995,
+                "confidence": 0.9892578,
+                "punctuated_word": "message"
+              },
+              {
+                "word": "record",
+                "start": 0.79999995,
+                "end": 1.12,
+                "confidence": 0.88720703,
+                "punctuated_word": "record"
+              },
+              {
+                "word": "is",
+                "start": 1.12,
+                "end": 1.28,
+                "confidence": 0.6870117,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "one",
+                "start": 1.28,
+                "end": 1.52,
+                "confidence": 0.99902344,
+                "punctuated_word": "one"
+              },
+              {
+                "word": "individual",
+                "start": 1.52,
+                "end": 2,
+                "confidence": 1,
+                "punctuated_word": "individual"
+              },
+              {
+                "word": "text",
+                "start": 2,
+                "end": 2.3999999,
+                "confidence": 1,
+                "punctuated_word": "text"
+              },
+              {
+                "word": "message",
+                "start": 2.3999999,
+                "end": 3.04,
+                "confidence": 0.86328125,
+                "punctuated_word": "message,"
+              },
+              {
+                "word": "sent",
+                "start": 3.04,
+                "end": 3.36,
+                "confidence": 0.80615234,
+                "punctuated_word": "sent"
+              },
+              {
+                "word": "to",
+                "start": 3.36,
+                "end": 3.6,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "or",
+                "start": 3.6,
+                "end": 3.84,
+                "confidence": 0.99316406,
+                "punctuated_word": "or"
+              },
+              {
+                "word": "received",
+                "start": 3.84,
+                "end": 4.16,
+                "confidence": 1,
+                "punctuated_word": "received"
+              },
+              {
+                "word": "from",
+                "start": 4.16,
+                "end": 4.4,
+                "confidence": 1,
+                "punctuated_word": "from"
+              },
+              {
+                "word": "a",
+                "start": 4.4,
+                "end": 4.56,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "prospect",
+                "start": 4.56,
+                "end": 4.96,
+                "confidence": 1,
+                "punctuated_word": "prospect"
+              },
+              {
+                "word": "or",
+                "start": 4.96,
+                "end": 5.2799997,
+                "confidence": 0.9970703,
+                "punctuated_word": "or"
+              },
+              {
+                "word": "a",
+                "start": 5.2799997,
+                "end": 5.44,
+                "confidence": 0.96435547,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "lead",
+                "start": 5.44,
+                "end": 6,
+                "confidence": 0.99609375,
+                "punctuated_word": "lead."
+              },
+              {
+                "word": "we",
+                "start": 6.16,
+                "end": 6.3999996,
+                "confidence": 0.99902344,
+                "punctuated_word": "We"
+              },
+              {
+                "word": "have",
+                "start": 6.3999996,
+                "end": 6.56,
+                "confidence": 1,
+                "punctuated_word": "have"
+              },
+              {
+                "word": "zero",
+                "start": 6.56,
+                "end": 6.8799996,
+                "confidence": 1,
+                "punctuated_word": "zero"
+              },
+              {
+                "word": "of",
+                "start": 6.8799996,
+                "end": 7.12,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "them",
+                "start": 7.12,
+                "end": 7.2799997,
+                "confidence": 1,
+                "punctuated_word": "them"
+              },
+              {
+                "word": "right",
+                "start": 7.2799997,
+                "end": 7.52,
+                "confidence": 1,
+                "punctuated_word": "right"
+              },
+              {
+                "word": "now",
+                "start": 7.52,
+                "end": 8,
+                "confidence": 0.99658203,
+                "punctuated_word": "now."
+              },
+              {
+                "word": "that",
+                "start": 8.16,
+                "end": 8.4,
+                "confidence": 0.99902344,
+                "punctuated_word": "That"
+              },
+              {
+                "word": "is",
+                "start": 8.4,
+                "end": 8.559999,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "worth",
+                "start": 8.559999,
+                "end": 8.8,
+                "confidence": 1,
+                "punctuated_word": "worth"
+              },
+              {
+                "word": "understanding",
+                "start": 8.8,
+                "end": 9.36,
+                "confidence": 1,
+                "punctuated_word": "understanding"
+              },
+              {
+                "word": "because",
+                "start": 9.36,
+                "end": 9.679999,
+                "confidence": 0.98535156,
+                "punctuated_word": "because"
+              },
+              {
+                "word": "it",
+                "start": 9.679999,
+                "end": 9.84,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "tells",
+                "start": 9.84,
+                "end": 10.08,
+                "confidence": 1,
+                "punctuated_word": "tells"
+              },
+              {
+                "word": "you",
+                "start": 10.08,
+                "end": 10.24,
+                "confidence": 1,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "something",
+                "start": 10.24,
+                "end": 10.559999,
+                "confidence": 1,
+                "punctuated_word": "something"
+              },
+              {
+                "word": "real",
+                "start": 10.559999,
+                "end": 10.88,
+                "confidence": 0.99902344,
+                "punctuated_word": "real"
+              },
+              {
+                "word": "about",
+                "start": 10.88,
+                "end": 11.12,
+                "confidence": 1,
+                "punctuated_word": "about"
+              },
+              {
+                "word": "where",
+                "start": 11.12,
+                "end": 11.28,
+                "confidence": 1,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "the",
+                "start": 11.28,
+                "end": 11.44,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "motion",
+                "start": 11.44,
+                "end": 11.759999,
+                "confidence": 0.9970703,
+                "punctuated_word": "motion"
+              },
+              {
+                "word": "currently",
+                "start": 11.759999,
+                "end": 12.16,
+                "confidence": 1,
+                "punctuated_word": "currently"
+              },
+              {
+                "word": "is",
+                "start": 12.16,
+                "end": 12.48,
+                "confidence": 0.9794922,
+                "punctuated_word": "is."
+              },
+              {
+                "word": "but",
+                "start": 13.075,
+                "end": 13.315,
+                "confidence": 0.99902344,
+                "punctuated_word": "But"
+              },
+              {
+                "word": "the",
+                "start": 13.315,
+                "end": 13.475,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "shape",
+                "start": 13.475,
+                "end": 13.715,
+                "confidence": 1,
+                "punctuated_word": "shape"
+              },
+              {
+                "word": "of",
+                "start": 13.715,
+                "end": 13.875,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "the",
+                "start": 13.875,
+                "end": 14.035,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "object",
+                "start": 14.035,
+                "end": 14.355,
+                "confidence": 1,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "is",
+                "start": 14.355,
+                "end": 14.595,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "simple",
+                "start": 14.595,
+                "end": 14.835,
+                "confidence": 1,
+                "punctuated_word": "simple"
+              },
+              {
+                "word": "and",
+                "start": 14.835,
+                "end": 15.075,
+                "confidence": 0.9277344,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "it",
+                "start": 15.075,
+                "end": 15.235,
+                "confidence": 0.99902344,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "is",
+                "start": 15.235,
+                "end": 15.315,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "worth",
+                "start": 15.315,
+                "end": 15.555,
+                "confidence": 1,
+                "punctuated_word": "worth"
+              },
+              {
+                "word": "understanding",
+                "start": 15.555,
+                "end": 16.115,
+                "confidence": 1,
+                "punctuated_word": "understanding"
+              },
+              {
+                "word": "anyway",
+                "start": 16.115,
+                "end": 16.835,
+                "confidence": 0.982666,
+                "punctuated_word": "anyway."
+              },
+              {
+                "word": "where",
+                "start": 17.154999,
+                "end": 17.315,
+                "confidence": 0.9980469,
+                "punctuated_word": "Where"
+              },
+              {
+                "word": "the",
+                "start": 17.315,
+                "end": 17.555,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "conversation",
+                "start": 17.555,
+                "end": 18.115,
+                "confidence": 0.9902344,
+                "punctuated_word": "conversation"
+              },
+              {
+                "word": "object",
+                "start": 18.115,
+                "end": 18.515,
+                "confidence": 1,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "holds",
+                "start": 18.515,
+                "end": 18.835,
+                "confidence": 1,
+                "punctuated_word": "holds"
+              },
+              {
+                "word": "a",
+                "start": 18.835,
+                "end": 18.994999,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "whole",
+                "start": 18.994999,
+                "end": 19.235,
+                "confidence": 0.9980469,
+                "punctuated_word": "whole"
+              },
+              {
+                "word": "back",
+                "start": 19.235,
+                "end": 19.475,
+                "confidence": 0.9980469,
+                "punctuated_word": "back"
+              },
+              {
+                "word": "and",
+                "start": 19.475,
+                "end": 19.715,
+                "confidence": 0.9970703,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "forth",
+                "start": 19.715,
+                "end": 19.955,
+                "confidence": 0.99902344,
+                "punctuated_word": "forth"
+              },
+              {
+                "word": "thread",
+                "start": 19.955,
+                "end": 20.515,
+                "confidence": 0.9875488,
+                "punctuated_word": "thread,"
+              },
+              {
+                "word": "the",
+                "start": 20.515,
+                "end": 20.755,
+                "confidence": 0.99609375,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "message",
+                "start": 20.755,
+                "end": 21.075,
+                "confidence": 0.9921875,
+                "punctuated_word": "message"
+              },
+              {
+                "word": "object",
+                "start": 21.075,
+                "end": 21.474998,
+                "confidence": 0.99902344,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "is",
+                "start": 21.474998,
+                "end": 21.715,
+                "confidence": 0.9970703,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 21.715,
+                "end": 21.795,
+                "confidence": 0.9941406,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "atom",
+                "start": 21.795,
+                "end": 22.595,
+                "confidence": 0.7711589,
+                "punctuated_word": "atom."
+              },
+              {
+                "word": "one",
+                "start": 22.835,
+                "end": 23.075,
+                "confidence": 0.89208984,
+                "punctuated_word": "One"
+              },
+              {
+                "word": "row",
+                "start": 23.075,
+                "end": 23.395,
+                "confidence": 0.9863281,
+                "punctuated_word": "row"
+              },
+              {
+                "word": "per",
+                "start": 23.395,
+                "end": 23.634998,
+                "confidence": 0.9863281,
+                "punctuated_word": "per"
+              },
+              {
+                "word": "text",
+                "start": 23.634998,
+                "end": 24.275,
+                "confidence": 0.97998047,
+                "punctuated_word": "text."
+              },
+              {
+                "word": "that",
+                "start": 24.515,
+                "end": 24.835,
+                "confidence": 0.98095703,
+                "punctuated_word": "That"
+              },
+              {
+                "word": "granularity",
+                "start": 25.14,
+                "end": 25.38,
+                "confidence": 0.98535156,
+                "punctuated_word": "granularity"
+              },
+              {
+                "word": "is",
+                "start": 25.38,
+                "end": 25.619999,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "deliberate",
+                "start": 25.619999,
+                "end": 26.099998,
+                "confidence": 1,
+                "punctuated_word": "deliberate"
+              },
+              {
+                "word": "and",
+                "start": 26.099998,
+                "end": 26.34,
+                "confidence": 0.89990234,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "it",
+                "start": 26.34,
+                "end": 26.42,
+                "confidence": 0.99902344,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "is",
+                "start": 26.42,
+                "end": 26.58,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "what",
+                "start": 26.58,
+                "end": 26.74,
+                "confidence": 1,
+                "punctuated_word": "what"
+              },
+              {
+                "word": "makes",
+                "start": 26.74,
+                "end": 26.98,
+                "confidence": 1,
+                "punctuated_word": "makes"
+              },
+              {
+                "word": "the",
+                "start": 26.98,
+                "end": 27.14,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "delivery",
+                "start": 27.14,
+                "end": 27.539999,
+                "confidence": 0.9970703,
+                "punctuated_word": "delivery"
+              },
+              {
+                "word": "pipeline",
+                "start": 27.539999,
+                "end": 28.099998,
+                "confidence": 1,
+                "punctuated_word": "pipeline"
+              },
+              {
+                "word": "auditable",
+                "start": 28.099998,
+                "end": 28.9,
+                "confidence": 0.9941406,
+                "punctuated_word": "auditable."
+              },
+              {
+                "word": "the",
+                "start": 29.22,
+                "end": 29.46,
+                "confidence": 0.99902344,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "fields",
+                "start": 29.46,
+                "end": 29.779999,
+                "confidence": 0.9980469,
+                "punctuated_word": "fields"
+              },
+              {
+                "word": "are",
+                "start": 29.779999,
+                "end": 29.939999,
+                "confidence": 1,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "straightforward",
+                "start": 29.939999,
+                "end": 30.82,
+                "confidence": 0.93896484,
+                "punctuated_word": "straightforward."
+              },
+              {
+                "word": "the",
+                "start": 31.06,
+                "end": 31.22,
+                "confidence": 0.9980469,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "body",
+                "start": 31.22,
+                "end": 31.539999,
+                "confidence": 0.97802734,
+                "punctuated_word": "body"
+              },
+              {
+                "word": "is",
+                "start": 31.539999,
+                "end": 31.699999,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 31.699999,
+                "end": 31.859999,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "actual",
+                "start": 31.859999,
+                "end": 32.26,
+                "confidence": 1,
+                "punctuated_word": "actual"
+              },
+              {
+                "word": "text",
+                "start": 32.26,
+                "end": 32.579998,
+                "confidence": 1,
+                "punctuated_word": "text"
+              },
+              {
+                "word": "that",
+                "start": 32.579998,
+                "end": 32.739998,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "was",
+                "start": 32.739998,
+                "end": 32.899998,
+                "confidence": 1,
+                "punctuated_word": "was"
+              },
+              {
+                "word": "written",
+                "start": 32.899998,
+                "end": 33.46,
+                "confidence": 0.9975586,
+                "punctuated_word": "written."
+              },
+              {
+                "word": "the",
+                "start": 33.78,
+                "end": 33.94,
+                "confidence": 0.99902344,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "direction",
+                "start": 33.94,
+                "end": 34.34,
+                "confidence": 0.9951172,
+                "punctuated_word": "direction"
+              },
+              {
+                "word": "tells",
+                "start": 34.34,
+                "end": 34.66,
+                "confidence": 1,
+                "punctuated_word": "tells"
+              },
+              {
+                "word": "you",
+                "start": 34.66,
+                "end": 34.82,
+                "confidence": 1,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "whether",
+                "start": 34.82,
+                "end": 35.059998,
+                "confidence": 1,
+                "punctuated_word": "whether"
+              },
+              {
+                "word": "we",
+                "start": 35.059998,
+                "end": 35.3,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "sent",
+                "start": 35.3,
+                "end": 35.46,
+                "confidence": 0.99902344,
+                "punctuated_word": "sent"
+              },
+              {
+                "word": "it",
+                "start": 35.46,
+                "end": 35.62,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "or",
+                "start": 35.62,
+                "end": 35.86,
+                "confidence": 0.9970703,
+                "punctuated_word": "or"
+              },
+              {
+                "word": "they",
+                "start": 35.86,
+                "end": 36.02,
+                "confidence": 1,
+                "punctuated_word": "they"
+              },
+              {
+                "word": "did",
+                "start": 36.02,
+                "end": 36.5,
+                "confidence": 0.9746094,
+                "punctuated_word": "did,"
+              },
+              {
+                "word": "which",
+                "start": 36.5,
+                "end": 36.66,
+                "confidence": 0.99902344,
+                "punctuated_word": "which"
+              },
+              {
+                "word": "matters",
+                "start": 36.66,
+                "end": 37.059998,
+                "confidence": 1,
+                "punctuated_word": "matters"
+              },
+              {
+                "word": "enormously",
+                "start": 37.059998,
+                "end": 37.62,
+                "confidence": 1,
+                "punctuated_word": "enormously"
+              },
+              {
+                "word": "when",
+                "start": 37.62,
+                "end": 37.86,
+                "confidence": 1,
+                "punctuated_word": "when"
+              },
+              {
+                "word": "you",
+                "start": 37.86,
+                "end": 37.94,
+                "confidence": 1,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "are",
+                "start": 37.94,
+                "end": 38.1,
+                "confidence": 1,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "reconstructing",
+                "start": 38.1,
+                "end": 38.82,
+                "confidence": 0.99853516,
+                "punctuated_word": "reconstructing"
+              },
+              {
+                "word": "a",
+                "start": 38.82,
+                "end": 38.98,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "conversation",
+                "start": 38.98,
+                "end": 39.78,
+                "confidence": 0.9980469,
+                "punctuated_word": "conversation."
+              },
+              {
+                "word": "the",
+                "start": 40.26,
+                "end": 40.42,
+                "confidence": 0.9980469,
+                "punctuated_word": "The"
+              },
+              {
+                "word": "from",
+                "start": 40.42,
+                "end": 40.66,
+                "confidence": 0.8491211,
+                "punctuated_word": "from"
+              },
+              {
+                "word": "number",
+                "start": 40.66,
+                "end": 40.899998,
+                "confidence": 0.9770508,
+                "punctuated_word": "number"
+              },
+              {
+                "word": "and",
+                "start": 40.899998,
+                "end": 42.019997,
+                "confidence": 0.9980469,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "the",
+                "start": 41.115,
+                "end": 41.275,
+                "confidence": 0.8251953,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "number",
+                "start": 41.275,
+                "end": 41.515003,
+                "confidence": 0.9667969,
+                "punctuated_word": "number"
+              },
+              {
+                "word": "tie",
+                "start": 41.515003,
+                "end": 41.835003,
+                "confidence": 0.984375,
+                "punctuated_word": "tie"
+              },
+              {
+                "word": "the",
+                "start": 41.835003,
+                "end": 41.995003,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "message",
+                "start": 41.995003,
+                "end": 42.315002,
+                "confidence": 1,
+                "punctuated_word": "message"
+              },
+              {
+                "word": "to",
+                "start": 42.315002,
+                "end": 42.475002,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "a",
+                "start": 42.475002,
+                "end": 42.635002,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "specific",
+                "start": 42.635002,
+                "end": 43.035,
+                "confidence": 1,
+                "punctuated_word": "specific"
+              },
+              {
+                "word": "agency",
+                "start": 43.035,
+                "end": 43.515003,
+                "confidence": 0.9980469,
+                "punctuated_word": "agency"
+              },
+              {
+                "word": "phone",
+                "start": 43.515003,
+                "end": 43.835003,
+                "confidence": 0.9980469,
+                "punctuated_word": "phone"
+              },
+              {
+                "word": "on",
+                "start": 43.835003,
+                "end": 43.995003,
+                "confidence": 0.99902344,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "our",
+                "start": 43.995003,
+                "end": 44.235,
+                "confidence": 0.99902344,
+                "punctuated_word": "our"
+              },
+              {
+                "word": "side",
+                "start": 44.235,
+                "end": 44.795002,
+                "confidence": 0.9338379,
+                "punctuated_word": "side,"
+              },
+              {
+                "word": "and",
+                "start": 44.795002,
+                "end": 45.035,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "a",
+                "start": 45.035,
+                "end": 45.195,
+                "confidence": 0.9980469,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "specific",
+                "start": 45.195,
+                "end": 45.595,
+                "confidence": 1,
+                "punctuated_word": "specific"
+              },
+              {
+                "word": "prospect",
+                "start": 45.595,
+                "end": 46.075,
+                "confidence": 1,
+                "punctuated_word": "prospect"
+              },
+              {
+                "word": "or",
+                "start": 46.075,
+                "end": 46.235,
+                "confidence": 0.99902344,
+                "punctuated_word": "or"
+              },
+              {
+                "word": "lead",
+                "start": 46.235,
+                "end": 46.475002,
+                "confidence": 1,
+                "punctuated_word": "lead"
+              },
+              {
+                "word": "on",
+                "start": 46.475002,
+                "end": 46.635002,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "theirs",
+                "start": 46.635002,
+                "end": 47.275,
+                "confidence": 0.984375,
+                "punctuated_word": "theirs."
+              },
+              {
+                "word": "then",
+                "start": 47.755,
+                "end": 47.995003,
+                "confidence": 0.99609375,
+                "punctuated_word": "Then"
+              },
+              {
+                "word": "the",
+                "start": 47.995003,
+                "end": 48.155003,
+                "confidence": 0.9536133,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "status",
+                "start": 48.155003,
+                "end": 48.555,
+                "confidence": 0.85546875,
+                "punctuated_word": "status"
+              },
+              {
+                "word": "field",
+                "start": 48.555,
+                "end": 49.115,
+                "confidence": 0.98999023,
+                "punctuated_word": "field,"
+              },
+              {
+                "word": "which",
+                "start": 49.115,
+                "end": 49.275,
+                "confidence": 1,
+                "punctuated_word": "which"
+              },
+              {
+                "word": "is",
+                "start": 49.275,
+                "end": 49.435,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 49.435,
+                "end": 49.595,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "delivery",
+                "start": 49.595,
+                "end": 49.995003,
+                "confidence": 0.9902344,
+                "punctuated_word": "delivery"
+              },
+              {
+                "word": "state",
+                "start": 49.995003,
+                "end": 50.555,
+                "confidence": 0.9169922,
+                "punctuated_word": "state,"
+              },
+              {
+                "word": "whether",
+                "start": 50.555,
+                "end": 50.795002,
+                "confidence": 0.9980469,
+                "punctuated_word": "whether"
+              },
+              {
+                "word": "it",
+                "start": 50.795002,
+                "end": 50.955,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "was",
+                "start": 50.955,
+                "end": 51.115,
+                "confidence": 1,
+                "punctuated_word": "was"
+              },
+              {
+                "word": "queued",
+                "start": 51.115,
+                "end": 51.755,
+                "confidence": 0.9868164,
+                "punctuated_word": "queued,"
+              },
+              {
+                "word": "sent",
+                "start": 51.755,
+                "end": 52.315002,
+                "confidence": 0.9980469,
+                "punctuated_word": "sent,"
+              },
+              {
+                "word": "delivered",
+                "start": 52.315002,
+                "end": 52.955,
+                "confidence": 0.9680176,
+                "punctuated_word": "delivered,"
+              },
+              {
+                "word": "or",
+                "start": 52.955,
+                "end": 53.035004,
+                "confidence": 1,
+                "punctuated_word": "or"
+              },
+              {
+                "word": "failed",
+                "start": 53.035004,
+                "end": 53.355003,
+                "confidence": 0.98999023,
+                "punctuated_word": "failed."
+              },
+              {
+                "word": "and",
+                "start": 53.84,
+                "end": 54.079998,
+                "confidence": 0.99316406,
+                "punctuated_word": "And"
+              },
+              {
+                "word": "finally",
+                "start": 54.079998,
+                "end": 54.559998,
+                "confidence": 0.9382324,
+                "punctuated_word": "finally,"
+              },
+              {
+                "word": "the",
+                "start": 54.559998,
+                "end": 54.719997,
+                "confidence": 0.9970703,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "telmics",
+                "start": 54.719997,
+                "end": 55.199997,
+                "confidence": 0.69677734,
+                "punctuated_word": "Telmics"
+              },
+              {
+                "word": "message",
+                "start": 55.199997,
+                "end": 55.519997,
+                "confidence": 0.55908203,
+                "punctuated_word": "Message"
+              },
+              {
+                "word": "id",
+                "start": 55.519997,
+                "end": 56.16,
+                "confidence": 0.94189453,
+                "punctuated_word": "ID,"
+              },
+              {
+                "word": "which",
+                "start": 56.16,
+                "end": 56.399998,
+                "confidence": 1,
+                "punctuated_word": "which"
+              },
+              {
+                "word": "is",
+                "start": 56.399998,
+                "end": 56.559998,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 56.559998,
+                "end": 56.64,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "reference",
+                "start": 56.64,
+                "end": 56.96,
+                "confidence": 0.9970703,
+                "punctuated_word": "reference"
+              },
+              {
+                "word": "our",
+                "start": 56.96,
+                "end": 57.199997,
+                "confidence": 0.99316406,
+                "punctuated_word": "our"
+              },
+              {
+                "word": "provider",
+                "start": 57.199997,
+                "end": 57.6,
+                "confidence": 0.9970703,
+                "punctuated_word": "provider"
+              },
+              {
+                "word": "gives",
+                "start": 57.6,
+                "end": 57.839996,
+                "confidence": 0.99902344,
+                "punctuated_word": "gives"
+              },
+              {
+                "word": "us",
+                "start": 57.839996,
+                "end": 58.399998,
+                "confidence": 0.9975586,
+                "punctuated_word": "us."
+              },
+              {
+                "word": "that",
+                "start": 58.879997,
+                "end": 59.12,
+                "confidence": 0.99902344,
+                "punctuated_word": "That"
+              },
+              {
+                "word": "last",
+                "start": 59.12,
+                "end": 59.44,
+                "confidence": 1,
+                "punctuated_word": "last"
+              },
+              {
+                "word": "field",
+                "start": 59.44,
+                "end": 59.76,
+                "confidence": 1,
+                "punctuated_word": "field"
+              },
+              {
+                "word": "is",
+                "start": 59.76,
+                "end": 59.92,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 59.92,
+                "end": 60.079998,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "important",
+                "start": 60.079998,
+                "end": 60.48,
+                "confidence": 1,
+                "punctuated_word": "important"
+              },
+              {
+                "word": "one",
+                "start": 60.48,
+                "end": 60.96,
+                "confidence": 0.9650879,
+                "punctuated_word": "one,"
+              },
+              {
+                "word": "because",
+                "start": 60.96,
+                "end": 61.199997,
+                "confidence": 1,
+                "punctuated_word": "because"
+              },
+              {
+                "word": "it",
+                "start": 61.199997,
+                "end": 61.359997,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "lets",
+                "start": 61.359997,
+                "end": 61.6,
+                "confidence": 0.99609375,
+                "punctuated_word": "lets"
+              },
+              {
+                "word": "us",
+                "start": 61.6,
+                "end": 61.76,
+                "confidence": 1,
+                "punctuated_word": "us"
+              },
+              {
+                "word": "go",
+                "start": 61.76,
+                "end": 61.92,
+                "confidence": 1,
+                "punctuated_word": "go"
+              },
+              {
+                "word": "back",
+                "start": 61.92,
+                "end": 62.159996,
+                "confidence": 1,
+                "punctuated_word": "back"
+              },
+              {
+                "word": "to",
+                "start": 62.159996,
+                "end": 62.32,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "the",
+                "start": 62.32,
+                "end": 62.399998,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "carrier",
+                "start": 62.399998,
+                "end": 62.8,
+                "confidence": 0.9970703,
+                "punctuated_word": "carrier"
+              },
+              {
+                "word": "and",
+                "start": 62.8,
+                "end": 63.12,
+                "confidence": 0.99316406,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "prove",
+                "start": 63.12,
+                "end": 63.44,
+                "confidence": 1,
+                "punctuated_word": "prove"
+              },
+              {
+                "word": "what",
+                "start": 63.44,
+                "end": 63.68,
+                "confidence": 1,
+                "punctuated_word": "what"
+              },
+              {
+                "word": "actually",
+                "start": 63.68,
+                "end": 64.08,
+                "confidence": 1,
+                "punctuated_word": "actually"
+              },
+              {
+                "word": "happened",
+                "start": 64.08,
+                "end": 64.479996,
+                "confidence": 0.99902344,
+                "punctuated_word": "happened"
+              },
+              {
+                "word": "to",
+                "start": 64.479996,
+                "end": 64.64,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "that",
+                "start": 64.64,
+                "end": 64.88,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "specific",
+                "start": 64.88,
+                "end": 65.36,
+                "confidence": 1,
+                "punctuated_word": "specific"
+              },
+              {
+                "word": "message",
+                "start": 65.36,
+                "end": 65.68,
+                "confidence": 0.99853516,
+                "punctuated_word": "message."
+              },
+              {
+                "word": "why",
+                "start": 66.395004,
+                "end": 66.715004,
+                "confidence": 1,
+                "punctuated_word": "Why"
+              },
+              {
+                "word": "does",
+                "start": 66.715004,
+                "end": 66.955,
+                "confidence": 1,
+                "punctuated_word": "does"
+              },
+              {
+                "word": "the",
+                "start": 66.955,
+                "end": 67.035,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "business",
+                "start": 67.035,
+                "end": 67.355,
+                "confidence": 1,
+                "punctuated_word": "business"
+              },
+              {
+                "word": "care",
+                "start": 67.355,
+                "end": 67.595,
+                "confidence": 0.7050781,
+                "punctuated_word": "care"
+              },
+              {
+                "word": "this",
+                "start": 67.595,
+                "end": 67.915,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "much",
+                "start": 67.915,
+                "end": 68.155,
+                "confidence": 1,
+                "punctuated_word": "much"
+              },
+              {
+                "word": "about",
+                "start": 68.155,
+                "end": 68.315,
+                "confidence": 1,
+                "punctuated_word": "about"
+              },
+              {
+                "word": "a",
+                "start": 68.315,
+                "end": 68.475006,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "text",
+                "start": 68.475006,
+                "end": 68.715004,
+                "confidence": 0.99902344,
+                "punctuated_word": "text"
+              },
+              {
+                "word": "message",
+                "start": 68.715004,
+                "end": 69.035,
+                "confidence": 1,
+                "punctuated_word": "message"
+              },
+              {
+                "word": "log",
+                "start": 69.035,
+                "end": 69.755005,
+                "confidence": 0.99853516,
+                "punctuated_word": "log?"
+              },
+              {
+                "word": "because",
+                "start": 69.995,
+                "end": 70.395004,
+                "confidence": 0.99609375,
+                "punctuated_word": "Because"
+              },
+              {
+                "word": "texting",
+                "start": 70.395004,
+                "end": 70.795006,
+                "confidence": 1,
+                "punctuated_word": "texting"
+              },
+              {
+                "word": "is",
+                "start": 70.795006,
+                "end": 71.035,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "most",
+                "start": 71.035,
+                "end": 71.275,
+                "confidence": 0.99902344,
+                "punctuated_word": "most"
+              },
+              {
+                "word": "of",
+                "start": 71.275,
+                "end": 71.435005,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "our",
+                "start": 71.435005,
+                "end": 71.595,
+                "confidence": 1,
+                "punctuated_word": "our"
+              },
+              {
+                "word": "outbound",
+                "start": 71.595,
+                "end": 72.075005,
+                "confidence": 1,
+                "punctuated_word": "outbound"
+              },
+              {
+                "word": "motion",
+                "start": 72.075005,
+                "end": 72.715004,
+                "confidence": 0.99072266,
+                "punctuated_word": "motion,"
+              },
+              {
+                "word": "not",
+                "start": 72.795006,
+                "end": 73.035,
+                "confidence": 1,
+                "punctuated_word": "not"
+              },
+              {
+                "word": "a",
+                "start": 73.035,
+                "end": 73.195,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "side",
+                "start": 73.195,
+                "end": 73.435005,
+                "confidence": 0.9980469,
+                "punctuated_word": "side"
+              },
+              {
+                "word": "channel",
+                "start": 73.435005,
+                "end": 74.155,
+                "confidence": 0.99658203,
+                "punctuated_word": "channel."
+              },
+              {
+                "word": "when",
+                "start": 74.395004,
+                "end": 74.635,
+                "confidence": 0.99902344,
+                "punctuated_word": "When"
+              },
+              {
+                "word": "somebody",
+                "start": 74.635,
+                "end": 75.035,
+                "confidence": 0.9970703,
+                "punctuated_word": "somebody"
+              },
+              {
+                "word": "rings",
+                "start": 75.035,
+                "end": 75.275,
+                "confidence": 0.99902344,
+                "punctuated_word": "rings"
+              },
+              {
+                "word": "us",
+                "start": 75.275,
+                "end": 75.435005,
+                "confidence": 0.9970703,
+                "punctuated_word": "us"
+              },
+              {
+                "word": "and",
+                "start": 75.435005,
+                "end": 75.595,
+                "confidence": 0.9980469,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "misses",
+                "start": 75.595,
+                "end": 75.915,
+                "confidence": 0.9980469,
+                "punctuated_word": "misses"
+              },
+              {
+                "word": "it",
+                "start": 75.915,
+                "end": 76.315,
+                "confidence": 0.99902344,
+                "punctuated_word": "it,"
+              },
+              {
+                "word": "we",
+                "start": 76.315,
+                "end": 76.555,
+                "confidence": 0.99609375,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "text",
+                "start": 76.555,
+                "end": 76.795,
+                "confidence": 0.99121094,
+                "punctuated_word": "text"
+              },
+              {
+                "word": "them",
+                "start": 76.795,
+                "end": 77.035,
+                "confidence": 0.9941406,
+                "punctuated_word": "them"
+              },
+              {
+                "word": "back",
+                "start": 77.035,
+                "end": 77.515,
+                "confidence": 0.9890137,
+                "punctuated_word": "back."
+              },
+              {
+                "word": "when",
+                "start": 77.755005,
+                "end": 77.995,
+                "confidence": 0.9863281,
+                "punctuated_word": "When"
+              },
+              {
+                "word": "we",
+                "start": 77.995,
+                "end": 78.155,
+                "confidence": 0.984375,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "cannot",
+                "start": 78.155,
+                "end": 78.715004,
+                "confidence": 0.9790039,
+                "punctuated_word": "cannot"
+              },
+              {
+                "word": "get",
+                "start": 78.42,
+                "end": 78.58,
+                "confidence": 0.9223633,
+                "punctuated_word": "get"
+              },
+              {
+                "word": "through",
+                "start": 78.58,
+                "end": 78.82,
+                "confidence": 1,
+                "punctuated_word": "through"
+              },
+              {
+                "word": "on",
+                "start": 78.82,
+                "end": 78.979996,
+                "confidence": 1,
+                "punctuated_word": "on"
+              },
+              {
+                "word": "a",
+                "start": 78.979996,
+                "end": 79.14,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "call",
+                "start": 79.14,
+                "end": 79.54,
+                "confidence": 1,
+                "punctuated_word": "call,"
+              },
+              {
+                "word": "we",
+                "start": 79.54,
+                "end": 79.7,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "text",
+                "start": 79.7,
+                "end": 80.34,
+                "confidence": 0.99902344,
+                "punctuated_word": "text."
+              },
+              {
+                "word": "when",
+                "start": 80.58,
+                "end": 80.74,
+                "confidence": 1,
+                "punctuated_word": "When"
+              },
+              {
+                "word": "a",
+                "start": 80.74,
+                "end": 80.9,
+                "confidence": 0.98291016,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "leave",
+                "start": 80.9,
+                "end": 81.14,
+                "confidence": 0.9873047,
+                "punctuated_word": "leave"
+              },
+              {
+                "word": "goes",
+                "start": 81.14,
+                "end": 81.38,
+                "confidence": 1,
+                "punctuated_word": "goes"
+              },
+              {
+                "word": "quiet",
+                "start": 81.38,
+                "end": 81.86,
+                "confidence": 0.9995117,
+                "punctuated_word": "quiet,"
+              },
+              {
+                "word": "we",
+                "start": 81.86,
+                "end": 82.02,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "follow-up",
+                "start": 82.02,
+                "end": 82.5,
+                "confidence": 1,
+                "punctuated_word": "follow-up"
+              },
+              {
+                "word": "by",
+                "start": 82.5,
+                "end": 82.74,
+                "confidence": 1,
+                "punctuated_word": "by"
+              },
+              {
+                "word": "text",
+                "start": 82.74,
+                "end": 83.38,
+                "confidence": 1,
+                "punctuated_word": "text."
+              },
+              {
+                "word": "every",
+                "start": 83.619995,
+                "end": 83.86,
+                "confidence": 0.99316406,
+                "punctuated_word": "Every"
+              },
+              {
+                "word": "one",
+                "start": 83.86,
+                "end": 84.1,
+                "confidence": 1,
+                "punctuated_word": "one"
+              },
+              {
+                "word": "of",
+                "start": 84.1,
+                "end": 84.18,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "those",
+                "start": 84.18,
+                "end": 84.42,
+                "confidence": 1,
+                "punctuated_word": "those"
+              },
+              {
+                "word": "steps",
+                "start": 84.42,
+                "end": 84.74,
+                "confidence": 1,
+                "punctuated_word": "steps"
+              },
+              {
+                "word": "is",
+                "start": 84.74,
+                "end": 84.9,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "a",
+                "start": 84.9,
+                "end": 85.06,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "row",
+                "start": 85.06,
+                "end": 85.299995,
+                "confidence": 0.9980469,
+                "punctuated_word": "row"
+              },
+              {
+                "word": "in",
+                "start": 85.299995,
+                "end": 85.46,
+                "confidence": 1,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "this",
+                "start": 85.46,
+                "end": 85.619995,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "object",
+                "start": 85.619995,
+                "end": 86.34,
+                "confidence": 0.8691406,
+                "punctuated_word": "object,"
+              },
+              {
+                "word": "and",
+                "start": 86.5,
+                "end": 86.659996,
+                "confidence": 1,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "each",
+                "start": 86.659996,
+                "end": 86.979996,
+                "confidence": 1,
+                "punctuated_word": "each"
+              },
+              {
+                "word": "of",
+                "start": 86.979996,
+                "end": 87.06,
+                "confidence": 1,
+                "punctuated_word": "of"
+              },
+              {
+                "word": "those",
+                "start": 87.06,
+                "end": 87.299995,
+                "confidence": 1,
+                "punctuated_word": "those"
+              },
+              {
+                "word": "steps",
+                "start": 87.299995,
+                "end": 87.619995,
+                "confidence": 1,
+                "punctuated_word": "steps"
+              },
+              {
+                "word": "can",
+                "start": 87.619995,
+                "end": 87.78,
+                "confidence": 1,
+                "punctuated_word": "can"
+              },
+              {
+                "word": "fail",
+                "start": 87.78,
+                "end": 88.1,
+                "confidence": 0.99902344,
+                "punctuated_word": "fail"
+              },
+              {
+                "word": "silently",
+                "start": 88.1,
+                "end": 88.979996,
+                "confidence": 0.945638,
+                "punctuated_word": "silently."
+              },
+              {
+                "word": "a",
+                "start": 89.22,
+                "end": 89.46,
+                "confidence": 0.99902344,
+                "punctuated_word": "A"
+              },
+              {
+                "word": "message",
+                "start": 89.46,
+                "end": 89.7,
+                "confidence": 1,
+                "punctuated_word": "message"
+              },
+              {
+                "word": "queued",
+                "start": 89.7,
+                "end": 90.1,
+                "confidence": 0.99609375,
+                "punctuated_word": "queued"
+              },
+              {
+                "word": "at",
+                "start": 90.1,
+                "end": 90.259995,
+                "confidence": 1,
+                "punctuated_word": "at"
+              },
+              {
+                "word": "midnight",
+                "start": 90.259995,
+                "end": 90.979996,
+                "confidence": 0.9904785,
+                "punctuated_word": "midnight,"
+              },
+              {
+                "word": "a",
+                "start": 90.979996,
+                "end": 91.14,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "carrier",
+                "start": 91.14,
+                "end": 91.54,
+                "confidence": 0.9970703,
+                "punctuated_word": "carrier"
+              },
+              {
+                "word": "filtering",
+                "start": 91.54,
+                "end": 92.259995,
+                "confidence": 0.99902344,
+                "punctuated_word": "filtering"
+              },
+              {
+                "word": "it",
+                "start": 92.085,
+                "end": 92.645,
+                "confidence": 0.99853516,
+                "punctuated_word": "it,"
+              },
+              {
+                "word": "a",
+                "start": 92.645,
+                "end": 92.805,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "bad",
+                "start": 92.805,
+                "end": 93.045,
+                "confidence": 1,
+                "punctuated_word": "bad"
+              },
+              {
+                "word": "number",
+                "start": 93.045,
+                "end": 93.685,
+                "confidence": 0.99902344,
+                "punctuated_word": "number,"
+              },
+              {
+                "word": "a",
+                "start": 93.845,
+                "end": 94.005,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "registration",
+                "start": 94.005,
+                "end": 94.565,
+                "confidence": 1,
+                "punctuated_word": "registration"
+              },
+              {
+                "word": "that",
+                "start": 94.565,
+                "end": 94.805,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "lapsed",
+                "start": 94.805,
+                "end": 95.604996,
+                "confidence": 0.9954427,
+                "punctuated_word": "lapsed."
+              },
+              {
+                "word": "without",
+                "start": 95.924995,
+                "end": 96.325,
+                "confidence": 1,
+                "punctuated_word": "Without"
+              },
+              {
+                "word": "this",
+                "start": 96.325,
+                "end": 96.485,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "log",
+                "start": 96.485,
+                "end": 96.965,
+                "confidence": 0.99658203,
+                "punctuated_word": "log,"
+              },
+              {
+                "word": "we",
+                "start": 96.965,
+                "end": 97.125,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "would",
+                "start": 97.125,
+                "end": 97.284996,
+                "confidence": 1,
+                "punctuated_word": "would"
+              },
+              {
+                "word": "simply",
+                "start": 97.284996,
+                "end": 97.604996,
+                "confidence": 1,
+                "punctuated_word": "simply"
+              },
+              {
+                "word": "believe",
+                "start": 97.604996,
+                "end": 97.845,
+                "confidence": 1,
+                "punctuated_word": "believe"
+              },
+              {
+                "word": "we",
+                "start": 97.845,
+                "end": 98.085,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "had",
+                "start": 98.085,
+                "end": 98.244995,
+                "confidence": 1,
+                "punctuated_word": "had"
+              },
+              {
+                "word": "followed",
+                "start": 98.244995,
+                "end": 98.565,
+                "confidence": 1,
+                "punctuated_word": "followed"
+              },
+              {
+                "word": "up",
+                "start": 98.565,
+                "end": 99.205,
+                "confidence": 0.9628906,
+                "punctuated_word": "up,"
+              },
+              {
+                "word": "when",
+                "start": 99.205,
+                "end": 99.365,
+                "confidence": 1,
+                "punctuated_word": "when"
+              },
+              {
+                "word": "in",
+                "start": 99.365,
+                "end": 99.604996,
+                "confidence": 0.984375,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "fact",
+                "start": 99.604996,
+                "end": 99.765,
+                "confidence": 1,
+                "punctuated_word": "fact"
+              },
+              {
+                "word": "nothing",
+                "start": 99.765,
+                "end": 100.244995,
+                "confidence": 0.9536133,
+                "punctuated_word": "nothing"
+              },
+              {
+                "word": "was",
+                "start": 100.244995,
+                "end": 100.485,
+                "confidence": 1,
+                "punctuated_word": "was"
+              },
+              {
+                "word": "ever",
+                "start": 100.485,
+                "end": 100.725,
+                "confidence": 1,
+                "punctuated_word": "ever"
+              },
+              {
+                "word": "delivered",
+                "start": 100.725,
+                "end": 101.445,
+                "confidence": 0.9995117,
+                "punctuated_word": "delivered."
+              },
+              {
+                "word": "this",
+                "start": 101.845,
+                "end": 102.085,
+                "confidence": 1,
+                "punctuated_word": "This"
+              },
+              {
+                "word": "object",
+                "start": 102.085,
+                "end": 102.485,
+                "confidence": 1,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "is",
+                "start": 102.485,
+                "end": 102.645,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "our",
+                "start": 102.645,
+                "end": 102.885,
+                "confidence": 1,
+                "punctuated_word": "our"
+              },
+              {
+                "word": "proof",
+                "start": 102.885,
+                "end": 103.125,
+                "confidence": 1,
+                "punctuated_word": "proof"
+              },
+              {
+                "word": "that",
+                "start": 103.125,
+                "end": 103.365,
+                "confidence": 1,
+                "punctuated_word": "that"
+              },
+              {
+                "word": "we",
+                "start": 103.365,
+                "end": 103.525,
+                "confidence": 1,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "did",
+                "start": 103.525,
+                "end": 103.685,
+                "confidence": 1,
+                "punctuated_word": "did"
+              },
+              {
+                "word": "the",
+                "start": 103.685,
+                "end": 103.845,
+                "confidence": 0.99902344,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "thing",
+                "start": 103.845,
+                "end": 104.085,
+                "confidence": 0.99902344,
+                "punctuated_word": "thing."
+              },
+              {
+                "word": "so",
+                "start": 104.55,
+                "end": 104.79,
+                "confidence": 0.99902344,
+                "punctuated_word": "So"
+              },
+              {
+                "word": "where",
+                "start": 104.79,
+                "end": 105.03001,
+                "confidence": 0.9941406,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "does",
+                "start": 105.03001,
+                "end": 105.270004,
+                "confidence": 1,
+                "punctuated_word": "does"
+              },
+              {
+                "word": "a",
+                "start": 105.270004,
+                "end": 105.43,
+                "confidence": 0.99902344,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "person",
+                "start": 105.43,
+                "end": 105.670006,
+                "confidence": 1,
+                "punctuated_word": "person"
+              },
+              {
+                "word": "actually",
+                "start": 105.670006,
+                "end": 106.15,
+                "confidence": 1,
+                "punctuated_word": "actually"
+              },
+              {
+                "word": "use",
+                "start": 106.15,
+                "end": 106.47,
+                "confidence": 0.9941406,
+                "punctuated_word": "use"
+              },
+              {
+                "word": "this",
+                "start": 106.47,
+                "end": 106.71001,
+                "confidence": 1,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "object",
+                "start": 106.71001,
+                "end": 107.350006,
+                "confidence": 0.9975586,
+                "punctuated_word": "object?"
+              },
+              {
+                "word": "when",
+                "start": 107.670006,
+                "end": 107.91,
+                "confidence": 0.9970703,
+                "punctuated_word": "When"
+              },
+              {
+                "word": "a",
+                "start": 107.91,
+                "end": 108.07,
+                "confidence": 1,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "lead",
+                "start": 108.07,
+                "end": 108.310005,
+                "confidence": 0.9951172,
+                "punctuated_word": "lead"
+              },
+              {
+                "word": "says",
+                "start": 108.310005,
+                "end": 108.55,
+                "confidence": 1,
+                "punctuated_word": "says"
+              },
+              {
+                "word": "they",
+                "start": 108.55,
+                "end": 108.71001,
+                "confidence": 0.9838867,
+                "punctuated_word": "they"
+              },
+              {
+                "word": "never",
+                "start": 108.71001,
+                "end": 109.03001,
+                "confidence": 1,
+                "punctuated_word": "never"
+              },
+              {
+                "word": "bought",
+                "start": 109.03001,
+                "end": 109.19,
+                "confidence": 0.890625,
+                "punctuated_word": "bought"
+              },
+              {
+                "word": "our",
+                "start": 109.19,
+                "end": 109.43,
+                "confidence": 1,
+                "punctuated_word": "our"
+              },
+              {
+                "word": "text",
+                "start": 109.43,
+                "end": 110.07,
+                "confidence": 0.99658203,
+                "punctuated_word": "text,"
+              },
+              {
+                "word": "this",
+                "start": 110.07,
+                "end": 110.310005,
+                "confidence": 0.99902344,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "is",
+                "start": 110.310005,
+                "end": 110.47,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "the",
+                "start": 110.47,
+                "end": 110.630005,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "first",
+                "start": 110.630005,
+                "end": 110.87,
+                "confidence": 0.99902344,
+                "punctuated_word": "first"
+              },
+              {
+                "word": "place",
+                "start": 110.87,
+                "end": 111.19,
+                "confidence": 1,
+                "punctuated_word": "place"
+              },
+              {
+                "word": "to",
+                "start": 111.19,
+                "end": 111.350006,
+                "confidence": 1,
+                "punctuated_word": "to"
+              },
+              {
+                "word": "look",
+                "start": 111.350006,
+                "end": 111.83,
+                "confidence": 0.9094238,
+                "punctuated_word": "look,"
+              },
+              {
+                "word": "and",
+                "start": 111.990005,
+                "end": 112.15,
+                "confidence": 0.99902344,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "the",
+                "start": 112.15,
+                "end": 112.310005,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "status",
+                "start": 112.310005,
+                "end": 112.630005,
+                "confidence": 0.8095703,
+                "punctuated_word": "Status"
+              },
+              {
+                "word": "field",
+                "start": 112.630005,
+                "end": 112.950005,
+                "confidence": 0.9863281,
+                "punctuated_word": "field"
+              },
+              {
+                "word": "usually",
+                "start": 112.950005,
+                "end": 113.43,
+                "confidence": 0.99902344,
+                "punctuated_word": "usually"
+              },
+              {
+                "word": "settles",
+                "start": 113.43,
+                "end": 113.75,
+                "confidence": 0.99902344,
+                "punctuated_word": "settles"
+              },
+              {
+                "word": "it",
+                "start": 113.75,
+                "end": 113.990005,
+                "confidence": 0.9970703,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "immediately",
+                "start": 113.990005,
+                "end": 114.79,
+                "confidence": 0.99560547,
+                "punctuated_word": "immediately."
+              },
+              {
+                "word": "when",
+                "start": 115.270004,
+                "end": 115.43,
+                "confidence": 0.99609375,
+                "punctuated_word": "When"
+              },
+              {
+                "word": "we",
+                "start": 115.43,
+                "end": 115.590004,
+                "confidence": 0.99609375,
+                "punctuated_word": "we"
+              },
+              {
+                "word": "are",
+                "start": 115.590004,
+                "end": 115.75,
+                "confidence": 0.99609375,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "reconstructing",
+                "start": 115.75,
+                "end": 116.47,
+                "confidence": 0.99609375,
+                "punctuated_word": "reconstructing"
+              },
+              {
+                "word": "a",
+                "start": 116.47,
+                "end": 116.630005,
+                "confidence": 0.9980469,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "conversation",
+                "start": 116.630005,
+                "end": 117.19,
+                "confidence": 0.98535156,
+                "punctuated_word": "conversation"
+              },
+              {
+                "word": "with",
+                "start": 117.19,
+                "end": 117.350006,
+                "confidence": 0.9921875,
+                "punctuated_word": "with"
+              },
+              {
+                "word": "a",
+                "start": 117.350006,
+                "end": 117.51,
+                "confidence": 0.9667969,
+                "punctuated_word": "a"
+              },
+              {
+                "word": "shop",
+                "start": 117.51,
+                "end": 118.15,
+                "confidence": 0.98828125,
+                "punctuated_word": "shop,"
+              },
+              {
+                "word": "these",
+                "start": 118.15,
+                "end": 118.47,
+                "confidence": 0.97802734,
+                "punctuated_word": "these"
+              },
+              {
+                "word": "rows",
+                "start": 118.47,
+                "end": 118.79,
+                "confidence": 0.9667969,
+                "punctuated_word": "rows"
+              },
+              {
+                "word": "are",
+                "start": 118.79,
+                "end": 119.270004,
+                "confidence": 0.97802734,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "evidence",
+                "start": 119.265,
+                "end": 119.585,
+                "confidence": 0.9741211,
+                "punctuated_word": "evidence"
+              },
+              {
+                "word": "and",
+                "start": 119.585,
+                "end": 120.385,
+                "confidence": 0.72558594,
+                "punctuated_word": "And"
+              },
+              {
+                "word": "when",
+                "start": 122.145,
+                "end": 122.305,
+                "confidence": 0.99902344,
+                "punctuated_word": "when"
+              },
+              {
+                "word": "the",
+                "start": 122.305,
+                "end": 122.465,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "agency",
+                "start": 122.465,
+                "end": 122.865,
+                "confidence": 0.98828125,
+                "punctuated_word": "agency"
+              },
+              {
+                "word": "phone's",
+                "start": 122.865,
+                "end": 123.265,
+                "confidence": 0.90893555,
+                "punctuated_word": "phone's"
+              },
+              {
+                "word": "record",
+                "start": 123.265,
+                "end": 123.585,
+                "confidence": 0.99902344,
+                "punctuated_word": "record"
+              },
+              {
+                "word": "needs",
+                "start": 123.585,
+                "end": 123.905,
+                "confidence": 1,
+                "punctuated_word": "needs"
+              },
+              {
+                "word": "auditing",
+                "start": 123.905,
+                "end": 124.625,
+                "confidence": 0.99576825,
+                "punctuated_word": "auditing,"
+              },
+              {
+                "word": "this",
+                "start": 124.625,
+                "end": 124.865,
+                "confidence": 0.9970703,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "is",
+                "start": 124.865,
+                "end": 125.025,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "where",
+                "start": 125.025,
+                "end": 125.185,
+                "confidence": 1,
+                "punctuated_word": "where"
+              },
+              {
+                "word": "you",
+                "start": 125.185,
+                "end": 125.345,
+                "confidence": 1,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "find",
+                "start": 125.345,
+                "end": 125.585,
+                "confidence": 1,
+                "punctuated_word": "find"
+              },
+              {
+                "word": "out",
+                "start": 125.585,
+                "end": 125.745,
+                "confidence": 1,
+                "punctuated_word": "out"
+              },
+              {
+                "word": "in",
+                "start": 125.745,
+                "end": 125.985,
+                "confidence": 0.9980469,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "practice",
+                "start": 125.985,
+                "end": 126.385,
+                "confidence": 1,
+                "punctuated_word": "practice"
+              },
+              {
+                "word": "whether",
+                "start": 126.385,
+                "end": 126.784996,
+                "confidence": 0.86279297,
+                "punctuated_word": "whether"
+              },
+              {
+                "word": "messages",
+                "start": 126.784996,
+                "end": 127.265,
+                "confidence": 0.99902344,
+                "punctuated_word": "messages"
+              },
+              {
+                "word": "are",
+                "start": 127.265,
+                "end": 127.425,
+                "confidence": 1,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "actually",
+                "start": 127.425,
+                "end": 127.905,
+                "confidence": 1,
+                "punctuated_word": "actually"
+              },
+              {
+                "word": "landing",
+                "start": 127.905,
+                "end": 128.625,
+                "confidence": 0.8874512,
+                "punctuated_word": "landing,"
+              },
+              {
+                "word": "because",
+                "start": 128.785,
+                "end": 129.105,
+                "confidence": 1,
+                "punctuated_word": "because"
+              },
+              {
+                "word": "the",
+                "start": 129.105,
+                "end": 129.265,
+                "confidence": 1,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "failure",
+                "start": 129.265,
+                "end": 129.665,
+                "confidence": 0.99902344,
+                "punctuated_word": "failure"
+              },
+              {
+                "word": "rate",
+                "start": 129.665,
+                "end": 129.905,
+                "confidence": 1,
+                "punctuated_word": "rate"
+              },
+              {
+                "word": "shows",
+                "start": 129.905,
+                "end": 130.145,
+                "confidence": 1,
+                "punctuated_word": "shows"
+              },
+              {
+                "word": "up",
+                "start": 130.145,
+                "end": 130.385,
+                "confidence": 1,
+                "punctuated_word": "up"
+              },
+              {
+                "word": "here",
+                "start": 130.385,
+                "end": 130.545,
+                "confidence": 1,
+                "punctuated_word": "here"
+              },
+              {
+                "word": "long",
+                "start": 130.545,
+                "end": 130.94499,
+                "confidence": 0.9716797,
+                "punctuated_word": "long"
+              },
+              {
+                "word": "before",
+                "start": 130.94499,
+                "end": 131.345,
+                "confidence": 1,
+                "punctuated_word": "before"
+              },
+              {
+                "word": "anybody",
+                "start": 131.345,
+                "end": 131.745,
+                "confidence": 1,
+                "punctuated_word": "anybody"
+              },
+              {
+                "word": "complains",
+                "start": 131.745,
+                "end": 132.305,
+                "confidence": 0.9684245,
+                "punctuated_word": "complains."
+              },
+              {
+                "word": "zero",
+                "start": 132.84288,
+                "end": 133.32288,
+                "confidence": 0.8535156,
+                "punctuated_word": "Zero"
+              },
+              {
+                "word": "records",
+                "start": 133.32288,
+                "end": 133.72289,
+                "confidence": 0.9980469,
+                "punctuated_word": "records"
+              },
+              {
+                "word": "today",
+                "start": 133.72289,
+                "end": 134.28288,
+                "confidence": 0.98535156,
+                "punctuated_word": "today"
+              },
+              {
+                "word": "means",
+                "start": 134.28288,
+                "end": 134.60287,
+                "confidence": 0.8144531,
+                "punctuated_word": "means"
+              },
+              {
+                "word": "the",
+                "start": 134.60287,
+                "end": 134.84288,
+                "confidence": 0.99609375,
+                "punctuated_word": "the"
+              },
+              {
+                "word": "texting",
+                "start": 134.84288,
+                "end": 135.24287,
+                "confidence": 0.98828125,
+                "punctuated_word": "texting"
+              },
+              {
+                "word": "side",
+                "start": 135.24287,
+                "end": 135.56288,
+                "confidence": 0.9873047,
+                "punctuated_word": "side"
+              },
+              {
+                "word": "is",
+                "start": 135.56288,
+                "end": 135.80289,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "not",
+                "start": 135.80289,
+                "end": 136.04288,
+                "confidence": 1,
+                "punctuated_word": "not"
+              },
+              {
+                "word": "running",
+                "start": 136.04288,
+                "end": 136.36288,
+                "confidence": 1,
+                "punctuated_word": "running"
+              },
+              {
+                "word": "yet",
+                "start": 136.36288,
+                "end": 136.92288,
+                "confidence": 0.9951172,
+                "punctuated_word": "yet."
+              },
+              {
+                "word": "it",
+                "start": 137.08289,
+                "end": 137.32288,
+                "confidence": 0.9951172,
+                "punctuated_word": "It"
+              },
+              {
+                "word": "also",
+                "start": 137.32288,
+                "end": 137.56288,
+                "confidence": 1,
+                "punctuated_word": "also"
+              },
+              {
+                "word": "means",
+                "start": 137.56288,
+                "end": 137.72289,
+                "confidence": 1,
+                "punctuated_word": "means"
+              },
+              {
+                "word": "when",
+                "start": 137.72289,
+                "end": 137.96288,
+                "confidence": 0.99121094,
+                "punctuated_word": "when"
+              },
+              {
+                "word": "it",
+                "start": 137.96288,
+                "end": 138.12288,
+                "confidence": 1,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "starts",
+                "start": 138.12288,
+                "end": 138.84288,
+                "confidence": 0.92578125,
+                "punctuated_word": "starts,"
+              },
+              {
+                "word": "this",
+                "start": 139.08289,
+                "end": 139.24287,
+                "confidence": 0.9941406,
+                "punctuated_word": "this"
+              },
+              {
+                "word": "object",
+                "start": 139.24287,
+                "end": 139.64288,
+                "confidence": 0.9980469,
+                "punctuated_word": "object"
+              },
+              {
+                "word": "is",
+                "start": 139.64288,
+                "end": 139.88287,
+                "confidence": 1,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "what",
+                "start": 139.88287,
+                "end": 140.04288,
+                "confidence": 1,
+                "punctuated_word": "what"
+              },
+              {
+                "word": "makes",
+                "start": 140.04288,
+                "end": 140.28288,
+                "confidence": 1,
+                "punctuated_word": "makes"
+              },
+              {
+                "word": "it",
+                "start": 140.28288,
+                "end": 140.44289,
+                "confidence": 0.9980469,
+                "punctuated_word": "it"
+              },
+              {
+                "word": "trustworthy",
+                "start": 140.44289,
+                "end": 141.08289,
+                "confidence": 0.99397784,
+                "punctuated_word": "trustworthy."
+              }
+            ],
+            "paragraphs": {
+              "transcript": "\nA message record is one individual text message, sent to or received from a prospect or a lead. We have zero of them right now. That is worth understanding because it tells you something real about where the motion currently is. But the shape of the object is simple and it is worth understanding anyway. Where the conversation object holds a whole back and forth thread, the message object is the atom.\n\nOne row per text. That granularity is deliberate and it is what makes the delivery pipeline auditable. The fields are straightforward. The body is the actual text that was written. The direction tells you whether we sent it or they did, which matters enormously when you are reconstructing a conversation.\n\nThe from number and the number tie the message to a specific agency phone on our side, and a specific prospect or lead on theirs. Then the status field, which is the delivery state, whether it was queued, sent, delivered, or failed. And finally, the Telmics Message ID, which is the reference our provider gives us. That last field is the important one, because it lets us go back to the carrier and prove what actually happened to that specific message. Why does the business care this much about a text message log?\n\nBecause texting is most of our outbound motion, not a side channel. When somebody rings us and misses it, we text them back. When we cannot get through on a call, we text. When a leave goes quiet, we follow-up by text. Every one of those steps is a row in this object, and each of those steps can fail silently.\n\nA message queued at midnight, a carrier filtering it, a bad number, a registration that lapsed. Without this log, we would simply believe we had followed up, when in fact nothing was ever delivered. This object is our proof that we did the thing. So where does a person actually use this object? When a lead says they never bought our text, this is the first place to look, and the Status field usually settles it immediately.\n\nWhen we are reconstructing a conversation with a shop, these rows are evidence And when the agency phone's record needs auditing, this is where you find out in practice whether messages are actually landing, because the failure rate shows up here long before anybody complains. Zero records today means the texting side is not running yet. It also means when it starts, this object is what makes it trustworthy.",
+              "paragraphs": [
+                {
+                  "sentences": [
+                    {
+                      "text": "A message record is one individual text message, sent to or received from a prospect or a lead.",
+                      "start": 0.16,
+                      "end": 6
+                    },
+                    {
+                      "text": "We have zero of them right now.",
+                      "start": 6.16,
+                      "end": 8
+                    },
+                    {
+                      "text": "That is worth understanding because it tells you something real about where the motion currently is.",
+                      "start": 8.16,
+                      "end": 12.48
+                    },
+                    {
+                      "text": "But the shape of the object is simple and it is worth understanding anyway.",
+                      "start": 13.075,
+                      "end": 16.835
+                    },
+                    {
+                      "text": "Where the conversation object holds a whole back and forth thread, the message object is the atom.",
+                      "start": 17.154999,
+                      "end": 22.595
+                    }
+                  ],
+                  "num_words": 72,
+                  "start": 0.16,
+                  "end": 22.595
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "One row per text.",
+                      "start": 22.835,
+                      "end": 24.275
+                    },
+                    {
+                      "text": "That granularity is deliberate and it is what makes the delivery pipeline auditable.",
+                      "start": 24.515,
+                      "end": 28.9
+                    },
+                    {
+                      "text": "The fields are straightforward.",
+                      "start": 29.22,
+                      "end": 30.82
+                    },
+                    {
+                      "text": "The body is the actual text that was written.",
+                      "start": 31.06,
+                      "end": 33.46
+                    },
+                    {
+                      "text": "The direction tells you whether we sent it or they did, which matters enormously when you are reconstructing a conversation.",
+                      "start": 33.78,
+                      "end": 39.78
+                    }
+                  ],
+                  "num_words": 50,
+                  "start": 22.835,
+                  "end": 39.78
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "The from number and the number tie the message to a specific agency phone on our side, and a specific prospect or lead on theirs.",
+                      "start": 40.26,
+                      "end": 47.275
+                    },
+                    {
+                      "text": "Then the status field, which is the delivery state, whether it was queued, sent, delivered, or failed.",
+                      "start": 47.755,
+                      "end": 53.355003
+                    },
+                    {
+                      "text": "And finally, the Telmics Message ID, which is the reference our provider gives us.",
+                      "start": 53.84,
+                      "end": 58.399998
+                    },
+                    {
+                      "text": "That last field is the important one, because it lets us go back to the carrier and prove what actually happened to that specific message.",
+                      "start": 58.879997,
+                      "end": 65.68
+                    },
+                    {
+                      "text": "Why does the business care this much about a text message log?",
+                      "start": 66.395004,
+                      "end": 69.755005
+                    }
+                  ],
+                  "num_words": 93,
+                  "start": 40.26,
+                  "end": 69.755005
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "Because texting is most of our outbound motion, not a side channel.",
+                      "start": 69.995,
+                      "end": 74.155
+                    },
+                    {
+                      "text": "When somebody rings us and misses it, we text them back.",
+                      "start": 74.395004,
+                      "end": 77.515
+                    },
+                    {
+                      "text": "When we cannot get through on a call, we text.",
+                      "start": 77.755005,
+                      "end": 80.34
+                    },
+                    {
+                      "text": "When a leave goes quiet, we follow-up by text.",
+                      "start": 80.58,
+                      "end": 83.38
+                    },
+                    {
+                      "text": "Every one of those steps is a row in this object, and each of those steps can fail silently.",
+                      "start": 83.619995,
+                      "end": 88.979996
+                    }
+                  ],
+                  "num_words": 61,
+                  "start": 69.995,
+                  "end": 88.979996
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "A message queued at midnight, a carrier filtering it, a bad number, a registration that lapsed.",
+                      "start": 89.22,
+                      "end": 95.604996
+                    },
+                    {
+                      "text": "Without this log, we would simply believe we had followed up, when in fact nothing was ever delivered.",
+                      "start": 95.924995,
+                      "end": 101.445
+                    },
+                    {
+                      "text": "This object is our proof that we did the thing.",
+                      "start": 101.845,
+                      "end": 104.085
+                    },
+                    {
+                      "text": "So where does a person actually use this object?",
+                      "start": 104.55,
+                      "end": 107.350006
+                    },
+                    {
+                      "text": "When a lead says they never bought our text, this is the first place to look, and the Status field usually settles it immediately.",
+                      "start": 107.670006,
+                      "end": 114.79
+                    }
+                  ],
+                  "num_words": 77,
+                  "start": 89.22,
+                  "end": 114.79
+                },
+                {
+                  "sentences": [
+                    {
+                      "text": "When we are reconstructing a conversation with a shop, these rows are evidence And when the agency phone's record needs auditing, this is where you find out in practice whether messages are actually landing, because the failure rate shows up here long before anybody complains.",
+                      "start": 115.270004,
+                      "end": 132.305
+                    },
+                    {
+                      "text": "Zero records today means the texting side is not running yet.",
+                      "start": 132.84288,
+                      "end": 136.92288
+                    },
+                    {
+                      "text": "It also means when it starts, this object is what makes it trustworthy.",
+                      "start": 137.08289,
+                      "end": 141.08289
+                    }
+                  ],
+                  "num_words": 69,
+                  "start": 115.270004,
+                  "end": 141.08289
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "utterances": [
+      {
+        "start": 0.16,
+        "end": 12.48,
+        "confidence": 0.9786704,
+        "channel": 0,
+        "transcript": "A message record is one individual text message, sent to or received from a prospect or a lead. We have zero of them right now. That is worth understanding because it tells you something real about where the motion currently is.",
+        "words": [
+          {
+            "word": "a",
+            "start": 0.16,
+            "end": 0.48,
+            "confidence": 0.9873047,
+            "punctuated_word": "A"
+          },
+          {
+            "word": "message",
+            "start": 0.48,
+            "end": 0.79999995,
+            "confidence": 0.9892578,
+            "punctuated_word": "message"
+          },
+          {
+            "word": "record",
+            "start": 0.79999995,
+            "end": 1.12,
+            "confidence": 0.88720703,
+            "punctuated_word": "record"
+          },
+          {
+            "word": "is",
+            "start": 1.12,
+            "end": 1.28,
+            "confidence": 0.6870117,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "one",
+            "start": 1.28,
+            "end": 1.52,
+            "confidence": 0.99902344,
+            "punctuated_word": "one"
+          },
+          {
+            "word": "individual",
+            "start": 1.52,
+            "end": 2,
+            "confidence": 1,
+            "punctuated_word": "individual"
+          },
+          {
+            "word": "text",
+            "start": 2,
+            "end": 2.3999999,
+            "confidence": 1,
+            "punctuated_word": "text"
+          },
+          {
+            "word": "message",
+            "start": 2.3999999,
+            "end": 3.04,
+            "confidence": 0.86328125,
+            "punctuated_word": "message,"
+          },
+          {
+            "word": "sent",
+            "start": 3.04,
+            "end": 3.36,
+            "confidence": 0.80615234,
+            "punctuated_word": "sent"
+          },
+          {
+            "word": "to",
+            "start": 3.36,
+            "end": 3.6,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "or",
+            "start": 3.6,
+            "end": 3.84,
+            "confidence": 0.99316406,
+            "punctuated_word": "or"
+          },
+          {
+            "word": "received",
+            "start": 3.84,
+            "end": 4.16,
+            "confidence": 1,
+            "punctuated_word": "received"
+          },
+          {
+            "word": "from",
+            "start": 4.16,
+            "end": 4.4,
+            "confidence": 1,
+            "punctuated_word": "from"
+          },
+          {
+            "word": "a",
+            "start": 4.4,
+            "end": 4.56,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "prospect",
+            "start": 4.56,
+            "end": 4.96,
+            "confidence": 1,
+            "punctuated_word": "prospect"
+          },
+          {
+            "word": "or",
+            "start": 4.96,
+            "end": 5.2799997,
+            "confidence": 0.9970703,
+            "punctuated_word": "or"
+          },
+          {
+            "word": "a",
+            "start": 5.2799997,
+            "end": 5.44,
+            "confidence": 0.96435547,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "lead",
+            "start": 5.44,
+            "end": 6,
+            "confidence": 0.99609375,
+            "punctuated_word": "lead."
+          },
+          {
+            "word": "we",
+            "start": 6.16,
+            "end": 6.3999996,
+            "confidence": 0.99902344,
+            "punctuated_word": "We"
+          },
+          {
+            "word": "have",
+            "start": 6.3999996,
+            "end": 6.56,
+            "confidence": 1,
+            "punctuated_word": "have"
+          },
+          {
+            "word": "zero",
+            "start": 6.56,
+            "end": 6.8799996,
+            "confidence": 1,
+            "punctuated_word": "zero"
+          },
+          {
+            "word": "of",
+            "start": 6.8799996,
+            "end": 7.12,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "them",
+            "start": 7.12,
+            "end": 7.2799997,
+            "confidence": 1,
+            "punctuated_word": "them"
+          },
+          {
+            "word": "right",
+            "start": 7.2799997,
+            "end": 7.52,
+            "confidence": 1,
+            "punctuated_word": "right"
+          },
+          {
+            "word": "now",
+            "start": 7.52,
+            "end": 8,
+            "confidence": 0.99658203,
+            "punctuated_word": "now."
+          },
+          {
+            "word": "that",
+            "start": 8.16,
+            "end": 8.4,
+            "confidence": 0.99902344,
+            "punctuated_word": "That"
+          },
+          {
+            "word": "is",
+            "start": 8.4,
+            "end": 8.559999,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "worth",
+            "start": 8.559999,
+            "end": 8.8,
+            "confidence": 1,
+            "punctuated_word": "worth"
+          },
+          {
+            "word": "understanding",
+            "start": 8.8,
+            "end": 9.36,
+            "confidence": 1,
+            "punctuated_word": "understanding"
+          },
+          {
+            "word": "because",
+            "start": 9.36,
+            "end": 9.679999,
+            "confidence": 0.98535156,
+            "punctuated_word": "because"
+          },
+          {
+            "word": "it",
+            "start": 9.679999,
+            "end": 9.84,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "tells",
+            "start": 9.84,
+            "end": 10.08,
+            "confidence": 1,
+            "punctuated_word": "tells"
+          },
+          {
+            "word": "you",
+            "start": 10.08,
+            "end": 10.24,
+            "confidence": 1,
+            "punctuated_word": "you"
+          },
+          {
+            "word": "something",
+            "start": 10.24,
+            "end": 10.559999,
+            "confidence": 1,
+            "punctuated_word": "something"
+          },
+          {
+            "word": "real",
+            "start": 10.559999,
+            "end": 10.88,
+            "confidence": 0.99902344,
+            "punctuated_word": "real"
+          },
+          {
+            "word": "about",
+            "start": 10.88,
+            "end": 11.12,
+            "confidence": 1,
+            "punctuated_word": "about"
+          },
+          {
+            "word": "where",
+            "start": 11.12,
+            "end": 11.28,
+            "confidence": 1,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "the",
+            "start": 11.28,
+            "end": 11.44,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "motion",
+            "start": 11.44,
+            "end": 11.759999,
+            "confidence": 0.9970703,
+            "punctuated_word": "motion"
+          },
+          {
+            "word": "currently",
+            "start": 11.759999,
+            "end": 12.16,
+            "confidence": 1,
+            "punctuated_word": "currently"
+          },
+          {
+            "word": "is",
+            "start": 12.16,
+            "end": 12.48,
+            "confidence": 0.9794922,
+            "punctuated_word": "is."
+          }
+        ],
+        "id": "01183a0d-8331-4f09-a094-86e51c41adfd"
+      },
+      {
+        "start": 13.075,
+        "end": 16.835,
+        "confidence": 0.99339074,
+        "channel": 0,
+        "transcript": "But the shape of the object is simple and it is worth understanding anyway.",
+        "words": [
+          {
+            "word": "but",
+            "start": 13.075,
+            "end": 13.315,
+            "confidence": 0.99902344,
+            "punctuated_word": "But"
+          },
+          {
+            "word": "the",
+            "start": 13.315,
+            "end": 13.475,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "shape",
+            "start": 13.475,
+            "end": 13.715,
+            "confidence": 1,
+            "punctuated_word": "shape"
+          },
+          {
+            "word": "of",
+            "start": 13.715,
+            "end": 13.875,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "the",
+            "start": 13.875,
+            "end": 14.035,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "object",
+            "start": 14.035,
+            "end": 14.355,
+            "confidence": 1,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "is",
+            "start": 14.355,
+            "end": 14.595,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "simple",
+            "start": 14.595,
+            "end": 14.835,
+            "confidence": 1,
+            "punctuated_word": "simple"
+          },
+          {
+            "word": "and",
+            "start": 14.835,
+            "end": 15.075,
+            "confidence": 0.9277344,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "it",
+            "start": 15.075,
+            "end": 15.235,
+            "confidence": 0.99902344,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "is",
+            "start": 15.235,
+            "end": 15.315,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "worth",
+            "start": 15.315,
+            "end": 15.555,
+            "confidence": 1,
+            "punctuated_word": "worth"
+          },
+          {
+            "word": "understanding",
+            "start": 15.555,
+            "end": 16.115,
+            "confidence": 1,
+            "punctuated_word": "understanding"
+          },
+          {
+            "word": "anyway",
+            "start": 16.115,
+            "end": 16.835,
+            "confidence": 0.982666,
+            "punctuated_word": "anyway."
+          }
+        ],
+        "id": "a5b82660-fe46-418c-8d75-6f7d4d5f4478"
+      },
+      {
+        "start": 17.154999,
+        "end": 22.595,
+        "confidence": 0.9833936,
+        "channel": 0,
+        "transcript": "Where the conversation object holds a whole back and forth thread, the message object is the atom.",
+        "words": [
+          {
+            "word": "where",
+            "start": 17.154999,
+            "end": 17.315,
+            "confidence": 0.9980469,
+            "punctuated_word": "Where"
+          },
+          {
+            "word": "the",
+            "start": 17.315,
+            "end": 17.555,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "conversation",
+            "start": 17.555,
+            "end": 18.115,
+            "confidence": 0.9902344,
+            "punctuated_word": "conversation"
+          },
+          {
+            "word": "object",
+            "start": 18.115,
+            "end": 18.515,
+            "confidence": 1,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "holds",
+            "start": 18.515,
+            "end": 18.835,
+            "confidence": 1,
+            "punctuated_word": "holds"
+          },
+          {
+            "word": "a",
+            "start": 18.835,
+            "end": 18.994999,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "whole",
+            "start": 18.994999,
+            "end": 19.235,
+            "confidence": 0.9980469,
+            "punctuated_word": "whole"
+          },
+          {
+            "word": "back",
+            "start": 19.235,
+            "end": 19.475,
+            "confidence": 0.9980469,
+            "punctuated_word": "back"
+          },
+          {
+            "word": "and",
+            "start": 19.475,
+            "end": 19.715,
+            "confidence": 0.9970703,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "forth",
+            "start": 19.715,
+            "end": 19.955,
+            "confidence": 0.99902344,
+            "punctuated_word": "forth"
+          },
+          {
+            "word": "thread",
+            "start": 19.955,
+            "end": 20.515,
+            "confidence": 0.9875488,
+            "punctuated_word": "thread,"
+          },
+          {
+            "word": "the",
+            "start": 20.515,
+            "end": 20.755,
+            "confidence": 0.99609375,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "message",
+            "start": 20.755,
+            "end": 21.075,
+            "confidence": 0.9921875,
+            "punctuated_word": "message"
+          },
+          {
+            "word": "object",
+            "start": 21.075,
+            "end": 21.474998,
+            "confidence": 0.99902344,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "is",
+            "start": 21.474998,
+            "end": 21.715,
+            "confidence": 0.9970703,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 21.715,
+            "end": 21.795,
+            "confidence": 0.9941406,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "atom",
+            "start": 21.795,
+            "end": 22.595,
+            "confidence": 0.7711589,
+            "punctuated_word": "atom."
+          }
+        ],
+        "id": "c184a018-9fc3-42bb-b022-d0f154c97d24"
+      },
+      {
+        "start": 22.835,
+        "end": 24.275,
+        "confidence": 0.96118164,
+        "channel": 0,
+        "transcript": "One row per text.",
+        "words": [
+          {
+            "word": "one",
+            "start": 22.835,
+            "end": 23.075,
+            "confidence": 0.89208984,
+            "punctuated_word": "One"
+          },
+          {
+            "word": "row",
+            "start": 23.075,
+            "end": 23.395,
+            "confidence": 0.9863281,
+            "punctuated_word": "row"
+          },
+          {
+            "word": "per",
+            "start": 23.395,
+            "end": 23.634998,
+            "confidence": 0.9863281,
+            "punctuated_word": "per"
+          },
+          {
+            "word": "text",
+            "start": 23.634998,
+            "end": 24.275,
+            "confidence": 0.97998047,
+            "punctuated_word": "text."
+          }
+        ],
+        "id": "c93776fe-082f-4401-b678-18d624edbf13"
+      },
+      {
+        "start": 24.515,
+        "end": 28.9,
+        "confidence": 0.98895735,
+        "channel": 0,
+        "transcript": "That granularity is deliberate and it is what makes the delivery pipeline auditable.",
+        "words": [
+          {
+            "word": "that",
+            "start": 24.515,
+            "end": 24.835,
+            "confidence": 0.98095703,
+            "punctuated_word": "That"
+          },
+          {
+            "word": "granularity",
+            "start": 25.14,
+            "end": 25.38,
+            "confidence": 0.98535156,
+            "punctuated_word": "granularity"
+          },
+          {
+            "word": "is",
+            "start": 25.38,
+            "end": 25.619999,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "deliberate",
+            "start": 25.619999,
+            "end": 26.099998,
+            "confidence": 1,
+            "punctuated_word": "deliberate"
+          },
+          {
+            "word": "and",
+            "start": 26.099998,
+            "end": 26.34,
+            "confidence": 0.89990234,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "it",
+            "start": 26.34,
+            "end": 26.42,
+            "confidence": 0.99902344,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "is",
+            "start": 26.42,
+            "end": 26.58,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "what",
+            "start": 26.58,
+            "end": 26.74,
+            "confidence": 1,
+            "punctuated_word": "what"
+          },
+          {
+            "word": "makes",
+            "start": 26.74,
+            "end": 26.98,
+            "confidence": 1,
+            "punctuated_word": "makes"
+          },
+          {
+            "word": "the",
+            "start": 26.98,
+            "end": 27.14,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "delivery",
+            "start": 27.14,
+            "end": 27.539999,
+            "confidence": 0.9970703,
+            "punctuated_word": "delivery"
+          },
+          {
+            "word": "pipeline",
+            "start": 27.539999,
+            "end": 28.099998,
+            "confidence": 1,
+            "punctuated_word": "pipeline"
+          },
+          {
+            "word": "auditable",
+            "start": 28.099998,
+            "end": 28.9,
+            "confidence": 0.9941406,
+            "punctuated_word": "auditable."
+          }
+        ],
+        "id": "ca9d53ba-8bc2-4341-9430-19b90e66add2"
+      },
+      {
+        "start": 29.22,
+        "end": 30.82,
+        "confidence": 0.9840088,
+        "channel": 0,
+        "transcript": "The fields are straightforward.",
+        "words": [
+          {
+            "word": "the",
+            "start": 29.22,
+            "end": 29.46,
+            "confidence": 0.99902344,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "fields",
+            "start": 29.46,
+            "end": 29.779999,
+            "confidence": 0.9980469,
+            "punctuated_word": "fields"
+          },
+          {
+            "word": "are",
+            "start": 29.779999,
+            "end": 29.939999,
+            "confidence": 1,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "straightforward",
+            "start": 29.939999,
+            "end": 30.82,
+            "confidence": 0.93896484,
+            "punctuated_word": "straightforward."
+          }
+        ],
+        "id": "104e070f-d4d4-4789-9a8c-1ad32c34a722"
+      },
+      {
+        "start": 31.06,
+        "end": 33.46,
+        "confidence": 0.9970703,
+        "channel": 0,
+        "transcript": "The body is the actual text that was written.",
+        "words": [
+          {
+            "word": "the",
+            "start": 31.06,
+            "end": 31.22,
+            "confidence": 0.9980469,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "body",
+            "start": 31.22,
+            "end": 31.539999,
+            "confidence": 0.97802734,
+            "punctuated_word": "body"
+          },
+          {
+            "word": "is",
+            "start": 31.539999,
+            "end": 31.699999,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 31.699999,
+            "end": 31.859999,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "actual",
+            "start": 31.859999,
+            "end": 32.26,
+            "confidence": 1,
+            "punctuated_word": "actual"
+          },
+          {
+            "word": "text",
+            "start": 32.26,
+            "end": 32.579998,
+            "confidence": 1,
+            "punctuated_word": "text"
+          },
+          {
+            "word": "that",
+            "start": 32.579998,
+            "end": 32.739998,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "was",
+            "start": 32.739998,
+            "end": 32.899998,
+            "confidence": 1,
+            "punctuated_word": "was"
+          },
+          {
+            "word": "written",
+            "start": 32.899998,
+            "end": 33.46,
+            "confidence": 0.9975586,
+            "punctuated_word": "written."
+          }
+        ],
+        "id": "c9d4bd70-ed54-4efe-ab87-1be4dc81b559"
+      },
+      {
+        "start": 33.78,
+        "end": 39.78,
+        "confidence": 0.99802244,
+        "channel": 0,
+        "transcript": "The direction tells you whether we sent it or they did, which matters enormously when you are reconstructing a conversation.",
+        "words": [
+          {
+            "word": "the",
+            "start": 33.78,
+            "end": 33.94,
+            "confidence": 0.99902344,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "direction",
+            "start": 33.94,
+            "end": 34.34,
+            "confidence": 0.9951172,
+            "punctuated_word": "direction"
+          },
+          {
+            "word": "tells",
+            "start": 34.34,
+            "end": 34.66,
+            "confidence": 1,
+            "punctuated_word": "tells"
+          },
+          {
+            "word": "you",
+            "start": 34.66,
+            "end": 34.82,
+            "confidence": 1,
+            "punctuated_word": "you"
+          },
+          {
+            "word": "whether",
+            "start": 34.82,
+            "end": 35.059998,
+            "confidence": 1,
+            "punctuated_word": "whether"
+          },
+          {
+            "word": "we",
+            "start": 35.059998,
+            "end": 35.3,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "sent",
+            "start": 35.3,
+            "end": 35.46,
+            "confidence": 0.99902344,
+            "punctuated_word": "sent"
+          },
+          {
+            "word": "it",
+            "start": 35.46,
+            "end": 35.62,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "or",
+            "start": 35.62,
+            "end": 35.86,
+            "confidence": 0.9970703,
+            "punctuated_word": "or"
+          },
+          {
+            "word": "they",
+            "start": 35.86,
+            "end": 36.02,
+            "confidence": 1,
+            "punctuated_word": "they"
+          },
+          {
+            "word": "did",
+            "start": 36.02,
+            "end": 36.5,
+            "confidence": 0.9746094,
+            "punctuated_word": "did,"
+          },
+          {
+            "word": "which",
+            "start": 36.5,
+            "end": 36.66,
+            "confidence": 0.99902344,
+            "punctuated_word": "which"
+          },
+          {
+            "word": "matters",
+            "start": 36.66,
+            "end": 37.059998,
+            "confidence": 1,
+            "punctuated_word": "matters"
+          },
+          {
+            "word": "enormously",
+            "start": 37.059998,
+            "end": 37.62,
+            "confidence": 1,
+            "punctuated_word": "enormously"
+          },
+          {
+            "word": "when",
+            "start": 37.62,
+            "end": 37.86,
+            "confidence": 1,
+            "punctuated_word": "when"
+          },
+          {
+            "word": "you",
+            "start": 37.86,
+            "end": 37.94,
+            "confidence": 1,
+            "punctuated_word": "you"
+          },
+          {
+            "word": "are",
+            "start": 37.94,
+            "end": 38.1,
+            "confidence": 1,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "reconstructing",
+            "start": 38.1,
+            "end": 38.82,
+            "confidence": 0.99853516,
+            "punctuated_word": "reconstructing"
+          },
+          {
+            "word": "a",
+            "start": 38.82,
+            "end": 38.98,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "conversation",
+            "start": 38.98,
+            "end": 39.78,
+            "confidence": 0.9980469,
+            "punctuated_word": "conversation."
+          }
+        ],
+        "id": "a9fdb0a1-a702-4690-961d-c2a6145aeb77"
+      },
+      {
+        "start": 40.26,
+        "end": 47.275,
+        "confidence": 0.9802832,
+        "channel": 0,
+        "transcript": "The from number and the number tie the message to a specific agency phone on our side, and a specific prospect or lead on theirs.",
+        "words": [
+          {
+            "word": "the",
+            "start": 40.26,
+            "end": 40.42,
+            "confidence": 0.9980469,
+            "punctuated_word": "The"
+          },
+          {
+            "word": "from",
+            "start": 40.42,
+            "end": 40.66,
+            "confidence": 0.8491211,
+            "punctuated_word": "from"
+          },
+          {
+            "word": "number",
+            "start": 40.66,
+            "end": 40.899998,
+            "confidence": 0.9770508,
+            "punctuated_word": "number"
+          },
+          {
+            "word": "and",
+            "start": 40.899998,
+            "end": 42.019997,
+            "confidence": 0.9980469,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "the",
+            "start": 41.115,
+            "end": 41.275,
+            "confidence": 0.8251953,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "number",
+            "start": 41.275,
+            "end": 41.515003,
+            "confidence": 0.9667969,
+            "punctuated_word": "number"
+          },
+          {
+            "word": "tie",
+            "start": 41.515003,
+            "end": 41.835003,
+            "confidence": 0.984375,
+            "punctuated_word": "tie"
+          },
+          {
+            "word": "the",
+            "start": 41.835003,
+            "end": 41.995003,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "message",
+            "start": 41.995003,
+            "end": 42.315002,
+            "confidence": 1,
+            "punctuated_word": "message"
+          },
+          {
+            "word": "to",
+            "start": 42.315002,
+            "end": 42.475002,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "a",
+            "start": 42.475002,
+            "end": 42.635002,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "specific",
+            "start": 42.635002,
+            "end": 43.035,
+            "confidence": 1,
+            "punctuated_word": "specific"
+          },
+          {
+            "word": "agency",
+            "start": 43.035,
+            "end": 43.515003,
+            "confidence": 0.9980469,
+            "punctuated_word": "agency"
+          },
+          {
+            "word": "phone",
+            "start": 43.515003,
+            "end": 43.835003,
+            "confidence": 0.9980469,
+            "punctuated_word": "phone"
+          },
+          {
+            "word": "on",
+            "start": 43.835003,
+            "end": 43.995003,
+            "confidence": 0.99902344,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "our",
+            "start": 43.995003,
+            "end": 44.235,
+            "confidence": 0.99902344,
+            "punctuated_word": "our"
+          },
+          {
+            "word": "side",
+            "start": 44.235,
+            "end": 44.795002,
+            "confidence": 0.9338379,
+            "punctuated_word": "side,"
+          },
+          {
+            "word": "and",
+            "start": 44.795002,
+            "end": 45.035,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "a",
+            "start": 45.035,
+            "end": 45.195,
+            "confidence": 0.9980469,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "specific",
+            "start": 45.195,
+            "end": 45.595,
+            "confidence": 1,
+            "punctuated_word": "specific"
+          },
+          {
+            "word": "prospect",
+            "start": 45.595,
+            "end": 46.075,
+            "confidence": 1,
+            "punctuated_word": "prospect"
+          },
+          {
+            "word": "or",
+            "start": 46.075,
+            "end": 46.235,
+            "confidence": 0.99902344,
+            "punctuated_word": "or"
+          },
+          {
+            "word": "lead",
+            "start": 46.235,
+            "end": 46.475002,
+            "confidence": 1,
+            "punctuated_word": "lead"
+          },
+          {
+            "word": "on",
+            "start": 46.475002,
+            "end": 46.635002,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "theirs",
+            "start": 46.635002,
+            "end": 47.275,
+            "confidence": 0.984375,
+            "punctuated_word": "theirs."
+          }
+        ],
+        "id": "42d3d3b2-5d2c-49c8-bf24-eb5fba2f818e"
+      },
+      {
+        "start": 47.755,
+        "end": 53.355003,
+        "confidence": 0.9789608,
+        "channel": 0,
+        "transcript": "Then the status field, which is the delivery state, whether it was queued, sent, delivered, or failed.",
+        "words": [
+          {
+            "word": "then",
+            "start": 47.755,
+            "end": 47.995003,
+            "confidence": 0.99609375,
+            "punctuated_word": "Then"
+          },
+          {
+            "word": "the",
+            "start": 47.995003,
+            "end": 48.155003,
+            "confidence": 0.9536133,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "status",
+            "start": 48.155003,
+            "end": 48.555,
+            "confidence": 0.85546875,
+            "punctuated_word": "status"
+          },
+          {
+            "word": "field",
+            "start": 48.555,
+            "end": 49.115,
+            "confidence": 0.98999023,
+            "punctuated_word": "field,"
+          },
+          {
+            "word": "which",
+            "start": 49.115,
+            "end": 49.275,
+            "confidence": 1,
+            "punctuated_word": "which"
+          },
+          {
+            "word": "is",
+            "start": 49.275,
+            "end": 49.435,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 49.435,
+            "end": 49.595,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "delivery",
+            "start": 49.595,
+            "end": 49.995003,
+            "confidence": 0.9902344,
+            "punctuated_word": "delivery"
+          },
+          {
+            "word": "state",
+            "start": 49.995003,
+            "end": 50.555,
+            "confidence": 0.9169922,
+            "punctuated_word": "state,"
+          },
+          {
+            "word": "whether",
+            "start": 50.555,
+            "end": 50.795002,
+            "confidence": 0.9980469,
+            "punctuated_word": "whether"
+          },
+          {
+            "word": "it",
+            "start": 50.795002,
+            "end": 50.955,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "was",
+            "start": 50.955,
+            "end": 51.115,
+            "confidence": 1,
+            "punctuated_word": "was"
+          },
+          {
+            "word": "queued",
+            "start": 51.115,
+            "end": 51.755,
+            "confidence": 0.9868164,
+            "punctuated_word": "queued,"
+          },
+          {
+            "word": "sent",
+            "start": 51.755,
+            "end": 52.315002,
+            "confidence": 0.9980469,
+            "punctuated_word": "sent,"
+          },
+          {
+            "word": "delivered",
+            "start": 52.315002,
+            "end": 52.955,
+            "confidence": 0.9680176,
+            "punctuated_word": "delivered,"
+          },
+          {
+            "word": "or",
+            "start": 52.955,
+            "end": 53.035004,
+            "confidence": 1,
+            "punctuated_word": "or"
+          },
+          {
+            "word": "failed",
+            "start": 53.035004,
+            "end": 53.355003,
+            "confidence": 0.98999023,
+            "punctuated_word": "failed."
+          }
+        ],
+        "id": "3be4def0-fc0f-4ef7-9cde-6a558873c758"
+      },
+      {
+        "start": 53.84,
+        "end": 58.399998,
+        "confidence": 0.93643624,
+        "channel": 0,
+        "transcript": "And finally, the Telmics Message ID, which is the reference our provider gives us.",
+        "words": [
+          {
+            "word": "and",
+            "start": 53.84,
+            "end": 54.079998,
+            "confidence": 0.99316406,
+            "punctuated_word": "And"
+          },
+          {
+            "word": "finally",
+            "start": 54.079998,
+            "end": 54.559998,
+            "confidence": 0.9382324,
+            "punctuated_word": "finally,"
+          },
+          {
+            "word": "the",
+            "start": 54.559998,
+            "end": 54.719997,
+            "confidence": 0.9970703,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "telmics",
+            "start": 54.719997,
+            "end": 55.199997,
+            "confidence": 0.69677734,
+            "punctuated_word": "Telmics"
+          },
+          {
+            "word": "message",
+            "start": 55.199997,
+            "end": 55.519997,
+            "confidence": 0.55908203,
+            "punctuated_word": "Message"
+          },
+          {
+            "word": "id",
+            "start": 55.519997,
+            "end": 56.16,
+            "confidence": 0.94189453,
+            "punctuated_word": "ID,"
+          },
+          {
+            "word": "which",
+            "start": 56.16,
+            "end": 56.399998,
+            "confidence": 1,
+            "punctuated_word": "which"
+          },
+          {
+            "word": "is",
+            "start": 56.399998,
+            "end": 56.559998,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 56.559998,
+            "end": 56.64,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "reference",
+            "start": 56.64,
+            "end": 56.96,
+            "confidence": 0.9970703,
+            "punctuated_word": "reference"
+          },
+          {
+            "word": "our",
+            "start": 56.96,
+            "end": 57.199997,
+            "confidence": 0.99316406,
+            "punctuated_word": "our"
+          },
+          {
+            "word": "provider",
+            "start": 57.199997,
+            "end": 57.6,
+            "confidence": 0.9970703,
+            "punctuated_word": "provider"
+          },
+          {
+            "word": "gives",
+            "start": 57.6,
+            "end": 57.839996,
+            "confidence": 0.99902344,
+            "punctuated_word": "gives"
+          },
+          {
+            "word": "us",
+            "start": 57.839996,
+            "end": 58.399998,
+            "confidence": 0.9975586,
+            "punctuated_word": "us."
+          }
+        ],
+        "id": "12c7443f-e74f-4f2d-a78e-a71fb350c1f7"
+      },
+      {
+        "start": 58.879997,
+        "end": 65.68,
+        "confidence": 0.9979199,
+        "channel": 0,
+        "transcript": "That last field is the important one, because it lets us go back to the carrier and prove what actually happened to that specific message.",
+        "words": [
+          {
+            "word": "that",
+            "start": 58.879997,
+            "end": 59.12,
+            "confidence": 0.99902344,
+            "punctuated_word": "That"
+          },
+          {
+            "word": "last",
+            "start": 59.12,
+            "end": 59.44,
+            "confidence": 1,
+            "punctuated_word": "last"
+          },
+          {
+            "word": "field",
+            "start": 59.44,
+            "end": 59.76,
+            "confidence": 1,
+            "punctuated_word": "field"
+          },
+          {
+            "word": "is",
+            "start": 59.76,
+            "end": 59.92,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 59.92,
+            "end": 60.079998,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "important",
+            "start": 60.079998,
+            "end": 60.48,
+            "confidence": 1,
+            "punctuated_word": "important"
+          },
+          {
+            "word": "one",
+            "start": 60.48,
+            "end": 60.96,
+            "confidence": 0.9650879,
+            "punctuated_word": "one,"
+          },
+          {
+            "word": "because",
+            "start": 60.96,
+            "end": 61.199997,
+            "confidence": 1,
+            "punctuated_word": "because"
+          },
+          {
+            "word": "it",
+            "start": 61.199997,
+            "end": 61.359997,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "lets",
+            "start": 61.359997,
+            "end": 61.6,
+            "confidence": 0.99609375,
+            "punctuated_word": "lets"
+          },
+          {
+            "word": "us",
+            "start": 61.6,
+            "end": 61.76,
+            "confidence": 1,
+            "punctuated_word": "us"
+          },
+          {
+            "word": "go",
+            "start": 61.76,
+            "end": 61.92,
+            "confidence": 1,
+            "punctuated_word": "go"
+          },
+          {
+            "word": "back",
+            "start": 61.92,
+            "end": 62.159996,
+            "confidence": 1,
+            "punctuated_word": "back"
+          },
+          {
+            "word": "to",
+            "start": 62.159996,
+            "end": 62.32,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "the",
+            "start": 62.32,
+            "end": 62.399998,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "carrier",
+            "start": 62.399998,
+            "end": 62.8,
+            "confidence": 0.9970703,
+            "punctuated_word": "carrier"
+          },
+          {
+            "word": "and",
+            "start": 62.8,
+            "end": 63.12,
+            "confidence": 0.99316406,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "prove",
+            "start": 63.12,
+            "end": 63.44,
+            "confidence": 1,
+            "punctuated_word": "prove"
+          },
+          {
+            "word": "what",
+            "start": 63.44,
+            "end": 63.68,
+            "confidence": 1,
+            "punctuated_word": "what"
+          },
+          {
+            "word": "actually",
+            "start": 63.68,
+            "end": 64.08,
+            "confidence": 1,
+            "punctuated_word": "actually"
+          },
+          {
+            "word": "happened",
+            "start": 64.08,
+            "end": 64.479996,
+            "confidence": 0.99902344,
+            "punctuated_word": "happened"
+          },
+          {
+            "word": "to",
+            "start": 64.479996,
+            "end": 64.64,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "that",
+            "start": 64.64,
+            "end": 64.88,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "specific",
+            "start": 64.88,
+            "end": 65.36,
+            "confidence": 1,
+            "punctuated_word": "specific"
+          },
+          {
+            "word": "message",
+            "start": 65.36,
+            "end": 65.68,
+            "confidence": 0.99853516,
+            "punctuated_word": "message."
+          }
+        ],
+        "id": "cda98f1a-759d-41e2-b0ab-d45ca891b806"
+      },
+      {
+        "start": 66.395004,
+        "end": 69.755005,
+        "confidence": 0.9752197,
+        "channel": 0,
+        "transcript": "Why does the business care this much about a text message log?",
+        "words": [
+          {
+            "word": "why",
+            "start": 66.395004,
+            "end": 66.715004,
+            "confidence": 1,
+            "punctuated_word": "Why"
+          },
+          {
+            "word": "does",
+            "start": 66.715004,
+            "end": 66.955,
+            "confidence": 1,
+            "punctuated_word": "does"
+          },
+          {
+            "word": "the",
+            "start": 66.955,
+            "end": 67.035,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "business",
+            "start": 67.035,
+            "end": 67.355,
+            "confidence": 1,
+            "punctuated_word": "business"
+          },
+          {
+            "word": "care",
+            "start": 67.355,
+            "end": 67.595,
+            "confidence": 0.7050781,
+            "punctuated_word": "care"
+          },
+          {
+            "word": "this",
+            "start": 67.595,
+            "end": 67.915,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "much",
+            "start": 67.915,
+            "end": 68.155,
+            "confidence": 1,
+            "punctuated_word": "much"
+          },
+          {
+            "word": "about",
+            "start": 68.155,
+            "end": 68.315,
+            "confidence": 1,
+            "punctuated_word": "about"
+          },
+          {
+            "word": "a",
+            "start": 68.315,
+            "end": 68.475006,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "text",
+            "start": 68.475006,
+            "end": 68.715004,
+            "confidence": 0.99902344,
+            "punctuated_word": "text"
+          },
+          {
+            "word": "message",
+            "start": 68.715004,
+            "end": 69.035,
+            "confidence": 1,
+            "punctuated_word": "message"
+          },
+          {
+            "word": "log",
+            "start": 69.035,
+            "end": 69.755005,
+            "confidence": 0.99853516,
+            "punctuated_word": "log?"
+          }
+        ],
+        "id": "3a0b0d92-279e-4e33-9ed6-c0fcfc8a6be0"
+      },
+      {
+        "start": 69.995,
+        "end": 74.155,
+        "confidence": 0.9983724,
+        "channel": 0,
+        "transcript": "Because texting is most of our outbound motion, not a side channel.",
+        "words": [
+          {
+            "word": "because",
+            "start": 69.995,
+            "end": 70.395004,
+            "confidence": 0.99609375,
+            "punctuated_word": "Because"
+          },
+          {
+            "word": "texting",
+            "start": 70.395004,
+            "end": 70.795006,
+            "confidence": 1,
+            "punctuated_word": "texting"
+          },
+          {
+            "word": "is",
+            "start": 70.795006,
+            "end": 71.035,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "most",
+            "start": 71.035,
+            "end": 71.275,
+            "confidence": 0.99902344,
+            "punctuated_word": "most"
+          },
+          {
+            "word": "of",
+            "start": 71.275,
+            "end": 71.435005,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "our",
+            "start": 71.435005,
+            "end": 71.595,
+            "confidence": 1,
+            "punctuated_word": "our"
+          },
+          {
+            "word": "outbound",
+            "start": 71.595,
+            "end": 72.075005,
+            "confidence": 1,
+            "punctuated_word": "outbound"
+          },
+          {
+            "word": "motion",
+            "start": 72.075005,
+            "end": 72.715004,
+            "confidence": 0.99072266,
+            "punctuated_word": "motion,"
+          },
+          {
+            "word": "not",
+            "start": 72.795006,
+            "end": 73.035,
+            "confidence": 1,
+            "punctuated_word": "not"
+          },
+          {
+            "word": "a",
+            "start": 73.035,
+            "end": 73.195,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "side",
+            "start": 73.195,
+            "end": 73.435005,
+            "confidence": 0.9980469,
+            "punctuated_word": "side"
+          },
+          {
+            "word": "channel",
+            "start": 73.435005,
+            "end": 74.155,
+            "confidence": 0.99658203,
+            "punctuated_word": "channel."
+          }
+        ],
+        "id": "99037093-65b7-4d88-80aa-6676a9bbeb11"
+      },
+      {
+        "start": 74.395004,
+        "end": 80.34,
+        "confidence": 0.9918504,
+        "channel": 0,
+        "transcript": "When somebody rings us and misses it, we text them back. When we cannot get through on a call, we text.",
+        "words": [
+          {
+            "word": "when",
+            "start": 74.395004,
+            "end": 74.635,
+            "confidence": 0.99902344,
+            "punctuated_word": "When"
+          },
+          {
+            "word": "somebody",
+            "start": 74.635,
+            "end": 75.035,
+            "confidence": 0.9970703,
+            "punctuated_word": "somebody"
+          },
+          {
+            "word": "rings",
+            "start": 75.035,
+            "end": 75.275,
+            "confidence": 0.99902344,
+            "punctuated_word": "rings"
+          },
+          {
+            "word": "us",
+            "start": 75.275,
+            "end": 75.435005,
+            "confidence": 0.9970703,
+            "punctuated_word": "us"
+          },
+          {
+            "word": "and",
+            "start": 75.435005,
+            "end": 75.595,
+            "confidence": 0.9980469,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "misses",
+            "start": 75.595,
+            "end": 75.915,
+            "confidence": 0.9980469,
+            "punctuated_word": "misses"
+          },
+          {
+            "word": "it",
+            "start": 75.915,
+            "end": 76.315,
+            "confidence": 0.99902344,
+            "punctuated_word": "it,"
+          },
+          {
+            "word": "we",
+            "start": 76.315,
+            "end": 76.555,
+            "confidence": 0.99609375,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "text",
+            "start": 76.555,
+            "end": 76.795,
+            "confidence": 0.99121094,
+            "punctuated_word": "text"
+          },
+          {
+            "word": "them",
+            "start": 76.795,
+            "end": 77.035,
+            "confidence": 0.9941406,
+            "punctuated_word": "them"
+          },
+          {
+            "word": "back",
+            "start": 77.035,
+            "end": 77.515,
+            "confidence": 0.9890137,
+            "punctuated_word": "back."
+          },
+          {
+            "word": "when",
+            "start": 77.755005,
+            "end": 77.995,
+            "confidence": 0.9863281,
+            "punctuated_word": "When"
+          },
+          {
+            "word": "we",
+            "start": 77.995,
+            "end": 78.155,
+            "confidence": 0.984375,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "cannot",
+            "start": 78.155,
+            "end": 78.715004,
+            "confidence": 0.9790039,
+            "punctuated_word": "cannot"
+          },
+          {
+            "word": "get",
+            "start": 78.42,
+            "end": 78.58,
+            "confidence": 0.9223633,
+            "punctuated_word": "get"
+          },
+          {
+            "word": "through",
+            "start": 78.58,
+            "end": 78.82,
+            "confidence": 1,
+            "punctuated_word": "through"
+          },
+          {
+            "word": "on",
+            "start": 78.82,
+            "end": 78.979996,
+            "confidence": 1,
+            "punctuated_word": "on"
+          },
+          {
+            "word": "a",
+            "start": 78.979996,
+            "end": 79.14,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "call",
+            "start": 79.14,
+            "end": 79.54,
+            "confidence": 1,
+            "punctuated_word": "call,"
+          },
+          {
+            "word": "we",
+            "start": 79.54,
+            "end": 79.7,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "text",
+            "start": 79.7,
+            "end": 80.34,
+            "confidence": 0.99902344,
+            "punctuated_word": "text."
+          }
+        ],
+        "id": "ac6bf5d4-585b-431d-8657-becfa7d2ba78"
+      },
+      {
+        "start": 80.58,
+        "end": 83.38,
+        "confidence": 0.9966363,
+        "channel": 0,
+        "transcript": "When a leave goes quiet, we follow-up by text.",
+        "words": [
+          {
+            "word": "when",
+            "start": 80.58,
+            "end": 80.74,
+            "confidence": 1,
+            "punctuated_word": "When"
+          },
+          {
+            "word": "a",
+            "start": 80.74,
+            "end": 80.9,
+            "confidence": 0.98291016,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "leave",
+            "start": 80.9,
+            "end": 81.14,
+            "confidence": 0.9873047,
+            "punctuated_word": "leave"
+          },
+          {
+            "word": "goes",
+            "start": 81.14,
+            "end": 81.38,
+            "confidence": 1,
+            "punctuated_word": "goes"
+          },
+          {
+            "word": "quiet",
+            "start": 81.38,
+            "end": 81.86,
+            "confidence": 0.9995117,
+            "punctuated_word": "quiet,"
+          },
+          {
+            "word": "we",
+            "start": 81.86,
+            "end": 82.02,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "follow-up",
+            "start": 82.02,
+            "end": 82.5,
+            "confidence": 1,
+            "punctuated_word": "follow-up"
+          },
+          {
+            "word": "by",
+            "start": 82.5,
+            "end": 82.74,
+            "confidence": 1,
+            "punctuated_word": "by"
+          },
+          {
+            "word": "text",
+            "start": 82.74,
+            "end": 83.38,
+            "confidence": 1,
+            "punctuated_word": "text."
+          }
+        ],
+        "id": "e17f5265-2966-4989-aec2-d7a1577bf1b7"
+      },
+      {
+        "start": 83.619995,
+        "end": 86.34,
+        "confidence": 0.9873047,
+        "channel": 0,
+        "transcript": "Every one of those steps is a row in this object,",
+        "words": [
+          {
+            "word": "every",
+            "start": 83.619995,
+            "end": 83.86,
+            "confidence": 0.99316406,
+            "punctuated_word": "Every"
+          },
+          {
+            "word": "one",
+            "start": 83.86,
+            "end": 84.1,
+            "confidence": 1,
+            "punctuated_word": "one"
+          },
+          {
+            "word": "of",
+            "start": 84.1,
+            "end": 84.18,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "those",
+            "start": 84.18,
+            "end": 84.42,
+            "confidence": 1,
+            "punctuated_word": "those"
+          },
+          {
+            "word": "steps",
+            "start": 84.42,
+            "end": 84.74,
+            "confidence": 1,
+            "punctuated_word": "steps"
+          },
+          {
+            "word": "is",
+            "start": 84.74,
+            "end": 84.9,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "a",
+            "start": 84.9,
+            "end": 85.06,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "row",
+            "start": 85.06,
+            "end": 85.299995,
+            "confidence": 0.9980469,
+            "punctuated_word": "row"
+          },
+          {
+            "word": "in",
+            "start": 85.299995,
+            "end": 85.46,
+            "confidence": 1,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "this",
+            "start": 85.46,
+            "end": 85.619995,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "object",
+            "start": 85.619995,
+            "end": 86.34,
+            "confidence": 0.8691406,
+            "punctuated_word": "object,"
+          }
+        ],
+        "id": "cd3f91cf-281b-4bbe-acba-7a12100cb06e"
+      },
+      {
+        "start": 86.5,
+        "end": 88.979996,
+        "confidence": 0.9930827,
+        "channel": 0,
+        "transcript": "and each of those steps can fail silently.",
+        "words": [
+          {
+            "word": "and",
+            "start": 86.5,
+            "end": 86.659996,
+            "confidence": 1,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "each",
+            "start": 86.659996,
+            "end": 86.979996,
+            "confidence": 1,
+            "punctuated_word": "each"
+          },
+          {
+            "word": "of",
+            "start": 86.979996,
+            "end": 87.06,
+            "confidence": 1,
+            "punctuated_word": "of"
+          },
+          {
+            "word": "those",
+            "start": 87.06,
+            "end": 87.299995,
+            "confidence": 1,
+            "punctuated_word": "those"
+          },
+          {
+            "word": "steps",
+            "start": 87.299995,
+            "end": 87.619995,
+            "confidence": 1,
+            "punctuated_word": "steps"
+          },
+          {
+            "word": "can",
+            "start": 87.619995,
+            "end": 87.78,
+            "confidence": 1,
+            "punctuated_word": "can"
+          },
+          {
+            "word": "fail",
+            "start": 87.78,
+            "end": 88.1,
+            "confidence": 0.99902344,
+            "punctuated_word": "fail"
+          },
+          {
+            "word": "silently",
+            "start": 88.1,
+            "end": 88.979996,
+            "confidence": 0.945638,
+            "punctuated_word": "silently."
+          }
+        ],
+        "id": "623adeb0-f266-4cbf-bfba-fa0482e29e21"
+      },
+      {
+        "start": 89.22,
+        "end": 93.685,
+        "confidence": 0.9982707,
+        "channel": 0,
+        "transcript": "A message queued at midnight, a carrier filtering it, a bad number,",
+        "words": [
+          {
+            "word": "a",
+            "start": 89.22,
+            "end": 89.46,
+            "confidence": 0.99902344,
+            "punctuated_word": "A"
+          },
+          {
+            "word": "message",
+            "start": 89.46,
+            "end": 89.7,
+            "confidence": 1,
+            "punctuated_word": "message"
+          },
+          {
+            "word": "queued",
+            "start": 89.7,
+            "end": 90.1,
+            "confidence": 0.99609375,
+            "punctuated_word": "queued"
+          },
+          {
+            "word": "at",
+            "start": 90.1,
+            "end": 90.259995,
+            "confidence": 1,
+            "punctuated_word": "at"
+          },
+          {
+            "word": "midnight",
+            "start": 90.259995,
+            "end": 90.979996,
+            "confidence": 0.9904785,
+            "punctuated_word": "midnight,"
+          },
+          {
+            "word": "a",
+            "start": 90.979996,
+            "end": 91.14,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "carrier",
+            "start": 91.14,
+            "end": 91.54,
+            "confidence": 0.9970703,
+            "punctuated_word": "carrier"
+          },
+          {
+            "word": "filtering",
+            "start": 91.54,
+            "end": 92.259995,
+            "confidence": 0.99902344,
+            "punctuated_word": "filtering"
+          },
+          {
+            "word": "it",
+            "start": 92.085,
+            "end": 92.645,
+            "confidence": 0.99853516,
+            "punctuated_word": "it,"
+          },
+          {
+            "word": "a",
+            "start": 92.645,
+            "end": 92.805,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "bad",
+            "start": 92.805,
+            "end": 93.045,
+            "confidence": 1,
+            "punctuated_word": "bad"
+          },
+          {
+            "word": "number",
+            "start": 93.045,
+            "end": 93.685,
+            "confidence": 0.99902344,
+            "punctuated_word": "number,"
+          }
+        ],
+        "id": "a8ee1486-e3d9-4984-b98a-6441d31d07a0"
+      },
+      {
+        "start": 93.845,
+        "end": 95.604996,
+        "confidence": 0.99886066,
+        "channel": 0,
+        "transcript": "a registration that lapsed.",
+        "words": [
+          {
+            "word": "a",
+            "start": 93.845,
+            "end": 94.005,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "registration",
+            "start": 94.005,
+            "end": 94.565,
+            "confidence": 1,
+            "punctuated_word": "registration"
+          },
+          {
+            "word": "that",
+            "start": 94.565,
+            "end": 94.805,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "lapsed",
+            "start": 94.805,
+            "end": 95.604996,
+            "confidence": 0.9954427,
+            "punctuated_word": "lapsed."
+          }
+        ],
+        "id": "f56f9d6a-8058-4840-8886-7088a0e683e0"
+      },
+      {
+        "start": 95.924995,
+        "end": 101.445,
+        "confidence": 0.9942763,
+        "channel": 0,
+        "transcript": "Without this log, we would simply believe we had followed up, when in fact nothing was ever delivered.",
+        "words": [
+          {
+            "word": "without",
+            "start": 95.924995,
+            "end": 96.325,
+            "confidence": 1,
+            "punctuated_word": "Without"
+          },
+          {
+            "word": "this",
+            "start": 96.325,
+            "end": 96.485,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "log",
+            "start": 96.485,
+            "end": 96.965,
+            "confidence": 0.99658203,
+            "punctuated_word": "log,"
+          },
+          {
+            "word": "we",
+            "start": 96.965,
+            "end": 97.125,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "would",
+            "start": 97.125,
+            "end": 97.284996,
+            "confidence": 1,
+            "punctuated_word": "would"
+          },
+          {
+            "word": "simply",
+            "start": 97.284996,
+            "end": 97.604996,
+            "confidence": 1,
+            "punctuated_word": "simply"
+          },
+          {
+            "word": "believe",
+            "start": 97.604996,
+            "end": 97.845,
+            "confidence": 1,
+            "punctuated_word": "believe"
+          },
+          {
+            "word": "we",
+            "start": 97.845,
+            "end": 98.085,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "had",
+            "start": 98.085,
+            "end": 98.244995,
+            "confidence": 1,
+            "punctuated_word": "had"
+          },
+          {
+            "word": "followed",
+            "start": 98.244995,
+            "end": 98.565,
+            "confidence": 1,
+            "punctuated_word": "followed"
+          },
+          {
+            "word": "up",
+            "start": 98.565,
+            "end": 99.205,
+            "confidence": 0.9628906,
+            "punctuated_word": "up,"
+          },
+          {
+            "word": "when",
+            "start": 99.205,
+            "end": 99.365,
+            "confidence": 1,
+            "punctuated_word": "when"
+          },
+          {
+            "word": "in",
+            "start": 99.365,
+            "end": 99.604996,
+            "confidence": 0.984375,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "fact",
+            "start": 99.604996,
+            "end": 99.765,
+            "confidence": 1,
+            "punctuated_word": "fact"
+          },
+          {
+            "word": "nothing",
+            "start": 99.765,
+            "end": 100.244995,
+            "confidence": 0.9536133,
+            "punctuated_word": "nothing"
+          },
+          {
+            "word": "was",
+            "start": 100.244995,
+            "end": 100.485,
+            "confidence": 1,
+            "punctuated_word": "was"
+          },
+          {
+            "word": "ever",
+            "start": 100.485,
+            "end": 100.725,
+            "confidence": 1,
+            "punctuated_word": "ever"
+          },
+          {
+            "word": "delivered",
+            "start": 100.725,
+            "end": 101.445,
+            "confidence": 0.9995117,
+            "punctuated_word": "delivered."
+          }
+        ],
+        "id": "4340cbf5-666e-40eb-b312-8f644d16db32"
+      },
+      {
+        "start": 101.845,
+        "end": 107.350006,
+        "confidence": 0.9990491,
+        "channel": 0,
+        "transcript": "This object is our proof that we did the thing. So where does a person actually use this object?",
+        "words": [
+          {
+            "word": "this",
+            "start": 101.845,
+            "end": 102.085,
+            "confidence": 1,
+            "punctuated_word": "This"
+          },
+          {
+            "word": "object",
+            "start": 102.085,
+            "end": 102.485,
+            "confidence": 1,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "is",
+            "start": 102.485,
+            "end": 102.645,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "our",
+            "start": 102.645,
+            "end": 102.885,
+            "confidence": 1,
+            "punctuated_word": "our"
+          },
+          {
+            "word": "proof",
+            "start": 102.885,
+            "end": 103.125,
+            "confidence": 1,
+            "punctuated_word": "proof"
+          },
+          {
+            "word": "that",
+            "start": 103.125,
+            "end": 103.365,
+            "confidence": 1,
+            "punctuated_word": "that"
+          },
+          {
+            "word": "we",
+            "start": 103.365,
+            "end": 103.525,
+            "confidence": 1,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "did",
+            "start": 103.525,
+            "end": 103.685,
+            "confidence": 1,
+            "punctuated_word": "did"
+          },
+          {
+            "word": "the",
+            "start": 103.685,
+            "end": 103.845,
+            "confidence": 0.99902344,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "thing",
+            "start": 103.845,
+            "end": 104.085,
+            "confidence": 0.99902344,
+            "punctuated_word": "thing."
+          },
+          {
+            "word": "so",
+            "start": 104.55,
+            "end": 104.79,
+            "confidence": 0.99902344,
+            "punctuated_word": "So"
+          },
+          {
+            "word": "where",
+            "start": 104.79,
+            "end": 105.03001,
+            "confidence": 0.9941406,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "does",
+            "start": 105.03001,
+            "end": 105.270004,
+            "confidence": 1,
+            "punctuated_word": "does"
+          },
+          {
+            "word": "a",
+            "start": 105.270004,
+            "end": 105.43,
+            "confidence": 0.99902344,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "person",
+            "start": 105.43,
+            "end": 105.670006,
+            "confidence": 1,
+            "punctuated_word": "person"
+          },
+          {
+            "word": "actually",
+            "start": 105.670006,
+            "end": 106.15,
+            "confidence": 1,
+            "punctuated_word": "actually"
+          },
+          {
+            "word": "use",
+            "start": 106.15,
+            "end": 106.47,
+            "confidence": 0.9941406,
+            "punctuated_word": "use"
+          },
+          {
+            "word": "this",
+            "start": 106.47,
+            "end": 106.71001,
+            "confidence": 1,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "object",
+            "start": 106.71001,
+            "end": 107.350006,
+            "confidence": 0.9975586,
+            "punctuated_word": "object?"
+          }
+        ],
+        "id": "53b8211d-b60f-46b5-a377-c4b95017601f"
+      },
+      {
+        "start": 107.670006,
+        "end": 114.79,
+        "confidence": 0.98151654,
+        "channel": 0,
+        "transcript": "When a lead says they never bought our text, this is the first place to look, and the Status field usually settles it immediately.",
+        "words": [
+          {
+            "word": "when",
+            "start": 107.670006,
+            "end": 107.91,
+            "confidence": 0.9970703,
+            "punctuated_word": "When"
+          },
+          {
+            "word": "a",
+            "start": 107.91,
+            "end": 108.07,
+            "confidence": 1,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "lead",
+            "start": 108.07,
+            "end": 108.310005,
+            "confidence": 0.9951172,
+            "punctuated_word": "lead"
+          },
+          {
+            "word": "says",
+            "start": 108.310005,
+            "end": 108.55,
+            "confidence": 1,
+            "punctuated_word": "says"
+          },
+          {
+            "word": "they",
+            "start": 108.55,
+            "end": 108.71001,
+            "confidence": 0.9838867,
+            "punctuated_word": "they"
+          },
+          {
+            "word": "never",
+            "start": 108.71001,
+            "end": 109.03001,
+            "confidence": 1,
+            "punctuated_word": "never"
+          },
+          {
+            "word": "bought",
+            "start": 109.03001,
+            "end": 109.19,
+            "confidence": 0.890625,
+            "punctuated_word": "bought"
+          },
+          {
+            "word": "our",
+            "start": 109.19,
+            "end": 109.43,
+            "confidence": 1,
+            "punctuated_word": "our"
+          },
+          {
+            "word": "text",
+            "start": 109.43,
+            "end": 110.07,
+            "confidence": 0.99658203,
+            "punctuated_word": "text,"
+          },
+          {
+            "word": "this",
+            "start": 110.07,
+            "end": 110.310005,
+            "confidence": 0.99902344,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "is",
+            "start": 110.310005,
+            "end": 110.47,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "the",
+            "start": 110.47,
+            "end": 110.630005,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "first",
+            "start": 110.630005,
+            "end": 110.87,
+            "confidence": 0.99902344,
+            "punctuated_word": "first"
+          },
+          {
+            "word": "place",
+            "start": 110.87,
+            "end": 111.19,
+            "confidence": 1,
+            "punctuated_word": "place"
+          },
+          {
+            "word": "to",
+            "start": 111.19,
+            "end": 111.350006,
+            "confidence": 1,
+            "punctuated_word": "to"
+          },
+          {
+            "word": "look",
+            "start": 111.350006,
+            "end": 111.83,
+            "confidence": 0.9094238,
+            "punctuated_word": "look,"
+          },
+          {
+            "word": "and",
+            "start": 111.990005,
+            "end": 112.15,
+            "confidence": 0.99902344,
+            "punctuated_word": "and"
+          },
+          {
+            "word": "the",
+            "start": 112.15,
+            "end": 112.310005,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "status",
+            "start": 112.310005,
+            "end": 112.630005,
+            "confidence": 0.8095703,
+            "punctuated_word": "Status"
+          },
+          {
+            "word": "field",
+            "start": 112.630005,
+            "end": 112.950005,
+            "confidence": 0.9863281,
+            "punctuated_word": "field"
+          },
+          {
+            "word": "usually",
+            "start": 112.950005,
+            "end": 113.43,
+            "confidence": 0.99902344,
+            "punctuated_word": "usually"
+          },
+          {
+            "word": "settles",
+            "start": 113.43,
+            "end": 113.75,
+            "confidence": 0.99902344,
+            "punctuated_word": "settles"
+          },
+          {
+            "word": "it",
+            "start": 113.75,
+            "end": 113.990005,
+            "confidence": 0.9970703,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "immediately",
+            "start": 113.990005,
+            "end": 114.79,
+            "confidence": 0.99560547,
+            "punctuated_word": "immediately."
+          }
+        ],
+        "id": "bdf62d94-cee7-4a91-8bb0-def0bfc1cf0c"
+      },
+      {
+        "start": 115.270004,
+        "end": 120.385,
+        "confidence": 0.9669713,
+        "channel": 0,
+        "transcript": "When we are reconstructing a conversation with a shop, these rows are evidence And",
+        "words": [
+          {
+            "word": "when",
+            "start": 115.270004,
+            "end": 115.43,
+            "confidence": 0.99609375,
+            "punctuated_word": "When"
+          },
+          {
+            "word": "we",
+            "start": 115.43,
+            "end": 115.590004,
+            "confidence": 0.99609375,
+            "punctuated_word": "we"
+          },
+          {
+            "word": "are",
+            "start": 115.590004,
+            "end": 115.75,
+            "confidence": 0.99609375,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "reconstructing",
+            "start": 115.75,
+            "end": 116.47,
+            "confidence": 0.99609375,
+            "punctuated_word": "reconstructing"
+          },
+          {
+            "word": "a",
+            "start": 116.47,
+            "end": 116.630005,
+            "confidence": 0.9980469,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "conversation",
+            "start": 116.630005,
+            "end": 117.19,
+            "confidence": 0.98535156,
+            "punctuated_word": "conversation"
+          },
+          {
+            "word": "with",
+            "start": 117.19,
+            "end": 117.350006,
+            "confidence": 0.9921875,
+            "punctuated_word": "with"
+          },
+          {
+            "word": "a",
+            "start": 117.350006,
+            "end": 117.51,
+            "confidence": 0.9667969,
+            "punctuated_word": "a"
+          },
+          {
+            "word": "shop",
+            "start": 117.51,
+            "end": 118.15,
+            "confidence": 0.98828125,
+            "punctuated_word": "shop,"
+          },
+          {
+            "word": "these",
+            "start": 118.15,
+            "end": 118.47,
+            "confidence": 0.97802734,
+            "punctuated_word": "these"
+          },
+          {
+            "word": "rows",
+            "start": 118.47,
+            "end": 118.79,
+            "confidence": 0.9667969,
+            "punctuated_word": "rows"
+          },
+          {
+            "word": "are",
+            "start": 118.79,
+            "end": 119.270004,
+            "confidence": 0.97802734,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "evidence",
+            "start": 119.265,
+            "end": 119.585,
+            "confidence": 0.9741211,
+            "punctuated_word": "evidence"
+          },
+          {
+            "word": "and",
+            "start": 119.585,
+            "end": 120.385,
+            "confidence": 0.72558594,
+            "punctuated_word": "And"
+          }
+        ],
+        "id": "502bd0e0-ba08-4b06-a2b7-2d559a76c3b9"
+      },
+      {
+        "start": 122.145,
+        "end": 128.625,
+        "confidence": 0.9817708,
+        "channel": 0,
+        "transcript": "when the agency phone's record needs auditing, this is where you find out in practice whether messages are actually landing,",
+        "words": [
+          {
+            "word": "when",
+            "start": 122.145,
+            "end": 122.305,
+            "confidence": 0.99902344,
+            "punctuated_word": "when"
+          },
+          {
+            "word": "the",
+            "start": 122.305,
+            "end": 122.465,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "agency",
+            "start": 122.465,
+            "end": 122.865,
+            "confidence": 0.98828125,
+            "punctuated_word": "agency"
+          },
+          {
+            "word": "phone's",
+            "start": 122.865,
+            "end": 123.265,
+            "confidence": 0.90893555,
+            "punctuated_word": "phone's"
+          },
+          {
+            "word": "record",
+            "start": 123.265,
+            "end": 123.585,
+            "confidence": 0.99902344,
+            "punctuated_word": "record"
+          },
+          {
+            "word": "needs",
+            "start": 123.585,
+            "end": 123.905,
+            "confidence": 1,
+            "punctuated_word": "needs"
+          },
+          {
+            "word": "auditing",
+            "start": 123.905,
+            "end": 124.625,
+            "confidence": 0.99576825,
+            "punctuated_word": "auditing,"
+          },
+          {
+            "word": "this",
+            "start": 124.625,
+            "end": 124.865,
+            "confidence": 0.9970703,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "is",
+            "start": 124.865,
+            "end": 125.025,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "where",
+            "start": 125.025,
+            "end": 125.185,
+            "confidence": 1,
+            "punctuated_word": "where"
+          },
+          {
+            "word": "you",
+            "start": 125.185,
+            "end": 125.345,
+            "confidence": 1,
+            "punctuated_word": "you"
+          },
+          {
+            "word": "find",
+            "start": 125.345,
+            "end": 125.585,
+            "confidence": 1,
+            "punctuated_word": "find"
+          },
+          {
+            "word": "out",
+            "start": 125.585,
+            "end": 125.745,
+            "confidence": 1,
+            "punctuated_word": "out"
+          },
+          {
+            "word": "in",
+            "start": 125.745,
+            "end": 125.985,
+            "confidence": 0.9980469,
+            "punctuated_word": "in"
+          },
+          {
+            "word": "practice",
+            "start": 125.985,
+            "end": 126.385,
+            "confidence": 1,
+            "punctuated_word": "practice"
+          },
+          {
+            "word": "whether",
+            "start": 126.385,
+            "end": 126.784996,
+            "confidence": 0.86279297,
+            "punctuated_word": "whether"
+          },
+          {
+            "word": "messages",
+            "start": 126.784996,
+            "end": 127.265,
+            "confidence": 0.99902344,
+            "punctuated_word": "messages"
+          },
+          {
+            "word": "are",
+            "start": 127.265,
+            "end": 127.425,
+            "confidence": 1,
+            "punctuated_word": "are"
+          },
+          {
+            "word": "actually",
+            "start": 127.425,
+            "end": 127.905,
+            "confidence": 1,
+            "punctuated_word": "actually"
+          },
+          {
+            "word": "landing",
+            "start": 127.905,
+            "end": 128.625,
+            "confidence": 0.8874512,
+            "punctuated_word": "landing,"
+          }
+        ],
+        "id": "f8fce751-b170-4c31-9fcf-4df850cbb784"
+      },
+      {
+        "start": 128.785,
+        "end": 132.305,
+        "confidence": 0.9944662,
+        "channel": 0,
+        "transcript": "because the failure rate shows up here long before anybody complains.",
+        "words": [
+          {
+            "word": "because",
+            "start": 128.785,
+            "end": 129.105,
+            "confidence": 1,
+            "punctuated_word": "because"
+          },
+          {
+            "word": "the",
+            "start": 129.105,
+            "end": 129.265,
+            "confidence": 1,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "failure",
+            "start": 129.265,
+            "end": 129.665,
+            "confidence": 0.99902344,
+            "punctuated_word": "failure"
+          },
+          {
+            "word": "rate",
+            "start": 129.665,
+            "end": 129.905,
+            "confidence": 1,
+            "punctuated_word": "rate"
+          },
+          {
+            "word": "shows",
+            "start": 129.905,
+            "end": 130.145,
+            "confidence": 1,
+            "punctuated_word": "shows"
+          },
+          {
+            "word": "up",
+            "start": 130.145,
+            "end": 130.385,
+            "confidence": 1,
+            "punctuated_word": "up"
+          },
+          {
+            "word": "here",
+            "start": 130.385,
+            "end": 130.545,
+            "confidence": 1,
+            "punctuated_word": "here"
+          },
+          {
+            "word": "long",
+            "start": 130.545,
+            "end": 130.94499,
+            "confidence": 0.9716797,
+            "punctuated_word": "long"
+          },
+          {
+            "word": "before",
+            "start": 130.94499,
+            "end": 131.345,
+            "confidence": 1,
+            "punctuated_word": "before"
+          },
+          {
+            "word": "anybody",
+            "start": 131.345,
+            "end": 131.745,
+            "confidence": 1,
+            "punctuated_word": "anybody"
+          },
+          {
+            "word": "complains",
+            "start": 131.745,
+            "end": 132.305,
+            "confidence": 0.9684245,
+            "punctuated_word": "complains."
+          }
+        ],
+        "id": "143eaa83-a633-456a-a027-9a6cc7b53ed0"
+      },
+      {
+        "start": 132.84288,
+        "end": 138.84288,
+        "confidence": 0.972369,
+        "channel": 0,
+        "transcript": "Zero records today means the texting side is not running yet. It also means when it starts,",
+        "words": [
+          {
+            "word": "zero",
+            "start": 132.84288,
+            "end": 133.32288,
+            "confidence": 0.8535156,
+            "punctuated_word": "Zero"
+          },
+          {
+            "word": "records",
+            "start": 133.32288,
+            "end": 133.72289,
+            "confidence": 0.9980469,
+            "punctuated_word": "records"
+          },
+          {
+            "word": "today",
+            "start": 133.72289,
+            "end": 134.28288,
+            "confidence": 0.98535156,
+            "punctuated_word": "today"
+          },
+          {
+            "word": "means",
+            "start": 134.28288,
+            "end": 134.60287,
+            "confidence": 0.8144531,
+            "punctuated_word": "means"
+          },
+          {
+            "word": "the",
+            "start": 134.60287,
+            "end": 134.84288,
+            "confidence": 0.99609375,
+            "punctuated_word": "the"
+          },
+          {
+            "word": "texting",
+            "start": 134.84288,
+            "end": 135.24287,
+            "confidence": 0.98828125,
+            "punctuated_word": "texting"
+          },
+          {
+            "word": "side",
+            "start": 135.24287,
+            "end": 135.56288,
+            "confidence": 0.9873047,
+            "punctuated_word": "side"
+          },
+          {
+            "word": "is",
+            "start": 135.56288,
+            "end": 135.80289,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "not",
+            "start": 135.80289,
+            "end": 136.04288,
+            "confidence": 1,
+            "punctuated_word": "not"
+          },
+          {
+            "word": "running",
+            "start": 136.04288,
+            "end": 136.36288,
+            "confidence": 1,
+            "punctuated_word": "running"
+          },
+          {
+            "word": "yet",
+            "start": 136.36288,
+            "end": 136.92288,
+            "confidence": 0.9951172,
+            "punctuated_word": "yet."
+          },
+          {
+            "word": "it",
+            "start": 137.08289,
+            "end": 137.32288,
+            "confidence": 0.9951172,
+            "punctuated_word": "It"
+          },
+          {
+            "word": "also",
+            "start": 137.32288,
+            "end": 137.56288,
+            "confidence": 1,
+            "punctuated_word": "also"
+          },
+          {
+            "word": "means",
+            "start": 137.56288,
+            "end": 137.72289,
+            "confidence": 1,
+            "punctuated_word": "means"
+          },
+          {
+            "word": "when",
+            "start": 137.72289,
+            "end": 137.96288,
+            "confidence": 0.99121094,
+            "punctuated_word": "when"
+          },
+          {
+            "word": "it",
+            "start": 137.96288,
+            "end": 138.12288,
+            "confidence": 1,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "starts",
+            "start": 138.12288,
+            "end": 138.84288,
+            "confidence": 0.92578125,
+            "punctuated_word": "starts,"
+          }
+        ],
+        "id": "4aea5079-cc4e-45e4-bd7a-806f49dd8fde"
+      },
+      {
+        "start": 139.08289,
+        "end": 141.08289,
+        "confidence": 0.9977446,
+        "channel": 0,
+        "transcript": "this object is what makes it trustworthy.",
+        "words": [
+          {
+            "word": "this",
+            "start": 139.08289,
+            "end": 139.24287,
+            "confidence": 0.9941406,
+            "punctuated_word": "this"
+          },
+          {
+            "word": "object",
+            "start": 139.24287,
+            "end": 139.64288,
+            "confidence": 0.9980469,
+            "punctuated_word": "object"
+          },
+          {
+            "word": "is",
+            "start": 139.64288,
+            "end": 139.88287,
+            "confidence": 1,
+            "punctuated_word": "is"
+          },
+          {
+            "word": "what",
+            "start": 139.88287,
+            "end": 140.04288,
+            "confidence": 1,
+            "punctuated_word": "what"
+          },
+          {
+            "word": "makes",
+            "start": 140.04288,
+            "end": 140.28288,
+            "confidence": 1,
+            "punctuated_word": "makes"
+          },
+          {
+            "word": "it",
+            "start": 140.28288,
+            "end": 140.44289,
+            "confidence": 0.9980469,
+            "punctuated_word": "it"
+          },
+          {
+            "word": "trustworthy",
+            "start": 140.44289,
+            "end": 141.08289,
+            "confidence": 0.99397784,
+            "punctuated_word": "trustworthy."
+          }
+        ],
+        "id": "4e07cc34-09e8-4380-aafa-2b27d0ee2e9f"
+      }
+    ]
+  }
+}

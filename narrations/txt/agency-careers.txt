@@ -1,0 +1,41 @@
+﻿AGENCY CAREER
+=============
+
+API object:   agencyCareers
+Records:      1
+Key fields:   name, title, slug, canonicalPath, status, family, primaryHref
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    A job advert we have published
+    Hiring pages get the same rigour as marketing pages
+
+    An Agency Career is a job advert we have published on the careers section of the website. There is one live at the moment. The reason this object exists separately is worth explaining, because on the surface a job advert looks nothing like a marketing page. But structurally it is identical. It has a slug, a canonical path, a search title, a family it belongs to, and a status. It is a page. And pages are what the Agency Content object renders.
+
+[2] What goes inside it
+    The role title, its address, and where it lives on the site
+    The advert as a first-class web page
+
+    The fields make it clear that this is a managed page rather than a PDF somebody uploaded. The name is the internal identity of the advert. The title is the actual job title candidates see. The slug and the canonical path are its address on the site, and fixing them matters, because if the address changes after the advert has been advertised on job boards and social media, we lose the applicants. The status controls whether it is live or closed. The family field groups careers pages together, so the whole careers section can be reasoned about as a section. And the primary href is where the apply button goes.
+
+[3] Why it matters
+    Hiring pages deserve the same rigour as marketing pages
+    Which adverts actually attract applicants
+
+    Why treat hiring pages with the same seriousness as sales pages? Two reasons. The first is that a sales page that is broken loses a lead, but a hiring page that is broken loses every applicant you have, because they are applying to a company and the first impression is the careers site. The second is measurement. We already track SEO and analytics on marketing pages, so we can tell which advert brings enquiries. Doing nothing different for careers means we have no idea which adverts actually attract people and which ones waste the spend. Having them as proper records fixes that.
+
+[4] Where it is used
+    Publishing, promoting, and retiring an advert
+    The record behind every hiring push
+
+    So where does a person use this object? When we decide to hire for a role, this is the record that gets written and published. When we advertise that role on job boards and social channels, every link we post points at the canonical path held here, so we know which adverts people actually clicked. And when the role is filled, the status is updated and the page is retired, cleanly, with a link to anything that replaced it. There is one advert live, which usually means there is one role we genuinely need filling. The applicants who come in through it land in the Agency Career Application object.
+
+[5] Before you use it
+    Why a job advert is a first-class record
+    A page that earns traffic like any other
+
+    It surprises people that a job advert gets its own object here, so let me justify it. A careers page is a page. It has an address, it gets crawled, it competes for the same attention as every marketing page on the site, and it has an advert on it that people actually read. Which means it can be as badly written as any other page, and nobody would notice, because there is no meeting about the careers page. Putting it in this database means it gets the same treatment as a service page. It gets an owner. It gets a canonical path, so we know which advert is the real one when three exist. It gets a status, so a filled role can be retired instead of quietly ranking for a job that is closed. And it gets a family, so a new city or a new role is added by copying a pattern rather than by inventing one from scratch.
+
+

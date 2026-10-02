@@ -1,0 +1,41 @@
+﻿AGENCY PHONE
+============
+
+API object:   agencyPhones
+Records:      1
+Key fields:   phoneNumber, countryCode, numberType, state, tenDlcCampaignId, tollFreeVerificationId, messagingProfileId
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    A number we own, and what it is legally allowed to do
+    One record, but it gates every call and text
+
+    An Agency Phone is a dialling or messaging number that we own. There is only one record right now, and at first glance that does not look like a very important object. It is actually one of the most consequential in the whole library. Because that single row is the thing that decides whether every call we place and every text we send is allowed to happen at all. Get it wrong, and the carrier or the regulator takes the number away, and suddenly the entire outbound engine, the calls and the messages and the leads and the conversations, all of it stops.
+
+[2] What goes inside it
+    The number, and the four registrations behind it
+    Compliance paperwork, stored as data
+
+    The fields are mostly regulatory housekeeping, and that is the point. There is the phone number itself, and the country code, so the system knows which country's rules apply. There is the number type, so it is clear whether this is a local number, a mobile, or a toll-free line. Then the state field, which is simply the current status of the number. And then the three registration identifiers, which are the real payload. There is a ten D L C campaign ID, which is the United States registration for business texting. There is a toll-free verification ID, which is the separate check toll-free numbers have to pass before they can send. And there is a messaging profile ID, which is the Telnyx profile the number sends through.
+
+[3] Why it matters
+    Regulators and carriers, not us, decide the pace
+    Lose the number and the whole outbound motion dies
+
+    Why is compliance stored in the CRM at all, rather than just in somebody's head? Because compliance is not a preference, it is a hard constraint imposed by carriers and regulators who are not interested in our pipeline. If a number is not registered properly, text messages to it get silently dropped. If complaint rates go too high on a campaign, the messaging profile is suspended. If we try to send from a number that has not passed toll-free verification, nothing arrives and no error is shown. So this object is our single source of truth for whether our outbound is actually permitted. One row, enormous blast radius.
+
+[4] Where it is used
+    Before a send, not after a complaint
+    The check that stops the messages ever being sent
+
+    Where does it get used in practice? At the moment of sending, before anything goes out. The messaging system reads this record, checks the profile is active, checks the registration is valid, and only then releases the message. That is the whole point of putting it in the database, it turns a legal constraint into an automated precondition. When something is not working and texts are mysteriously not landing, this is the first record you open. And if you ever want to add a second number, a new city, or a different channel, you duplicate this row, get it registered properly first, and only then start sending. Never the other way round.
+
+[5] Before you use it
+    The one number, and the four approvals behind it
+    Sending is a privilege, not a default
+
+    There is only one of these right now, so let us be precise about what it means. This row is not a list of numbers we might dial some day. It is the record of the legal permissions attached to one number we own. Read the registrations as four separate answers to four separate authorities. The ten D L C campaign is the registration that lets us send business text from that number. The toll free verification is the separate process for a toll free number. The messaging profile is the container that decides which sender we are allowed to present. And the country and state fields decide which rulebook applies, because a number registered in Texas is not governed the same way as one in another country. So the practical instruction is simple. Before you ever queue a send, open this record and confirm the registration is approved, not pending. If it is pending, you are not waiting for marketing to be slow. You are waiting for a carrier. Nobody in this building can make that move faster, and pretending otherwise is how a number gets burned.
+
+

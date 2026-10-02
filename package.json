@@ -1,0 +1,20 @@
+{
+  "name": "listeningkit-hyperframes",
+  "private": false,
+  "type": "module",
+  "description": "ListeningKit object-explainer video series — HyperFrames compositions and the design system that governs them",
+  "license": "MIT",
+  "scripts": {
+    "entry": "node scripts/entry.mjs",
+    "dev": "npx --yes hyperframes@0.8.112 preview",
+    "build": "node build-beats.mjs && node scripts/entry.mjs",
+    "check": "npx --yes hyperframes@0.8.112 check",
+    "render": "node scripts/entry.mjs && npx --yes hyperframes@0.8.112 render",
+    "snapshot": "node scripts/entry.mjs && npx --yes hyperframes@0.8.112 snapshot",
+    "publish": "npx --yes hyperframes@0.8.112 publish",
+    "lint:design": "node scripts/lint-design.mjs"
+  },
+  "devDependencies": {
+    "lefthook": "^1.7.0"
+  }
+}

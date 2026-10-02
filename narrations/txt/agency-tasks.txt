@@ -1,0 +1,41 @@
+﻿AGENCY TASK
+===========
+
+API object:   agencyTasks
+Records:      0
+Key fields:   title, status, assignee
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    A to-do that lives on the record it belongs to
+    Work items attached to prospects, leads and deals
+
+    An Agency Task is an internal to-do item, and the important word is attached. A task is not a floating note in a list somewhere. It hangs directly off a prospect, a lead, an opportunity, an application, any of the other objects in this library. There are zero tasks at the moment, which again tells you something honest about where the team is. But the design is the thing worth understanding, because it is the difference between a business that follows up and a business that means to.
+
+[2] What goes inside it
+    A title, a status, and a named person
+    Three fields, and all three are load-bearing
+
+    Three fields, and all three are load-bearing. The title is what the work is, written so that somebody who was not in the room understands it in two seconds. The status tells you whether it is still to do, in progress, blocked, or done, and that is what lets anybody glance at a record and see the real state of it. The assignee is the named human who is doing it. Drop the assignee and you have a wish. Drop the status and you have a note. With all three, you have a commitment with a name on it.
+
+[3] Why it matters
+    Follow-up next to the record, never in a separate list
+    Next action visible on the record it belongs to
+
+    Why insist that follow-up work lives next to the record rather than in a separate list? Because separate lists are where work goes to die. Somebody writes call this shop back on Thursday in a notes app. Thursday arrives. Nobody can remember which shop. The deal goes cold and nobody can even explain why. When the task hangs off the prospect record, then opening the prospect tells you exactly what still needs doing and who owns it. You cannot look at a live deal without seeing the outstanding work attached to it.
+
+[4] Where it is used
+    The five-second check before anything is dropped
+    The check that stops a deal going cold unnoticed
+
+    So where does this get used day to day? In the five second check before anything is dropped. A call goes badly, so a task appears on the lead to call back Thursday. An advert goes live, so a task appears on the content record to check the rankings in two weeks. An application comes in, so a task appears to reply. That is it. That is the entire lifecycle. There are no tasks at the moment, which I would read as an opportunity rather than a problem, because the first genuinely useful thing anybody does in a system like this is attach a task to the record they were already looking at. Then the pipeline starts telling the truth.
+
+[5] Before you use it
+    The first task you should ever create
+    Attach it to the record you are already on
+
+    So if you take one action away from this, make it this. The next time you finish a call, or send a text, or publish a page, and you are already sitting on the record, create the follow-up task before you navigate anywhere else. That is the whole habit. Type a title that would make sense to somebody who was not in the room. Set the status to to do, not to done, because if it is done you would not be creating it. And assign it to a named person, which means you, by name, today, because an unassigned task is a wish and a wish does not get done on Thursday. Now notice what just happened. A task has been created on a record, and that record will now tell the next person who opens it exactly what is outstanding and who owns it. Do that once and the system starts telling the truth. Do it every time and the pipeline starts running itself. That is the entire return on this object.
+
+

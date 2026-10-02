@@ -1,0 +1,41 @@
+﻿AGENCY CONTENT
+==============
+
+API object:   agencyContents
+Records:      14
+Key fields:   name, slug, canonicalPath, family, status, seoTitle, primaryCta, primaryHref
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    Every page on the site, one row per URL
+    This is the CMS, and the site renders from it
+
+    An Agency Content record is one page on the ListeningKit website. Fourteen of them at the moment. One row equals one URL, and that is the whole mental model. This object is the content management system. It is not a blog, it is not a page builder, and it does not live in a deployment. It lives here, in the CRM, and the website reads from it. That means the person who owns the copy and the person who owns the pipeline are looking at the same record, which is unusual and very valuable.
+
+[2] What goes inside it
+    The path, the page family, and the SEO and CTA settings
+    Metadata and calls to action, per page
+
+    The fields start with identity. The name, the slug, and the canonical path, which is the definitive address of the page. Then the family field, which groups pages that belong together, like all the tinting pages, or all the career pages. That grouping is how you change something once and have it land in many places. The status controls whether the page is live or draft. Then the SEO title, which is the line that appears in the search results, and it is edited here deliberately rather than left to whatever the page happened to render. Finally the primary call to action and its href, so every page has a clear next step.
+
+[3] Why it matters
+    The website is a rendering of this table
+    Copy, SEO and conversion live on the same row
+
+    Why does it matter that the website renders from a CRM table? Because of where the accountability sits. When a page underperforms, somebody has to change the copy, change the SEO title, or change the call to action. If the content lives in the marketing team, the CRM never learns anything about it. If it lives here, then the same record carries the copy, the search metadata, and the conversion action, and it sits right next to the Campaign records that are driving traffic to it. Marketing and sales stop being separate databases and start being one system.
+
+[4] Where it is used
+    Launching pages, and measuring whether they work
+    Where the funnel and the website meet
+
+    So where does this object get used day to day? When we launch a page, this is the record that gets written. When we change an offer, this is where the wording on the matching page changes. When we analyse performance, this is where we look to see whether a weak page is weak because of its SEO title or its call to action. And the family field is what makes bulk work possible, because updating four tinting pages should be four edits in the database, not four separate deployments. Fourteen records today. This is the object where the search side of the business and the pipeline side of the business finally touch.
+
+[5] Before you use it
+    Reading one row and knowing the whole page
+    If it is not in this row, we did not build it
+
+    So to read a row properly, imagine you have never seen the website. The path tells you where the page lives. The family tells you what kind of page it is, whether that is a service page, a comparison, a resource, which means every page of the same kind shares a template and a standard. The status tells you whether it is published, in draft, or retired, and that status is the switch that decides whether it appears at all. The SEO title is the line that shows up in a search result, and it is the highest leverage three seconds of text on the entire page. The primary call to action is the button you want somebody to press, and the href is where it actually goes. Those last two fields being right or wrong is the difference between a page that generates a call and a page somebody visits, nods, and leaves. Read them in that order and you can tell somebody exactly what a page is for without opening it.
+
+

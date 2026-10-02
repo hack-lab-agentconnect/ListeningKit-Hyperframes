@@ -1,0 +1,41 @@
+﻿MESSAGE
+=======
+
+API object:   agencyMessages
+Records:      0
+Key fields:   body, direction, fromNumber, toNumber, status, telnyxMessageId
+
+NARRATION SCRIPT
+-----------------
+
+[1] The object
+    One row per SMS we sent or received
+    The atom of the texting motion, one per message
+
+    A Message record is one individual text message, sent to or received from a prospect or a lead. We have zero of them right now. That is worth understanding, because it tells you something real about where the motion currently is. But the shape of the object is simple and it is worth understanding anyway. Where the Conversation object holds a whole back and forth thread, the Message object is the atom. One row per text. That granularity is deliberate, and it is what makes the delivery pipeline auditable.
+
+[2] What goes inside it
+    The words, the direction, and the delivery receipt
+    A delivery receipt we can actually check
+
+    The fields are straightforward. The body is the actual text that was written. The direction tells you whether we sent it or they did, which matters enormously when you are reconstructing a conversation. The from number and the to number tie the message to a specific Agency Phone on our side and a specific prospect or lead on theirs. Then the status field, which is the delivery state, whether it was queued, sent, delivered, or failed. And finally the Telnyx message ID, which is the reference our provider gives us. That last field is the important one, because it lets us go back to the carrier and prove what actually happened to that specific message.
+
+[3] Why it matters
+    Text-back and missed-call follow-up is the whole motion
+    If a text never arrived, the follow-up never happens
+
+    Why does the business care this much about a text message log? Because texting is most of our outbound motion, not a side channel. When somebody rings us and misses it, we text them back. When we cannot get through on a call, we text. When a lead goes quiet, we follow up by text. Every one of those steps is a row in this object. And each of those steps can fail silently. A message queued at midnight, a carrier filtering it, a bad number, a registration that lapsed. Without this log, we would simply believe we had followed up, when in fact nothing was ever delivered. This object is our proof that we did the thing.
+
+[4] Where it is used
+    Reconstructing a thread, and chasing a delivery failure
+    The place to look when a reply never arrived
+
+    So where does a person actually use this object? When a lead says they never got our text, this is the first place to look, and the status field usually settles it immediately. When we are reconstructing a conversation with a shop, these rows are the evidence, in order, with timestamps. And when the Agency Phones record needs auditing, this is where you find out in practice whether messages are actually landing, because the failure rate shows up here long before anybody complains. Zero records today means the texting side is not running yet. It also means when it starts, this object is what makes it trustworthy.
+
+[5] Before you use it
+    Reading a thread and spotting a failure
+    Direction, status, and the receipt
+
+    So for the practical skill here, it is reading a thread in order and knowing where it broke. The direction field is the first thing you check on every single row, because inbound and outbound sitting next to each other without that label is genuinely how people get embarrassed on a live lead. Then the status. A message that shows as failed did not reach the phone, and the delivery receipt is where you find out why. Not every failure is our fault. Some of them are a full inbox, some are a number that no longer exists, and some are simply a carrier being slow. But the distinction matters, because a full inbox is a retry in five minutes and a dead number is a correction to the prospect record. Read the thread, find the first failure, and fix the cause rather than resending into the same wall.
+
+

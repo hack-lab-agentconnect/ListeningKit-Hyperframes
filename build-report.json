@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "agency-calls",
+    "title": "Call",
+    "seconds": 144.54,
+    "captions": 62,
+    "cards": 4
+  },
+  {
+    "slug": "agency-campaigns",
+    "title": "Agency Campaign",
+    "seconds": 144.97,
+    "captions": 61,
+    "cards": 4
+  },
+  {
+    "slug": "agency-career-applications",
+    "title": "Agency Career Application",
+    "seconds": 133.55,
+    "captions": 55,
+    "cards": 4
+  },
+  {
+    "slug": "agency-careers",
+    "title": "Agency Career",
+    "seconds": 133.03,
+    "captions": 53,
+    "cards": 4
+  },
+  {
+    "slug": "agency-competitors",
+    "title": "Agency Competitor",
+    "seconds": 140.68,
+    "captions": 62,
+    "cards": 4
+  },
+  {
+    "slug": "agency-contents",
+    "title": "Agency Content",
+    "seconds": 143.01,
+    "captions": 55,
+    "cards": 4
+  },
+  {
+    "slug": "agency-conversations",
+    "title": "Conversation",
+    "seconds": 143.19,
+    "captions": 61,
+    "cards": 4
+  },
+  {
+    "slug": "agency-leads",
+    "title": "Agency Lead",
+    "seconds": 150.87,
+    "captions": 68,
+    "cards": 4
+  },
+  {
+    "slug": "agency-listings",
+    "title": "Agency Listing",
+    "seconds": 142.15,
+    "captions": 61,
+    "cards": 4
+  },
+  {
+    "slug": "agency-messages",
+    "title": "Message",
+    "seconds": 141.08,
+    "captions": 58,
+    "cards": 4
+  },
+  {
+    "slug": "agency-offers",
+    "title": "Agency Offer",
+    "seconds": 145.76,
+    "captions": 55,
+    "cards": 4
+  },
+  {
+    "slug": "agency-opportunities",
+    "title": "Agency Opportunity",
+    "seconds": 143.88,
+    "captions": 61,
+    "cards": 4
+  },
+  {
+    "slug": "agency-phones",
+    "title": "Agency Phone",
+    "seconds": 153.9,
+    "captions": 63,
+    "cards": 4
+  },
+  {
+    "slug": "agency-prospects",
+    "title": "Agency Prospect",
+    "seconds": 161.39,
+    "captions": 72,
+    "cards": 4
+  },
+  {
+    "slug": "agency-scripts",
+    "title": "Script",
+    "seconds": 144.58,
+    "captions": 59,
+    "cards": 4
+  },
+  {
+    "slug": "agency-tasks",
+    "title": "Agency Task",
+    "seconds": 127.66,
+    "captions": 57,
+    "cards": 4
+  }
+]

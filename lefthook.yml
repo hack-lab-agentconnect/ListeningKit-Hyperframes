@@ -1,0 +1,30 @@
+# lefthook — enforces DESIGN_SYSTEM.md on every commit.
+#
+# The design-system lint runs first and is not skippable with --no-verify on
+# this repo's CI. Every rule it enforces was broken at least once; see
+# DESIGN_SYSTEM.md for the failure each one prevents.
+
+pre-commit:
+  parallel: false
+  commands:
+    design-system:
+      glob: "*.{mjs,html,css}"
+      run: node scripts/lint-design.mjs {staged_files}
+
+    build:
+      # Rebuild the compositions so a stale committed build can never ship. The
+      # generated HTML under compositions/ is committed on purpose — Studio and
+      # the renderer read it directly and a fresh clone must render without a
+      # build step — so it has to be regenerated, not just rebuilt locally.
+      run: node build-beats.mjs
+      stage_fixed: true
+
+    diff-check:
+      # If `build` changed anything, fail and let the author inspect + stage it.
+      # Silently committing a regenerated build would hide the drift.
+      run: git diff --quiet -- compositions/ || (echo "compositions/ changed — review and stage the rebuild" && exit 1)
+
+pre-push:
+  commands:
+    design-system:
+      run: node scripts/lint-design.mjs

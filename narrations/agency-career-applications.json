@@ -1,0 +1,49 @@
+{
+  "slug": "agency-career-applications",
+  "narration": {
+    "title": "Agency Career Application",
+    "api": "agencyCareerApplications",
+    "recordCount": "4",
+    "keyFields": [
+      "name",
+      "email",
+      "phone",
+      "roleTitle",
+      "resumeUrl",
+      "coverLetter",
+      "status"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "One real person who applied for a job",
+        "body": "Where the careers flow becomes about humans",
+        "say": "An Agency Career Application is one application we received against one of our published roles. We have four at the moment. This is the object where the careers flow stops being a website and starts being about actual human beings who trusted us enough to send us their CV. That sounds like a sentimental thing to say about a database row, but it has a very practical consequence. An applicant stored in a shared inbox is a liability. An applicant stored as a record with a status is a pipeline."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "Who they are, what they applied for, and what they sent us",
+        "body": "Including the resume and the cover letter",
+        "say": "The fields are straightforward and complete. The name, the email, and the phone, so we can reach them. The role title, which tells you which advert they came through, and that link is what lets us compare adverts by quality of applicant. Then the resume URL, which points at the actual document they uploaded, so it does not get lost in an inbox. Then the cover letter, stored inline, because the cover letter usually tells you more about whether somebody is worth talking to than the CV does. And the status, which is where the person currently sits in our hiring process."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "They land in the same pipeline as everything else",
+        "body": "An inbox is not a hiring process",
+        "say": "Why does it matter that applications get stored here rather than emailed? Because everything else in this system has a status, an owner, and a next action, and hiring is the only part of the business that runs entirely on somebody remembering. When an applicant lives in an inbox, the reply that was going to go out on Monday does not go out, and they take another offer. Putting applications into the CRM means they appear in the same pipeline view as leads, opportunities and follow-up tasks, so nothing quietly falls through. The status field is the whole game."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "Reading applications, and judging the advert",
+        "body": "And reading it back to grade the advert itself",
+        "say": "So where does this object get used? Directly, when somebody is reading applications and deciding who to talk to. And then less directly, which is more interesting. The quality of applicants is the honest feedback on the Agency Career advert itself. If one advert gets forty applications and they are all strong, and another gets four and they are all off-target, then the problem is the advert, not the market. Reading these records backwards is how you learn which roles to advertise and how to write the next one. Four applications today is a very small sample, but it is the beginning of a real hiring process."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "The forty-five seconds that actually read an application",
+        "body": "What to look for before the CV",
+        "say": "Reading an application well takes about forty five seconds and almost none of it is spent on the CV. Start with the role title and ask whether this person answered the advert we actually posted or an advert from three months ago that is still floating around. Then the name and the email, because a surprising share of applications come in with a name that does not match the email address, and that mismatch is the first and cheapest fraud signal you get. Then the cover letter, and you are not grading the writing. You are looking for one of three things. A specific reason they want this job. A specific thing they have actually done. Or a question. Anything else is a template, and a template tells you the person is mass applying, which is a fact about them worth knowing before you spend an hour. Only after that do you open the resume."
+      }
+    ]
+  }
+}

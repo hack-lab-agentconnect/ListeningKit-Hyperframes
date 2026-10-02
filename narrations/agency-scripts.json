@@ -1,0 +1,45 @@
+{
+  "slug": "agency-scripts",
+  "narration": {
+    "title": "Script",
+    "api": "agencyScripts",
+    "recordCount": "9",
+    "keyFields": [
+      "name",
+      "scriptData",
+      "campaign"
+    ],
+    "paragraphs": [
+      {
+        "eyebrow": "The object",
+        "heading": "The actual words we say out loud, stored as data",
+        "body": "Reusable talk tracks, not a doc somebody edits",
+        "say": "A Script record is the actual words we say when we ring somebody, or the actual words we put in a text message. We have nine of them. This is the object people are most surprised to find in a CRM, because a script feels like a document, not data. But the whole point is that it is data. Once the words live here, they can be handed to a dialer, versioned, reviewed, linked to the campaign they belong to, and improved. A script living in a Google Doc is already dead. It drifts, it gets forked, and two people end up saying different things."
+      },
+      {
+        "eyebrow": "What goes inside it",
+        "heading": "A name, structured script data, and the campaign it serves",
+        "body": "Structured, so a machine can actually read it",
+        "say": "There are three fields, and the second one is the interesting one. The name identifies the script, something like a cold call opener for window tinting. Then script data, which is the script itself, and the word structured is doing real work in that sentence. It is not a blob of prose. It is the script broken into its parts, the opening line, the qualifying questions, the objection handling, the close for the next step. Because it is structured, software can read it and pick the right part at the right moment. And the campaign field links it to the Agency Campaign it was written for, so you can tell which motion it belongs to."
+      },
+      {
+        "eyebrow": "Why it matters",
+        "heading": "It is the single source of truth for how we sound",
+        "body": "Two people should never sell the same thing differently",
+        "say": "Why insist on keeping scripts in the CRM rather than in a document? Consistency. If two people sell the same package using two different stories, the customer experience is incoherent and we cannot improve either version, because we do not know which one they heard. Storing them here means the whole team, and every automated agent that dials on our behalf, works from exactly the same source of truth. It also means when a script works, everybody gets the improvement immediately, rather than three weeks later when somebody mentions it in a meeting."
+      },
+      {
+        "eyebrow": "Where it is used",
+        "heading": "On the call, in the text, and in the training",
+        "body": "Used live during outreach, not just read once",
+        "say": "Where does a script actually get used? Directly, during outreach. When the dialer places a call, it is reading from this object. When we send a follow-up text, the wording comes from here. And then there is a second, less obvious use, which is training. When a new joiner starts, the fastest way to understand how the business sells is to read the nine scripts end to end. They are short, they are written down, and they encode the objections we hit and the answers that work. Nine scripts is a tiny object with an outsized effect on the whole sales floor."
+      },
+      {
+        "eyebrow": "Before you use it",
+        "heading": "Changing the words and keeping the record",
+        "body": "Edit here, never in a notes app",
+        "say": "One last practical thing, and it is the one that gets broken most often. When the team improves an opening line, it gets changed in a script record, not in a document, not in a text file, and definitely not in somebody's head before a call. That is the whole reason this object is structured rather than just being a big text field. The structured data means the system can pull out the pieces it needs, like the first line, or the objection responses, and use them in the places they belong. The call script, the text message, and the training material can all read from one record and stay consistent. If you have ever run a team where the version in the dialer and the version in the training doc disagreed, you already know how expensive that is. Somebody gets told the old line on a call. The objection they thought was handled is not handled. So the discipline is small. If you are about to say new words on a call, the words change here first, and everyone downstream picks them up from here."
+      }
+    ]
+  }
+}
