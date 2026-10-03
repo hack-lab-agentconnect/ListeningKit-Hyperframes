@@ -137,6 +137,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
  width:72px;height:72px;border-radius:8px;
  background:#2A8CFF;color:#FFFFFF}
 .ico.on-white{background:#EFF6FF;color:#2A8CFF}
+/* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
+   a blue glyph. A blue tile on a blue card is the icon disappearing, which is
+   the exact failure the white-stage cards had. */
+.ico.on-bluecard{background:#FFFFFF;color:#2A8CFF}
 .ico.plain{background:none;width:auto;height:auto;color:inherit}
 .irow{display:flex;align-items:center;gap:24px}
 .irow > .itx{flex:1;min-width:0}
@@ -144,7 +148,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* ---- grid + list rows used by the field-by-field beats */
 .rows{display:flex;flex-direction:column;gap:14px}
 .row{display:flex;align-items:center;gap:22px;padding:18px 24px;border-radius:14px}
-.row .rk{font:undefined;width:270px;flex-shrink:0;opacity:.8}
+.row .rk{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:270px;flex-shrink:0;opacity:.8}
 .row .rv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:500}
 .row .rdot{margin-left:auto;width:12px;height:12px;border-radius:50%;background:currentColor;opacity:.28}
 
@@ -156,10 +160,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 
 /* ---- bar chart (sentiment) */
 .bar{display:flex;align-items:center;gap:20px;padding:14px 0}
-.bar .bl{font:undefined;width:130px;opacity:.8}
+.bar .bl{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:130px;opacity:.8}
 .bar .bt{flex:1;height:26px;border-radius:8px;overflow:hidden;background:rgba(127,127,127,.14)}
 .bar .bf{display:block;height:100%;width:0;border-radius:8px}
-.bar .bv{font:undefined;width:150px;text-align:right;opacity:.8}
+.bar .bv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:150px;text-align:right;opacity:.8}
 
 /* ---- journey / step cards */
 .jr{display:flex;gap:20px;justify-content:center}
@@ -168,7 +172,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
  justify-content:center;font-size:20px;font-weight:700}
 .jr .ch{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:20px}
 .jr .cs{font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:400;opacity:.72;margin-top:10px}
-.jr .cm{font:undefined;margin-top:18px;opacity:.6}
+.jr .cm{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;margin-top:18px;opacity:.6}
 
 /* ---- transcript surface */
 .tw{border-radius:24px;overflow:hidden}
@@ -188,8 +192,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .chk{width:30px;height:30px;margin-left:auto;opacity:0}
 .chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
-/* ---- chips that converge (constellation) */
-.chip{padding:13px 22px;border-radius:999px;font-size:23px;font-weight:600;
+/* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
+   carrying an object name, not status badges, and a 999px radius turned them
+   into lozenges. Fully-rounded is for real pills only (DESIGN_SYSTEM 2.3). */
+.chip{padding:13px 22px;border-radius:14px;font-size:23px;font-weight:600;
  white-space:nowrap}
 
 /* ---- cursor. The real product cursors, lifted from
@@ -266,7 +272,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
     <div id="root" data-composition-id="agency-calls-b1" data-start="0" data-duration="15.500" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
         <div class="ovwrap"><div class="ovbox" data-a="box" style="opacity:0;width:560px;height:120px;background:#FFFFFF;border-radius:12px;;color:#0F172A;box-shadow:inset 0 -2px 0 0 #117eff, inset 0 1px 0 0 #ffffff, 0 6px 0 0 rgba(9,32,63,0.30);display:flex;align-items:center;justify-content:center;"><span class="h3" style="color:#0F172A">COLD CALLING</span></div></div>
-        <div class="ovcard" data-i="0" style="max-width:520px;background:rgba(255,255,255,0.10);border-radius:20px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center"><span class="body white">“I rung 40 shops”</span></div><div class="ovcard" data-i="1" style="max-width:520px;background:rgba(255,255,255,0.10);border-radius:20px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center"><span class="body white">no transcript</span></div><div class="ovcard" data-i="2" style="max-width:520px;background:rgba(255,255,255,0.10);border-radius:20px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center"><span class="body white">no recording</span></div><div class="ovcard" data-i="3" style="max-width:520px;background:rgba(255,255,255,0.10);border-radius:20px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center"><span class="body white">no sentiment</span></div><div class="ovcard" data-i="4" style="max-width:520px;background:rgba(255,255,255,0.10);border-radius:20px;box-shadow:0 6px 0 0 rgba(9,32,63,0.30),inset 0 0 0 1.5px rgba(255,255,255,0.30);display:flex;align-items:center;justify-content:center"><span class="body white">no way to check</span></div>
+        <div class="ovcard" data-i="0" style="max-width:520px;background:#FFFFFF;border-radius:20px;box-shadow:0 6px 0 0 rgba(13,42,76,0.24);color:#0F172A;;display:flex;align-items:center;justify-content:center"><span class="body" style="color:#0F172A">“I rung 40 shops”</span></div><div class="ovcard" data-i="1" style="max-width:520px;background:#FFFFFF;border-radius:20px;box-shadow:0 6px 0 0 rgba(13,42,76,0.24);color:#0F172A;;display:flex;align-items:center;justify-content:center"><span class="body" style="color:#0F172A">no transcript</span></div><div class="ovcard" data-i="2" style="max-width:520px;background:#FFFFFF;border-radius:20px;box-shadow:0 6px 0 0 rgba(13,42,76,0.24);color:#0F172A;;display:flex;align-items:center;justify-content:center"><span class="body" style="color:#0F172A">no recording</span></div><div class="ovcard" data-i="3" style="max-width:520px;background:#FFFFFF;border-radius:20px;box-shadow:0 6px 0 0 rgba(13,42,76,0.24);color:#0F172A;;display:flex;align-items:center;justify-content:center"><span class="body" style="color:#0F172A">no sentiment</span></div><div class="ovcard" data-i="4" style="max-width:520px;background:#FFFFFF;border-radius:20px;box-shadow:0 6px 0 0 rgba(13,42,76,0.24);color:#0F172A;;display:flex;align-items:center;justify-content:center"><span class="body" style="color:#0F172A">no way to check</span></div>
       </div>
     </div>
     <script>

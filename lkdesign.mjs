@@ -165,6 +165,13 @@ export const TYPE = {
   eyebrow: "700 20px/1 'Satoshi', system-ui, sans-serif",
   label: "700 17px/1.2 'Satoshi', system-ui, sans-serif",
   monoish: "500 21px/1.3 'Satoshi', system-ui, sans-serif",
+  // The record/list KEY label ("direction", "status", "fromNumber") and the value
+  // beside it. This token was referenced by lkchrome.mjs as TYPE.kv and DID NOT
+  // EXIST, so every key label emitted a literal `font:undefined` and silently
+  // inherited the body face - which is why the record keys read as undifferentiated
+  // body text next to the values, and why the object chips looked inconsistent.
+  // Same cut as monoish; it is the same role in the product.
+  kv: "500 21px/1.3 'Satoshi', system-ui, sans-serif",
   // 400: captions are the floor of the frame, not a competing headline.
   caption: "400 34px/1.34 'Satoshi', system-ui, sans-serif",
 };

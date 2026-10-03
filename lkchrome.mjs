@@ -161,6 +161,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:${stageBg}}
  width:72px;height:72px;border-radius:${R.sm}px;
  background:${C.blue};color:${C.white}}
 .ico.on-white{background:${C.tint};color:${C.blue}}
+/* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
+   a blue glyph. A blue tile on a blue card is the icon disappearing, which is
+   the exact failure the white-stage cards had. */
+.ico.on-bluecard{background:${C.white};color:${C.blue}}
 .ico.plain{background:none;width:auto;height:auto;color:inherit}
 .irow{display:flex;align-items:center;gap:24px}
 .irow > .itx{flex:1;min-width:0}
@@ -212,8 +216,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:${stageBg}}
 .chk{width:30px;height:30px;margin-left:auto;opacity:0}
 .chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
-/* ---- chips that converge (constellation) */
-.chip{padding:13px 22px;border-radius:${R.pill}px;font-size:23px;font-weight:600;
+/* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
+   carrying an object name, not status badges, and a 999px radius turned them
+   into lozenges. Fully-rounded is for real pills only (DESIGN_SYSTEM 2.3). */
+.chip{padding:13px 22px;border-radius:${R.lg}px;font-size:23px;font-weight:600;
  white-space:nowrap}
 
 /* ---- cursor. The real product cursors, lifted from

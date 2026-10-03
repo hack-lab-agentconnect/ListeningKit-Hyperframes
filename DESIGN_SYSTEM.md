@@ -26,13 +26,40 @@ Alpha that costs contrast without buying depth is banned.
 
 | Surface | Fill | Where |
 |---|---|---|
-| Card on a white stage | `#FFFFFF` solid + `0 6px 0 0 rgba(13,42,76,0.24)` | `surface()` |
-| Card on a blue stage | `#FFFFFF` solid + same drop | `surface()` |
+| **Card on a blue stage** | `#FFFFFF` solid + `0 6px 0 0 rgba(13,42,76,0.24)` | `surface()` |
+| **Card on a white stage** | `#2A8CFF` solid + `0 6px 0 0 #1F6FE6` | `blueCard()` |
 | Glass panel on blue | `rgba(255,255,255,0.10)` + `1.5px rgba(255,255,255,0.30)` | `glass()` |
 | Caption pill on blue | `rgba(10,24,48,0.42)` + `1.5px rgba(255,255,255,0.16)` | `.cap span` |
 | Caption pill on white | `rgba(255,255,255,0.88)` + `1.5px #E2E8F0` | `.cap span` |
-| Record row fill | `rgba(42,140,255,0.06)` | `.row` |
+| Record row fill on a blue card | `rgba(255,255,255,0.10)` | `.row` |
+| Record row fill on a white card | `rgba(42,140,255,0.06)` | `.row` |
 | API name chip | `rgba(42,140,255,0.10)` + `1.5px rgba(42,140,255,0.22)` | `.apichip` |
+
+#### 1.1a The card inverts with the stage — the one rule that was wrong twice
+
+**A card is WHITE on the blue stage and BRAND BLUE on the white stage.**
+
+This is not a preference; it is the only way a card reads as an object at all
+when the stage underneath it is already one of those two colours. Two earlier
+attempts at the white stage were the same mistake in different clothes: an
+opaque near-white fill, and then an opaque white fill with a `1.5px` blue
+hairline "for an edge". Both are the stage, redrawn. A hairline is not an edge
+at video scale — it is a rumour of one.
+
+Pick the card with `cardFor(tone, maxW, radius, extra)`, which is the only place
+the inversion is decided. Do **not** hand-pick `surface()` vs `frost()` per tone
+in a scene: that is exactly how the record panel shipped with byte-identical
+branches on both tones (`onBlue ? surface(...) : surface(...)`) and rendered
+white-on-white.
+
+Everything **inside** a card inverts with it — key labels, values, the focus row
+fill, the waveform, and the icon tile. `.ico.on-bluecard` is a white tile with a
+blue glyph; a blue tile on a blue card is the icon disappearing. Derive the inner
+ink from the same flag you derive the surface from, never from the stage tone
+independently.
+
+`frost()` (translucent white card) exists in `scenes.mjs` but is no longer used by
+any beat. If you reach for it, you are about to reintroduce this bug.
 
 **Exception, deliberate:** the dither field. `rgba(42,140,255,0.30)` crossed at
 45° is a *pattern*, not a wash — it has hard edges and it animates. It is
@@ -81,22 +108,24 @@ The app's radii, from `DashboardFormSheet.tsx`, `OnboardingSteps.tsx:319`,
 `R.pill` is for real pills and badges — CTA buttons, status chips, the numbered
 `rounded-full` step marker from `OnboardingSteps.tsx:421`. It is **not** for icon
 tiles, progress bars, or cards. Icon tiles are `R.sm`. Bar tracks are `R.sm`
-(they were `13px` on a `26px` height, which is a fully-rounded pill).
+(they were `13px` on a `26px` height, which is a fully-rounded pill). The converge
+chips were `R.pill` while carrying an object name — they are `R.lg` now, because
+a card that says `agencyOpportunities` is not a badge.
 
 ### 1.5 Icon tiles
 
 An icon **inside a tile** takes its colour from the tile, and the two must be
-opposite ends of the value range:
+opposite ends of the value range. The tile follows the **card**, not the stage:
 
-- `.ico.on-blue` — brand blue `#2A8CFF` tile, **white** glyph. For a tile sitting
-  on a white card.
-- `.ico.on-white` — light tint `#EFF6FF` tile, **blue** glyph. For a tile sitting
-  on a blue stage.
+- `.ico.on-blue` — brand blue `#2A8CFF` tile, **white** glyph. On a white card.
+- `.ico.on-bluecard` — solid white tile, **blue** glyph. On a blue card.
+- `.ico.on-white` — light tint `#EFF6FF` tile, **blue** glyph. On a white stage
+  outside any card.
 - `.ico.plain` — no tile, `color: inherit`. A bare icon is fine anywhere.
 
 The specific bug: a light-blue tile on a white card left the icon within a few
-points of the card's own value, so the icon read as a faint smudge. Tiles on white
-surfaces are brand blue with white glyphs.
+points of the card's own value, so the icon read as a faint smudge. The mirror of
+it is worse — a blue tile on a blue card is the icon gone entirely.
 
 ### 1.6 No squircle
 
@@ -201,7 +230,14 @@ per beat so the edit keeps cutting between white-on-blue and blue-on-white.
   element is the chapter rail at the bottom, which wipes.
 - Boxes must be able to grow. A fixed `300x52` chip silently clipped longer labels
   mid-word.
-- Record panels are reconstructed product surfaces and stay solid white.
+- Record panels follow the same inversion as every other card (1.1a). They are
+  reconstructed product surfaces, but a reconstructed surface that is invisible is
+  not representing the product, it is contradicting it.
+- **Generated `compositions/**` HTML must be rebuilt and committed with any source
+  change.** The journey-card fix landed in `scenes.mjs` and the committed
+  compositions still carried the old hardcoded `background:#FFFFFF` — every frame
+  reviewed after that commit was a frame of the *previous* design. Run
+  `npm run build` (both compositions) before committing.
 
 ---
 
@@ -213,4 +249,15 @@ npm run lint:design     # lefthook pre-commit
 
 `scripts/lint-design.mjs` fails on: opaque card fills, `border-radius` ≥ half the
 box, `letter-spacing` other than 0 or negative, monospace families, the squircle
-`clip-path`, and the logo invert filter.
+`clip-path`, the logo invert filter, and **any `R.*` / `TYPE.*` / `C.*` token that
+`lkdesign.mjs` does not export**.
+
+That last rule exists because an undefined token **fails open**: the browser
+drops `font:undefined` and `border-radius:undefinedpx` without a warning, so the
+frame is quietly wrong and the build says nothing. Three shipped that way —
+`TYPE.kv` (every record key label), `R.input` (the overwhelm cards),
+`R.badge` (the end-card URL chip) — plus one call with transposed arguments,
+`glass(430, 128, R.card)`, which produced a 128px lozenge and a stray `;20;` in
+the same style attribute. `TYPE.kv` was the visible one: the record keys were
+rendering in the inherited body face, which is most of why the camelCase object
+names looked visually inconsistent with everything around them.

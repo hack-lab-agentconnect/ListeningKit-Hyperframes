@@ -84,6 +84,38 @@ export function surface(maxW, r = R.panel, extra = "") {
 }
 
 /**
+ * THE CARD INVERSION RULE. A card is WHITE on the blue stage and BRAND BLUE on
+ * the white stage. Never white-on-white, never white-on-white-with-a-hairline.
+ *
+ * Both earlier attempts at the white stage were the same mistake wearing
+ * different clothes: an opaque near-white fill, and then an opaque white fill
+ * with a 1.5px blue hairline pretending to be an edge. Neither is a card - they
+ * are the stage, redrawn. The stage already alternates, so the card has to
+ * alternate against it or it has no job.
+ *
+ * The drop is the brand's own darker blue (button.tsx:22 #1f6fe6), not grey:
+ * a grey shadow under a blue card reads as dirt, a blue one reads as depth.
+ */
+export function blueCard(maxW, r = R.card, extra = "") {
+  return card(maxW, r, C.blue, null, `color:${C.white};${extra}`).replace(
+    hardDrop(SHADOW.y, SHADOW.grey),
+    hardDrop(SHADOW.y, C.blueHover),
+  );
+}
+
+/**
+ * Pick the card for the stage it will actually sit on.
+ *
+ * This is the only place the inversion is decided. A scene that hand-picks
+ * `surface()` vs `frost()` per tone is how the record panel ended up with
+ * literally identical branches on both tones (`onBlue ? surface(...) :
+ * surface(...)`) and shipped white-on-white.
+ */
+export function cardFor(tone, maxW, r = R.card, extra = "") {
+  return tone === "blue" ? surface(maxW, r, extra) : blueCard(maxW, r, extra);
+}
+
+/**
  * A white card that has to be visible ON A WHITE STAGE.
  *
  * Solid white on solid white has no edge — the hard drop alone was not enough to
@@ -157,14 +189,15 @@ function rowsHTML(rows) {
 }
 
 /** Waveform bars from a deterministic pseudo-random height list. */
-function waveHTML(n = 84) {
+/** Waveform bars. `ink` is the colour that reads against the CARD they sit on:
+ *  brand blue on a white card, solid white on the blue card - a blue waveform on
+ *  a blue card is an invisible waveform. */
+function waveHTML(n = 84, ink = C.blue) {
   let s = 7;
   const rnd = () => ((s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
   return `<div class="wave">${Array.from(
     { length: n },
-    (_, i) => `<i style="--h:${(18 + rnd() * 62).toFixed(0)}%;background:${
-      C.blue
-    }"></i>`,
+    (_, i) => `<i style="--h:${(18 + rnd() * 62).toFixed(0)}%;background:${ink}"></i>`,
   ).join("")}</div>`;
 }
 
@@ -248,7 +281,11 @@ export const beats = {
         ${blockers
           .map(
             (b, i) =>
-              `<div class="ovcard" data-i="${i}" style="${glass(520, R.input)};display:flex;align-items:center;justify-content:center"><span class="body white">${b}</span></div>`,
+              `<div class="ovcard" data-i="${i}" style="${cardFor(
+          "blue",
+          520,
+          R.card,
+        )};display:flex;align-items:center;justify-content:center"><span class="body" style="color:${C.slate900}">${b}</span></div>`,
           )
           .join("")}
       </div>`,
@@ -305,12 +342,24 @@ export const beats = {
   /* --- 3/4. THE RECORD â€” a real surface, one field lit at a time ------------ */
   record({ kicker, title, api, r, focus, note, cursor = false, tone = "white" }) {
     const onBlue = tone === "blue";
-    const head = `<div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid ${onBlue ? "rgba(127,127,127,.16)" : C.slate200}">
-        <span class="ico on-white" style="width:56px;height:56px;border-radius:${R.md}px">${icon(OBJECT_ICON[api] || "square-3-stack-3d", 32)}</span>
-        <span class="h3" style="font-weight:900">${title}</span>
-        ${apiChip(api)}</div>`;
-    const rowFill = onBlue ? "rgba(255,255,255,0.08)" : "rgba(42,140,255,0.06)";
-    const body = `<div style="padding:26px 30px 30px">${rowsHTML(r)}</div>`;
+    // The card inverts against the stage, so everything INSIDE it has to invert
+    // with it. `cardIsBlue` is the single flag both the surface and the inner
+    // ink are derived from - deriving them from `onBlue` independently is what
+    // produced a white card full of slate text on a white stage.
+    const cardIsBlue = !onBlue;
+    const ink = cardIsBlue ? C.white : C.slate900;
+    const head = `<div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid ${
+      cardIsBlue ? "rgba(255,255,255,0.22)" : C.slate200
+    }">
+        <span class="ico ${cardIsBlue ? "on-bluecard" : "on-white"}" style="width:56px;height:56px;border-radius:${R.md}px">${icon(
+          OBJECT_ICON[api] || "square-3-stack-3d",
+          32,
+        )}</span>
+        <span class="h3" style="font-weight:900;color:${ink}">${title}</span>
+        ${apiChip(api, cardIsBlue)}</div>`;
+    const rowFill = cardIsBlue ? "rgba(255,255,255,0.10)" : "rgba(42,140,255,0.06)";
+    const focusFill = cardIsBlue ? "rgba(255,255,255,0.26)" : C.selected;
+    const body = `<div style="padding:26px 30px 30px;color:${ink}">${rowsHTML(r)}</div>`;
     return {
       name: "record",
       tone,
@@ -318,10 +367,12 @@ export const beats = {
       type: "feature_showcase",
       html: `<div class="stagec">
         ${kicker ? `<div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>` : ""}
-        <div class="pan" data-a="p" style="${onBlue ? surface(1180, R.panel) : surface(1180, R.panel)};overflow:hidden">${head}${body}</div>
-        <div class="note" data-a="n" style="${onBlue ? glass(560, R.card) : frost(560, R.card)};padding:26px 28px;opacity:0">
-          <div class="label ${onBlue ? "white" : "blue"}">${focus}</div>
-          <div class="body ${onBlue ? "white" : ""}" style="font-weight:500;margin-top:10px">${note}</div>
+        <div class="pan" data-a="p" style="${cardFor(tone, 1180, R.panel)};overflow:hidden">${head}${body}</div>
+        <div class="note" data-a="n" style="${cardFor(tone, 560, R.card)};padding:26px 28px;opacity:0;color:${
+          cardIsBlue ? C.white : C.slate900
+        }">
+          <div class="label" style="color:${cardIsBlue ? C.white : C.blue}">${focus}</div>
+          <div class="body" style="font-weight:500;margin-top:10px">${note}</div>
         </div>
         ${
           cursor
@@ -342,7 +393,7 @@ export const beats = {
           if (isT) {
             // the named field lifts and stays lit â€” this is the "motion carries
             // the explanation" beat: the row the narration is saying lights up.
-            tl.to(el, { background: onBlue ? "rgba(42,140,255,0.30)" : C.selected, scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
+            tl.to(el, { background: focusFill, scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
             tl.to(el, { scale: 1.0, duration: 0.9, yoyo: true, repeat: -1, ease: "sine.inOut" }, at + 0.9);
             tl.fromTo(q('[data-a="n"]'), { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, at + 0.45);
             if (cursor) {
@@ -361,11 +412,10 @@ export const beats = {
     const nodes = links
       .map(
         (l, i) =>
-          `<div class="node relnode" data-node="${i}" style="${glass(
+          `<div class="node relnode" data-node="${i}" style="${surface(
             430,
-            128,
             R.card,
-          )};position:absolute;left:1330px;top:${400 + i * 240}px;opacity:0"><span class="nk white">${l[0]}</span><span class="nv white">${l[1]}</span></div>`,
+          )};position:absolute;left:1330px;top:${400 + i * 240}px;opacity:0"><span class="nk" style="color:${C.slate900}">${l[0]}</span><span class="nv" style="color:${C.slate600}">${l[1]}</span></div>`,
       )
       .join("");
     const paths = links
@@ -411,12 +461,17 @@ export const beats = {
       type: "feature_showcase",
       html: `<div class="stagec">
         <div class="eyebrow blue" data-a="k" style="opacity:0">${kicker}</div>
-        <div class="tw" style="${surface(1300, R.panel)}">
-          <div class="thead"><span class="kv" style="color:${C.blue}">transcript</span><span class="kv" data-a="len" style="opacity:.55">0:00</span></div>
+        <div class="tw" style="${cardFor("white", 1300, R.panel)}">
+          <div class="thead"><span class="kv" style="color:${C.white}">transcript</span><span class="kv" data-a="len" style="color:${C.white};opacity:.62">0:00</span></div>
           <div class="tscroll"><div class="tinner" data-a="inner">${lines
-            .map((l, i) => `<p class="tline ${i === marker ? "hit" : ""}" style="color:${i === marker ? C.blue : C.slate900}">${l}</p>`)
+            .map(
+              (l, i) =>
+                `<p class="tline ${i === marker ? "hit" : ""}" style="color:${
+                  i === marker ? C.white : "rgba(255,255,255,0.74)"
+                }${i === marker ? ";font-weight:900" : ""}">${l}</p>`,
+            )
             .join("")}</div></div>
-          ${waveHTML()}
+          ${waveHTML(84, C.white)}
         </div>
       </div>`,
       anim(tl, t0, { q, qq }) {
@@ -445,16 +500,16 @@ export const beats = {
       blueprint: "agent-progress-theater",
       type: "key_feature",
       html: `<div class="stagec">
-        <div class="wk" style="${glass(1120, R.panel)};padding:0;overflow:hidden">
-          <div class="thead" style="border-bottom:1.5px solid rgba(255,255,255,.18)"><span class="kv white" style="opacity:.8">${head}</span></div>
+        <div class="wk" style="${cardFor("blue", 1120, R.panel)};padding:0;overflow:hidden;color:${C.slate900}">
+          <div class="thead" style="border-bottom:1.5px solid ${C.slate200}"><span class="kv" style="opacity:.8">${head}</span></div>
           <div style="padding:24px 30px;display:flex;flex-direction:column;gap:16px">
             ${steps
               .map(
-                (s) => `<div class="wrow" data-state="pending" style="background:rgba(255,255,255,.07)"><span class="spin white"></span><span class="body white">${s}</span><span class="chk"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M20 6L9 17L4 12" stroke="#6EE7A8"/></svg></span></div>`,
+                (s) => `<div class="wrow" data-state="pending" style="background:rgba(42,140,255,0.06)"><span class="spin" style="border-color:${C.blue};border-top-color:transparent"></span><span class="body">${s}</span><span class="chk"><svg width="30" height="30" viewBox="0 0 24 24"><path d="M20 6L9 17L4 12" stroke="#12A150"/></svg></span></div>`,
               )
               .join("")}
           </div>
-          <div style="padding:22px 30px 26px;border-top:1.5px solid rgba(255,255,255,.18)" class="body white dim">${foot}</div>
+          <div style="padding:22px 30px 26px;border-top:1.5px solid ${C.slate200}" class="body dim">${foot}</div>
         </div>
       </div>`,
       anim(tl, t0, { qq }) {
@@ -504,16 +559,14 @@ export const beats = {
       type: "benefit_highlight",
       html: `<div class="stagec">
         <div class="eyebrow white" data-a="k" style="opacity:0">${kicker}</div>
-        <div class="sb" style="${glass(1120, R.panel,
-        )};padding:24px 30px">
+        <div class="sb" style="${cardFor("blue", 1120, R.panel)};padding:24px 30px;color:${C.slate900}">
           ${bars
             .map(
-              (b) => `<div class="bar"><span class="bl white">${b[0]}</span><span class="bt" style="background:rgba(255,255,255,.14)"><i class="bf" data-w="${b[1]}" style="background:linear-gradient(90deg,${C.blueGradTop},${C.blueGradBot})"></i></span><span class="bv white">${b[2]}</span></div>`,
+              (b) => `<div class="bar"><span class="bl">${b[0]}</span><span class="bt" style="background:rgba(42,140,255,0.10)"><i class="bf" data-w="${b[1]}" style="background:linear-gradient(90deg,${C.blueGradTop},${C.blueGradBot})"></i></span><span class="bv">${b[2]}</span></div>`,
             )
             .join("")}
         </div>
-        <div class="note" data-a="n" style="${glass(700, R.card,
-        )};padding:24px 28px;opacity:0"><div class="label white">aiSentiment</div><div class="body white" style="font-weight:500;margin-top:8px">${note}</div></div>
+        <div class="note" data-a="n" style="${cardFor("blue", 700, R.card)};padding:24px 28px;opacity:0;color:${C.slate900}"><div class="label" style="color:${C.blue}">aiSentiment</div><div class="body" style="font-weight:500;margin-top:8px">${note}</div></div>
       </div>`,
       anim(tl, t0, { q, qq }) {
         tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
@@ -536,12 +589,12 @@ export const beats = {
     // nine identical cards scattered around a core says nothing about what
     // actually hangs off a prospect.
     const texts = Array.isArray(labels) && labels.length ? labels : new Array(n).fill(label);
-    // Tone-aware fill. A single translucent blue fill is correct on the white
-    // stage and completely invisible on the blue one - the chips vanished and
-    // only their hard shadows were left floating on the field.
-    const chipFill = onBlue ? "rgba(255,255,255,0.14)" : "rgba(42,140,255,0.10)";
-    const chipEdge = onBlue ? "rgba(255,255,255,0.32)" : "rgba(42,140,255,0.24)";
-    const chipInk = onBlue ? C.white : C.blue;
+    // Chips are CARDS, so they follow the same inversion as every other card:
+    // solid white on the blue stage, solid brand blue on the white stage. The
+    // translucent fills that were here were unreadable on one stage or the
+    // other, and R.pill turned a card carrying an object name into a lozenge.
+    const chipFill = onBlue ? C.white : C.blue;
+    const chipInk = onBlue ? C.slate900 : C.white;
     const chips = Array.from({ length: n }, (_, i) => {
       const a = (i / n) * Math.PI * 2;
       const cx = Math.cos(a) * R0;
@@ -549,9 +602,9 @@ export const beats = {
       // Auto width, not a fixed 300px box. A fixed box clipped the longer
       // labels mid-word ("cancel the contract" lost its tail) because the text
       // simply overflowed a box that could not grow.
-      return `<div class="chip cvchip" style="position:absolute;padding:13px 22px;border-radius:${R.pill}px;
- background:${chipFill};border:1.5px solid ${chipEdge};
- color:${chipInk};white-space:nowrap;box-shadow:0 ${SHADOW.y}px 0 0 ${onBlue ? SHADOW.greyGlass : SHADOW.grey}"
+      return `<div class="chip cvchip" style="position:absolute;padding:13px 22px;border-radius:${R.lg}px;
+ background:${chipFill};border:1.5px solid ${chipFill};
+ color:${chipInk};white-space:nowrap;box-shadow:0 ${SHADOW.y}px 0 0 ${onBlue ? SHADOW.grey : C.blueHover}"
  data-cx="${cx.toFixed(0)}" data-cy="${cy.toFixed(0)}">${texts[i % texts.length]}</div>`;
     }).join("");
     return {
@@ -601,6 +654,8 @@ export const beats = {
    */
   journey({ kicker, steps, note, tone = "blue" }) {
     const onBlue = tone === "blue";
+    const cardIsBlue = !onBlue;
+    const ink = cardIsBlue ? C.white : C.slate900;
     return {
       name: "journey",
       tone,
@@ -611,16 +666,19 @@ export const beats = {
         <div class="jr" style="display:flex;gap:22px">
           ${steps
             .map(
-              (s, i) => `<div class="jcard" data-i="${i}" style="${
-                onBlue ? surface(400, R.card) : surfaceOnWhite(400, R.card)
-              };padding:30px 28px;opacity:0">
-              <div class="irow" style="gap:18px"><span class="ico on-blue">${icon(
-                STEP_ICON[s[2]] || "arrow-right-circle",
-                40,
-              )}</span><span class="cm blue" style="margin-top:0">${i + 1}</span></div>
+              (s, i) => `<div class="jcard" data-i="${i}" style="${cardFor(
+                tone,
+                400,
+                R.card,
+              )};padding:30px 28px;opacity:0;color:${ink}">
+              <div class="irow" style="gap:18px"><span class="ico ${
+                cardIsBlue ? "on-bluecard" : "on-blue"
+              }">${icon(STEP_ICON[s[2]] || "arrow-right-circle", 40)}</span><span class="cm" style="margin-top:0;color:${
+                cardIsBlue ? "rgba(255,255,255,0.72)" : C.blue
+              }">${i + 1}</span></div>
               <div class="ch">${s[0]}</div>
               <div class="cs">${s[1]}</div>
-              <div class="cm blue">${s[2]}</div>
+              <div class="cm" style="color:${cardIsBlue ? "rgba(255,255,255,0.78)" : C.blueText}">${s[2]}</div>
             </div>`,
             )
             .join("")}
@@ -677,12 +735,15 @@ export const beats = {
   /* --- 15. SPLIT â€” what was agreed vs what was avoided -------------------- */
   split({ kicker, left, right, foot, tone = "blue" }) {
     const onBlue = tone === "blue";
-    const side = (k, v, n) =>
-      `<div class="sp" style="${onBlue ? glass(700, R.card) : frost(700, R.card)};padding:34px 36px">
-        <div class="label ${onBlue ? "white" : "blue"}">${k}</div>
-        <div class="h3 ${onBlue ? "white" : ""}" style="margin-top:16px">${v}</div>
-        <div class="body ${onBlue ? "white dim" : ""}" style="margin-top:22px;font-weight:400;opacity:.66">${n}</div>
+    const side = (k, v, n) => {
+      const cardIsBlue = !onBlue;
+      const ink = cardIsBlue ? C.white : C.slate900;
+      return `<div class="sp" style="${cardFor(tone, 700, R.card)};padding:34px 36px;color:${ink}">
+        <div class="label" style="color:${cardIsBlue ? C.white : C.blue}">${k}</div>
+        <div class="h3" style="margin-top:16px">${v}</div>
+        <div class="body" style="margin-top:22px;font-weight:400;opacity:.72">${n}</div>
       </div>`;
+    };
     return {
       name: "split",
       tone,
@@ -716,7 +777,7 @@ export const beats = {
         <div class="ecmark" data-a="m" style="opacity:0"><img src="assets/logo.svg" alt="ListeningKit"/></div>
         <div class="wordmark" data-a="w" style="opacity:0">${word}</div>
         <div class="body white" data-a="c" style="opacity:0;margin-top:26px">${cta}</div>
-        <div class="kv white" data-a="u" style="opacity:0;margin-top:26px;padding:14px 26px;border-radius:${R.badge}px;background:rgba(255,255,255,.14)">${url}</div>
+        <div class="kv white" data-a="u" style="opacity:0;margin-top:26px;padding:14px 26px;border-radius:${R.lg}px;background:rgba(255,255,255,.14)">${url}</div>
       </div>`,
       anim(tl, t0, { q }) {
         tl.fromTo(q('[data-a="m"]'), { opacity: 0, scale: 0.5, rotate: -12 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.6, ease: "back.out(1.8)" }, t0);

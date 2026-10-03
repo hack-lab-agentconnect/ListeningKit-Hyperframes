@@ -135,6 +135,39 @@ const RULES = [
   },
 ];
 
+/* Resolve the real export names so the undefined-token rule is not guesswork.
+   Every one of these shipped as a literal `undefined` in the output CSS or in an
+   inline style, which the browser silently discards - so the rule failed OPEN
+   and the frame was quietly wrong with nothing in the build to explain it:
+     TYPE.kv   -> never existed -> `font:undefined` on every record key label
+     R.input   -> never existed -> `border-radius:undefinedpx`
+     R.badge   -> never existed -> `border-radius:undefinedpx` on the end card
+     glass(430, 128, R.card) -> args transposed -> a 128px lozenge AND a stray
+                  ";20;" declaration in the same style attribute */
+const { C, R, TYPE, M, SHADOW, DITHER } = await import("../lkdesign.mjs");
+const EXPORTED = new Set([
+  ...Object.keys(C),
+  ...Object.keys(R),
+  ...Object.keys(TYPE),
+  ...Object.keys(M),
+  ...Object.keys(SHADOW),
+  ...Object.keys(DITHER),
+]);
+
+RULES.push({
+  id: "no-undefined-token",
+  test: (line) => {
+    if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
+    for (const m of line.matchAll(/\b(?:TYPE|R|C|M|SHADOW|DITHER)\.(\w+)/g)) {
+      if (!EXPORTED.has(m[1])) {
+        return `\`${m[0]}\` is not exported by lkdesign.mjs - it emits a literal "undefined" into the composition, which the browser drops silently`;
+      }
+    }
+    return null;
+  },
+  why: "an undefined design token fails OPEN: no error, no warning, just a quietly wrong frame",
+});
+
 let failures = 0;
 const report = [];
 
