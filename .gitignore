@@ -1,8 +1,45 @@
+# Dependencies
 node_modules/
+
+# Scratch and review output
 .scratch/
 .shots/
 snapshots/
-renders/
 transcripts/
+
+# Rendered video and audio.
+#
+# These are build artefacts, not source. `fetch-audio.mjs` regenerates the
+# narration mp3s from narrations/*.json via Deepgram; `npm run render` produces
+# the mp4s.
+#
+# CONSEQUENCE, stated plainly: a fresh clone will NOT have narration audio, so it
+# renders silent. That is the intended trade — the repo stays free of binaries.
+# Run `node fetch-audio.mjs` to regenerate before rendering.
+*.mp4
+*.mp3
+*.wav
+*.m4a
+*.aac
+*.ogg
+*.flac
+*.webm
+*.mov
+*.mkv
+*.avi
+
+# Frames extracted for visual review. NOT .svg — the logo, the cursors and the
+# Heroicons are source assets and the compositions fail to render without them.
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+
+# Logs, OS noise, secrets
 *.log
 .DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example

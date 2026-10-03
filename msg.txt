@@ -1,0 +1,21 @@
+@matt done, and it is public: **https://github.com/matthewdonsemail-lab/ListeningKit-Hyperframes**
+
+Local at `C:\Users\0\.buzz\REPOS\ListeningKit-Hyperframes`, `.scratch` deleted, `main` pushed, `4219fc8` local == remote.
+
+**First, a correction I owe you. I was wrong about Satoshi.** I reported twice that "Satoshi was never in the project." That was wrong. `compositions/assets/fonts/Satoshi-*.woff` has been there since 9/27. What was actually true: HyperFrames resolves assets against `compositions/`, and the *snapshot* path reads the project root — so the snapshot was missing fonts the render had all along. I over-claimed from one tool's output and did not check the other path. That is on me, and it is now written into the README as trap #1 so nobody repeats it.
+
+**The cards, exactly as you asked.** `Found in the wild` / `Queue ordered` / `The number dialled` are now solid white cards. Icon tiles are brand blue `#2A8CFF` with white glyphs, `rounded-sm`. Fully-rounded is gone from icon tiles and bar tracks (they were `12px` on a `72px` box, and `13px` on a `26px` bar — a pill). Cursor is `168px`, up from `96px`.
+
+**One thing that followed from "solid white".** Solid white on a solid white stage has no edge — three cards vanished into each other again. The fix is a **hairline, not an alpha**: fill stays fully solid, stroke does the work the translucency was faking. That keeps your no-opaque-opacity rule intact instead of trading one rule for another.
+
+**The lint is real, and I nearly shipped a fake one.** `scripts/lint-design.mjs` enforces 6 rules. When I tested it with 7 deliberate violations it passed — because `new URL(...).pathname` yields `/C:/Users/...` on Windows, every `existsSync` returned false, and it had been skipping every file. A lint that cannot fail is worse than none because it reads as a clean bill of health. Fixed, then verified: **7/7 violations caught, clean baseline passes, and lefthook actually blocked a bad commit** end-to-end.
+
+**It immediately caught a live bug.** `.lockup.on-blue img` still carried `brightness(0) invert(1)` — the same logo-inversion that shipped a blank white end card. Removed.
+
+**`DESIGN_SYSTEM.md`** documents your rules with the product file behind each one: no opaque opacity (with a table of exactly which alpha is sanctioned where), no mono, no tracking, no fully-rounded, icon-tile colours, no squircle, never invert the logo. Two rules where I scoped rather than absolutised, and said so in the doc: positive tracking is still allowed on uppercase micro-labels ≤20px (a blanket ban would strip the eyebrow treatment the product ships), and HyperFrames' own reference argues *for* mono — your alias-to-sans wins, and the doc says so explicitly.
+
+**Two hook rules I had to fix after they misfired.** `diff-check` compared against a tree `build` had just changed, so it blocked *every* commit — a rule that could only ever say no. Replaced with `verify-build`, which checks the working tree matches the index. Both caught real drift while I worked on them; the `agency-calls/b12.html` rebuild is committed.
+
+Verified before publishing: no secrets (`fetch-audio.mjs` reads from env), no emails, and the only 10–15 digit runs are Deepgram request-UUID fragments — I checked the context rather than trusting the grep.
+
+Still not rendered. Frames are attached if you want to see the fixed cards; the encode is the next step whenever you say.
