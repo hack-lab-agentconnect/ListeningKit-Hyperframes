@@ -70,10 +70,19 @@ fs.mkdirSync(dest, { recursive: true });
 // `npm run entry` first: index.html points at whichever composition it names, and a
 // snapshot of the wrong entry silently captures the `hyperframes init` scaffold —
 // 15 identical black frames. That happened here once already.
-const entry = spawnSync(process.execPath, [path.join(ROOT, "scripts", "entry.mjs")], {
-  cwd: ROOT,
-  stdio: "inherit",
-});
+//
+// The slug is passed THROUGH to entry.mjs. It used to be used only to name the
+// output folder, so `npm run review -- --slug agency-leads` cheerfully captured
+// agency-prospects and filed the frames under "agency-leads". A review tool that
+// labels frames with the wrong composition is worse than one that fails.
+const entry = spawnSync(
+  process.execPath,
+  [path.join(ROOT, "scripts", "entry.mjs"), slug].filter(Boolean),
+  {
+    cwd: ROOT,
+    stdio: "inherit",
+  },
+);
 if (entry.status !== 0) {
   console.error("✗ could not point index.html at a composition");
   process.exit(entry.status ?? 1);

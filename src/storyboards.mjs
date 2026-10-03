@@ -549,4 +549,259 @@ export const ARCS = {
       },
     },
   },
+
+  // ============================================================================
+  // agency-leads
+  //
+  // Its own arc, not a re-skin of prospects. The object has a different job: a
+  // prospect is a company, a lead is a PERSON inside that company, and the whole
+  // video turns on that one distinction plus the three status fields people
+  // confuse. Beat times are anchored to assets/timing/agency-leads.json, which
+  // runs 0.2s - 150.9s across utterances 0-29.
+  // ============================================================================
+  "agency-leads": {
+    arc: "Distinction → three status fields → the hinge → the ladder",
+    promise:
+      "A prospect is a company. A lead is the person inside it — and this is the only object where the money starts.",
+    beats: [
+      // ── ACT 1 — the distinction the object exists to make ──
+      {
+        t: 0.0,
+        kind: "countup",
+        tone: "white",
+        a: {
+          label: "Agency Leads",
+          count: 18,
+          sub: "One row per human being we want on a call.",
+        },
+      },
+      {
+        t: 12.2,
+        kind: "overwhelm",
+        tone: "blue",
+        blur: true,
+        a: {
+          label: "THE DISTINCTION",
+          blockers: [
+            "a prospect is a company",
+            "a lead is a person",
+            "one shop, three people",
+            "each one, a different conversation",
+          ],
+        },
+      },
+      {
+        t: 16.5,
+        kind: "journey",
+        tone: "white",
+        slide: true,
+        a: {
+          kicker: "One shop in Leeds is one prospect — and three leads",
+          steps: [
+            ["The owner", "decides whether this ever happens", "1"],
+            ["The service manager", "owns the day-to-day work", "2"],
+            ["The body shop manager", "owns the jobs that pay", "3"],
+          ],
+          note: "Same company, same phone number, three separate conversations. The object has to be per-person or the second call lands on the wrong record.",
+        },
+      },
+      {
+        t: 25.8,
+        kind: "record",
+        tone: "blue",
+        blur: true,
+        a: {
+          kicker: "This is where the commercial state lands",
+          title: "Lead",
+          api: "agencyLeads",
+          r: [
+            ["status", "new"],
+            ["status", "working"],
+          ],
+          focus: "status",
+          note: "Once something is a lead it has a status, and a status can move. Before that it is just a row of shops in a database.",
+        },
+      },
+
+      // ── ACT 2 — what is actually inside the row ──
+      {
+        t: 35.6,
+        kind: "record",
+        tone: "white",
+        zx: true,
+        a: {
+          kicker: "Identity and provenance",
+          title: "Lead",
+          api: "agencyLeads",
+          r: [
+            ["contactName", "Marcus Webb"],
+            ["source", "campaign"],
+            ["source", "inbound"],
+            ["source", "found ourselves"],
+          ],
+          focus: "contactName",
+          note: "The name tells us exactly who we are talking to. The source tells us why we are talking to them at all — a campaign, an enquiry, or our own digging.",
+        },
+      },
+      {
+        t: 49.4,
+        kind: "agentWork",
+        tone: "blue",
+        blur: true,
+        a: {
+          head: "Three status fields. Three different questions. This is the most confused part of the table.",
+          steps: [
+            "status — is this a real person, or a name on a list?",
+            "qualificationStatus — are they actually a fit, and if not, why not?",
+            "coldCallStatus — have we rung them, and did it connect?",
+          ],
+          foot: "Each one is read by a different person. The dialer reads one, the qualification argument reads another, and the record belongs to both.",
+        },
+      },
+      {
+        t: 64.3,
+        kind: "record",
+        tone: "white",
+        slide: true,
+        a: {
+          kicker: "coldCallStatus — the operational truth",
+          title: "Lead",
+          api: "agencyLeads",
+          r: [
+            ["coldCallStatus", "not called"],
+            ["coldCallStatus", "connected"],
+            ["coldCallStatus", "voicemail"],
+          ],
+          focus: "coldCallStatus",
+          note: "This is the field the dialer reads before it picks up the phone. It is how nobody gets rung twice in a day.",
+        },
+      },
+      {
+        t: 69.7,
+        kind: "typewriter",
+        tone: "blue",
+        a: {
+          kicker: "outboundMessage — the words we actually sent",
+          lines: [
+            "Hi Marcus — Sam from ListeningKit.",
+            "We build booking systems for tinting shops.",
+            "Worth 15 minutes this week?",
+          ],
+          hold: "Kept on the row, not in somebody's sent folder. Six weeks later this is the only honest record of what was promised.",
+        },
+      },
+
+      // ── ACT 3 — why it matters, and the hinge ──
+      {
+        t: 74.4,
+        kind: "costCount",
+        tone: "white",
+        zx: true,
+        a: {
+          label: "Rows we have decided to spend money and time on",
+          from: 0,
+          to: 18,
+          unit: "leads",
+          sub: "Prospects are cheap — they are just rows. A lead is somebody we have decided to ring, message, and chase.",
+        },
+      },
+      {
+        t: 88.8,
+        kind: "relations",
+        tone: "blue",
+        blur: true,
+        a: {
+          title: "Lead",
+          api: "agencyLeads",
+          r: [
+            ["agencyProspects", "the company"],
+            ["agencyLeads", "the person we are working"],
+            ["agencyOpportunities", "the signed piece of work"],
+          ],
+          links: [
+            ["agencyCalls", "the calls placed against them"],
+            ["agencyMessages", "the texts sent to them"],
+          ],
+        },
+      },
+      {
+        t: 97.5,
+        kind: "record",
+        tone: "white",
+        slide: true,
+        a: {
+          kicker: "Ask where a number in a report came from",
+          title: "Report",
+          api: "agencyOpportunities",
+          r: [
+            ["£4,200", "signed"],
+            ["agencyOpportunities", "the deal"],
+            ["agencyLeads", "who we actually rang"],
+            ["agencyProspects", "the shop"],
+          ],
+          focus: "£4,200",
+          note: "It almost always traces back through a lead. That chain is the reason the object is structured rather than a note on a spreadsheet.",
+        },
+      },
+
+      // ── ACT 4 — the two places it is used, then the ladder ──
+      {
+        t: 110.7,
+        kind: "journey",
+        tone: "blue",
+        zx: true,
+        a: {
+          kicker: "Where leads are used day to day — two places, mainly",
+          steps: [
+            ["The call queue", "the dialer reads coldCallStatus before it dials", "1"],
+            ["The qualification argument", "real, in-market, able to pay", "2"],
+          ],
+          note: "Both are automated or delegated decisions, and both write their answer back onto this row.",
+        },
+      },
+      {
+        t: 130.8,
+        kind: "record",
+        tone: "white",
+        zx: true,
+        cursor: true,
+        a: {
+          kicker: "qualificationStatus — the verdict, and the reason behind it",
+          title: "Lead",
+          api: "agencyLeads",
+          r: [
+            ["qualified", "real, in market, able to pay"],
+            ["disqualified", "and the reason it was not"],
+          ],
+          focus: "qualified",
+          cursor: true,
+          note: "The reason is the part that earns its place. It is what stops the same bad fit being re-qualified six weeks from now.",
+        },
+      },
+      {
+        t: 141.9,
+        kind: "converge",
+        tone: "blue",
+        slide: true,
+        a: {
+          kicker: "The practical summary",
+          n: 3,
+          label: "the ladder",
+          labels: ["agencyProspects", "agencyLeads", "agencyOpportunities"],
+          label: "the ladder",
+          verdict: "A PROSPECT IS A MAYBE",
+        },
+      },
+    ],
+    outro: {
+      t: 151.2,
+      kind: "endcard",
+      tone: "blue",
+      a: {
+        word: "ListeningKit",
+        cta: "Agency Leads — the person, not the company",
+        url: "twenty.inferencesaver.com/objects/agencyLeads",
+      },
+    },
+  },
 };

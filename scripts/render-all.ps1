@@ -1,9 +1,18 @@
 # Batch-render every composition.
 #
 # Paths are resolved from THIS file, not from the CWD. The previous version
-# hard-coded `C:\Users\0\.buzz\listeningkit-object-videos` — a directory that no
-# longer exists — so running it from the current repo would have rendered into
+# hard-coded `C:\Users\0\.buzz\listeningkit-object-videos` - a directory that no
+# longer exists - so running it from the current repo would have rendered into
 # nothing and the log would have looked like it worked.
+#
+# The slug list is NOT written here. An earlier version hard-coded 16 slugs while
+# src/storyboards.mjs only had 2, so the batch cheerfully rendered 14 stale
+# slideshow compositions left over from a superseded generator - the same
+# animation repeated with the object name swapped. Two guards stop that:
+#   1. the list is derived from the storyboard, so a missing arc cannot be
+#      silently skipped;
+#   2. every composition is checked for beat-driven timeline structure before it
+#      is rendered, and the batch aborts rather than shipping a slideshow.
 #
 # Renders land in renders/ at the repo root, which is gitignored: this repo ships
 # the compositions, not the video.
@@ -22,12 +31,38 @@ $log = "renders\render-all.log"
 New-Item -ItemType Directory -Force -Path "renders" | Out-Null
 "=== render all started $(Get-Date -Format o)  cli=$cli ===" | Out-File $log -Encoding utf8
 
-$slugs = @(
-  "agency-calls","agency-campaigns","agency-career-applications","agency-careers",
-  "agency-competitors","agency-contents","agency-conversations","agency-leads",
-  "agency-listings","agency-messages","agency-offers","agency-opportunities",
-  "agency-phones","agency-prospects","agency-scripts","agency-tasks"
-)
+# --- guard 1: slugs come from the storyboard, not from a list in this file ----
+$storyboard = Get-Content "src\storyboards.mjs" -Raw
+$slugs = [regex]::Matches($storyboard, '^  "([a-z0-9-]+)":\s*\{\s*$', 'Multiline') |
+  ForEach-Object { $_.Groups[1].Value }
+if (-not $slugs) { throw "no slugs found in src/storyboards.mjs - refusing to render" }
+"=== $($slugs.Count) arcs in storyboards.mjs: $($slugs -join ', ') ===" | Tee-Object -Append $log
+
+# Every object the narration set expects should have an arc. A missing one is a
+# gap to fill, not something to render around.
+$expected = Get-ChildItem narrations -Filter *.json | ForEach-Object { $_.BaseName }
+$missing = $expected | Where-Object { $slugs -notcontains $_ }
+if ($missing) {
+  "=== ABORT: no storyboard arc for: $($missing -join ', ') ===" | Tee-Object -Append $log
+  throw "missing storyboard arcs: $($missing -join ', '). Build them before rendering."
+}
+
+# --- guard 2: every composition must be beat-driven, not a slideshow ----------
+# The superseded generator emitted `.slidelist` sections and a 3-call timeline.
+# A real beat-driven composition carries one sub-composition mount per beat.
+$bad = @()
+foreach ($s in $slugs) {
+  $f = "compositions\$s.html"
+  if (-not (Test-Path $f)) { $bad += "$s (composition missing - run npm run build)"; continue }
+  $html = Get-Content $f -Raw
+  $mounts = ([regex]::Matches($html, 'data-composition-src=')).Count
+  if ($mounts -lt 8) { $bad += "$s (only $mounts beat mounts - looks like the old slideshow)" }
+}
+if ($bad) {
+  foreach ($b in $bad) { "=== ABORT: $b ===" | Tee-Object -Append $log }
+  throw "refusing to render non beat-driven compositions: $($bad -join '; ')"
+}
+
 foreach ($s in $slugs) {
   $out = "renders/$s.mp4"
   if ((Test-Path $out) -and ((Get-Item $out).Length -gt 1000000)) {
@@ -36,7 +71,6 @@ foreach ($s in $slugs) {
   }
   "--- $s render start $(Get-Date -Format HH:mm:ss)" | Tee-Object -Append $log
   & npx --yes "hyperframes@$cli" render -c "compositions/$s.html" --output $out 2>&1 |
-    Select-String -Pattern "Render complete|error|Error|failed|MB " |
     ForEach-Object { "$s $_" } | Tee-Object -Append $log
   "--- $s render end $(Get-Date -Format HH:mm:ss)" | Tee-Object -Append $log
 }
