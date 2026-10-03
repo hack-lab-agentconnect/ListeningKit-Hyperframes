@@ -20,6 +20,12 @@
 export const C = {
   blue: "#2A8CFF", // OnboardingShell.tsx:65, button.tsx:22, DashboardLayout.tsx:34
   blueHover: "#1F6FE6", // button.tsx:22
+  blueEdge: "#7FBAFF", // the one edge colour in the system, used by every card
+  // that needs to separate from a same-value neighbour - chiefly THE SPINE
+  // (solid brand blue on the blue stage) and the object chips. #2A8CFF on
+  // #2A8CFF is the card disappearing, and the hard drop's grey is a shadow,
+  // not a stroke: putting the shadow ink on the border read as two unrelated
+  // treatments. One lightened blue, both stages, no exceptions.
   blueGradTop: "#3B9BFF", // button.tsx:25 (blue-gradient)
   blueGradBot: "#2B7FFF", // button.tsx:25
   blueText: "#2B7FFF", // button.tsx:26, SquircleBadge.tsx:18

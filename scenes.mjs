@@ -594,6 +594,18 @@ export const beats = {
     // translucent fills that were here were unreadable on one stage or the
     // other, and R.pill turned a card carrying an object name into a lozenge.
     const chipFill = onBlue ? C.white : C.blue;
+    // A solid-blue card on the blue stage (THE SPINE, by the deliberate
+    // exception in DESIGN_SYSTEM.md 1.1) has no separation: same fill, and a
+    // border in the same colour is not a border at all. It needs a real edge.
+    // ONE edge colour - C.blueEdge, the lightened brand blue - on both stages.
+    // It is deliberately NOT the hard drop's grey: that ink is a shadow, and
+    // shadow-ink-as-stroke read as two unrelated treatments on the same card.
+    const coreBorder = `2px solid ${C.blueEdge}`;
+    // Same rule on the chips. `border:${chipFill}` (a border in the fill's own
+    // colour) was a decorative no-op that made the chips read as borderless
+    // tiles on both stages; the lightened blue edge gives every chip a
+    // defined outline against its stage without touching the fill.
+    const chipBorder = `1.5px solid ${C.blueEdge}`;
     const chipInk = onBlue ? C.slate900 : C.white;
     const chips = Array.from({ length: n }, (_, i) => {
       const a = (i / n) * Math.PI * 2;
@@ -613,7 +625,7 @@ export const beats = {
       // simply overflowed a box that could not grow.
       return `<div class="chip cvchip" style="position:absolute;display:flex;align-items:center;gap:14px;
  padding:11px 20px;border-radius:${R.lg}px;
- background:${chipFill};border:1.5px solid ${chipFill};
+ background:${chipFill};border:${chipBorder};
  color:${chipInk};white-space:nowrap;box-shadow:0 ${SHADOW.y}px 0 0 ${onBlue ? SHADOW.grey : C.blueHover}"
  data-cx="${cx.toFixed(0)}" data-cy="${cy.toFixed(0)}"><span class="${tileCls}">${icon(icn, 26)}</span><span>${text}</span></div>`;
     }).join("");
@@ -627,7 +639,7 @@ export const beats = {
         <div class="cvf" style="position:relative;width:1300px;height:560px">${chips}
           <div class="cvcore" data-a="core" style="position:absolute;left:330px;top:185px;
  max-width:640px;padding:40px 44px;border-radius:${R.panel}px;
- background:${C.blue};border:1.5px solid ${C.blue};
+ background:${C.blue};border:${coreBorder};
  box-shadow:0 ${SHADOW.yLg}px 0 0 ${SHADOW.grey};text-align:center;opacity:0">
             <div class="label" style="color:${C.white};opacity:.78">one signal</div>
             <div class="h2" style="color:${C.white};margin-top:10px">${verdict}</div>

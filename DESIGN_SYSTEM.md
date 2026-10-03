@@ -70,8 +70,16 @@ is what turned every white beat pale blue.
 card of the converge beat — the one captioned `THE SPINE` — is **solid brand blue
 on both tones**, including the blue stage where it deliberately goes against its
 own background. It is the one object the whole beat is about, so it earns the
-break; it is separated from the blue stage by its grey drop shadow and by the
+break; it is separated from the blue stage by a **2px `C.blueEdge` border** and by the
 white ink, not by an alpha or a hairline. Do not "fix" this one back to white.
+
+**The one edge colour (`C.blueEdge`, #7FBAFF).** Any card whose fill matches its
+stage needs a real edge, and this is the only colour allowed to be it - lightened
+brand blue, on **both** stages. Explicitly NOT `SHADOW.grey`: that ink is a drop
+shadow, and reusing it as a stroke makes border and shadow read as two unrelated
+treatments. It applies to THE SPINE (`2px`) and to every converge object chip
+(`1.5px`) - a border set to the chip's own fill colour is a decorative no-op that
+leaves the tile looking borderless.
 
 `frost()` (translucent white card) exists in `scenes.mjs` but is no longer used by
 the journey or split beats. If you reach for it, you are probably about to
