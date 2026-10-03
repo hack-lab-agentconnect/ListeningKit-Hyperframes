@@ -27,7 +27,9 @@
     "lint:repo": "node scripts/lint-repo.mjs",
     "audio": "node src/fetch-audio.mjs",
     "refs": "node scripts/refs.mjs",
-    "times": "node scripts/narration-times.mjs"
+    "times": "node scripts/narration-times.mjs",
+    "vendor:icons": "node src/vendor-icons.mjs",
+    "render:all:sh": "bash scripts/render-all.sh"
   },
   "devDependencies": {
     "lefthook": "^1.7.0"

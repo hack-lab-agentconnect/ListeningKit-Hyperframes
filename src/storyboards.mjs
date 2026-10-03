@@ -711,6 +711,442 @@ export const ARCS = {
       },
     },
   },
+
+  // ============================================================================
+  // agency-phones
+  //
+  // Its own arc: a single row is the thing that decides whether every call we
+  // place and every text we send is allowed to happen. Beat times are
+  // audio-relative, anchored to `npm run times -- sentences agency-phones`
+  // (the narration runs 153.9s). No beat past ~8s; tones alternate.
+  // ============================================================================
+  "agency-phones": {
+    arc: "One row → the four registrations → the blast radius → the send-time check",
+    promise:
+      "One Agency Phone gates every call and text we place — the registrations on this row decide whether the entire outbound engine is allowed to run.",
+    beats: [
+      // ── ACT 1 — a single row with an enormous blast radius ──
+      { t: 0.0, kind: "countup", fx: "number-tick",
+        a: { label: "Agency Phones", count: 1, sub: "One number we own — and it gates every call and text." } },
+      { t: 4.4, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "One record, and it does not look important",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["phoneNumber", "(xxx) xxx-0147"], ["countryCode", "US"], ["numberType", "local"], ["state", "active"]],
+          focus: "state",
+          note: "One row. At first glance it does not look like a very important object.",
+        } },
+      { t: 10.4, kind: "overwhelm", tone: "blue",
+        a: {
+          label: "CONSEQUENTIAL",
+          blockers: [
+            "a call we place",
+            "a text we send",
+            "a lead we chase",
+            "a conversation we start",
+            ["the outbound engine", "phone"],
+          ],
+        } },
+      { t: 15.7, kind: "typewriter", tone: "white", fx: "typewriter-run",
+        a: {
+          kicker: "That single row decides everything",
+          lines: ["Whether every call we place,", "and every text we send,", "is allowed to happen at all."],
+          hold: "One row, and it gates the entire outbound engine.",
+        } },
+      { t: 21.6, kind: "split", fx: "comparison-wipe",
+        a: {
+          kicker: "Get it wrong and it stops",
+          left: ["ONE NUMBER", "gets taken away", "by the carrier or the regulator"],
+          right: ["EVERYTHING ELSE", "the calls", "the messages", "the leads"],
+          foot: "All of it stops the moment that single row is taken away.",
+        } },
+      { t: 27.0, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "And all of it stops",
+          lines: ["The outbound engine stops.", "The conversations stop."],
+          hold: "Get it wrong, and the whole motion dies.",
+        } },
+      { t: 33.3, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "The fields are regulatory housekeeping",
+          lines: ["The fields are mostly regulatory housekeeping.", "And that is the point."],
+          hold: "Compliance is stored as data, not in somebody's head.",
+        } },
+
+      // ── ACT 2 — the number, then the four registrations behind it ──
+      { t: 37.6, kind: "record",
+        a: {
+          kicker: "The number, and where its rules come from",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["phoneNumber", "(xxx) xxx-0147"], ["countryCode", "US"], ["numberType", "local"], ["state", "active"]],
+          focus: "countryCode",
+          note: "The country code tells the system which country's rules apply.",
+        } },
+      { t: 43.7, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "numberType — which rulebook the number answers to",
+          steps: [
+            ["Local", "the default business line", "1"],
+            ["Mobile", "a different set of rules again", "2"],
+            ["Toll-free", "verified separately before it can send", "3"],
+          ],
+          note: "The type decides which rules apply before anything is sent.",
+        } },
+      { t: 50.4, kind: "record", fx: "chip-rail-tick",
+        a: {
+          kicker: "state — the current status of the number",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["state", "active"], ["state", "pending"], ["state", "suspended"]],
+          focus: "state",
+          note: "The live status. If it is not active, nothing should be leaving this number.",
+        } },
+      { t: 54.4, kind: "table",
+        a: {
+          kicker: "And then the three registration IDs — the real payload",
+          title: "Agency Phone", api: "agencyPhones", count: "1 row",
+          cols: ["tenDlcCampaignId", "tollFreeVerificationId", "messagingProfileId", "state"],
+          rows: [
+            ["Q2x…", "—", "mp_…", "active"],
+          ],
+          focus: 0, focusCol: "tenDlcCampaignId",
+        } },
+      { t: 58.5, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "tenDlcCampaignId — business texting, registered",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["tenDlcCampaignId", "Q2x…"], ["countryCode", "US"]],
+          focus: "tenDlcCampaignId",
+          note: "The United States registration that lets us send business text from this number.",
+        } },
+      { t: 64.5, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "tollFreeVerificationId — a separate check",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["tollFreeVerificationId", "TFV…"], ["numberType", "toll-free"]],
+          focus: "tollFreeVerificationId",
+          note: "The separate process a toll-free number has to pass before it can send at all.",
+        } },
+      { t: 71.0, kind: "relations", fx: "stroke-trace",
+        a: {
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["messagingProfileId", "the sender we present"], ["tenDlcCampaignId", "the texting registration"], ["tollFreeVerificationId", "the separate toll-free check"]],
+          links: [["agencyMessages", "every text sent through it"], ["agencyCalls", "every call placed from it"]],
+        } },
+
+      // ── ACT 3 — why compliance lives in the CRM at all ──
+      { t: 77.0, kind: "split", fx: "comparison-wipe",
+        a: {
+          kicker: "Compliance is not a preference",
+          left: ["WHAT PEOPLE THINK", "a setting somebody ticked", "and can quietly untick"],
+          right: ["WHAT IT IS", "a hard constraint", "imposed by carriers and regulators"],
+          foot: "Carriers and regulators are not interested in our pipeline.",
+        } },
+      { t: 84.0, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "Not interested in our pipeline",
+          lines: ["Compliance is a hard constraint.", "Not a preference."],
+          hold: "Carriers and regulators decide the pace, not us.",
+        } },
+      { t: 89.5, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "How a number silently fails — part one",
+          steps: [
+            ["Not registered properly", "texts are silently dropped", "1"],
+            ["Complaint rate too high", "the messaging profile is suspended", "2"],
+          ],
+          note: "Every failure mode is silent. Nothing tells you it failed.",
+        } },
+      { t: 94.9, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "How a number silently fails — part two",
+          steps: [
+            ["Toll-free not verified", "nothing arrives", "1"],
+            ["No error shown", "you never learn why", "2"],
+          ],
+          note: "Not registered, suspended, or unverified — all silent.",
+        } },
+      { t: 99.6, kind: "table",
+        a: {
+          kicker: "The four ways a send quietly dies",
+          title: "Failure modes", api: "agencyPhones", count: "silent",
+          cols: ["what went wrong", "what you see", "what the carrier does"],
+          rows: [
+            ["not registered", "nothing", "drops the text"],
+            ["complaints too high", "nothing", "suspends the profile"],
+            ["toll-free unverified", "nothing", "sends no error"],
+          ],
+          focus: 0, focusCol: "what you see",
+        } },
+      { t: 107.1, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "One row, enormous blast radius",
+          lines: ["This object is our single source of truth.", "For whether our outbound is actually permitted."],
+          hold: "One row decides whether the whole pipeline is allowed to run.",
+        } },
+      { t: 112.4, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "Where it gets used — at the moment of sending",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["state", "active"], ["messagingProfileId", "mp_…"]],
+          focus: "messagingProfileId",
+          note: "The messaging system reads this record before anything goes out.",
+        } },
+
+      // ── ACT 4 — the send-time check, then the closing instruction ──
+      { t: 117.2, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "The send-time check, before anything goes out — part one",
+          steps: [
+            ["Reads this record", "the messaging system opens it first", "1"],
+            ["Checks the profile", "is the messaging profile active?", "2"],
+          ],
+          note: "The check happens before anything goes out.",
+        } },
+      { t: 123.0, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "The send-time check — part two",
+          steps: [
+            ["Checks the registration", "is the 10DLC / toll-free valid?", "1"],
+            ["Releases the message", "only then does it send", "2"],
+          ],
+          note: "A legal constraint turned into an automated precondition.",
+        } },
+      { t: 129.2, kind: "record",
+        a: {
+          kicker: "When texts are mysteriously not landing",
+          title: "Agency Phone", api: "agencyPhones",
+          r: [["state", "active"], ["tenDlcCampaignId", "Q2x…"], ["messagingProfileId", "mp_…"]],
+          focus: "tenDlcCampaignId",
+          note: "This is the first record you open.",
+        } },
+      { t: 135.6, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "Before you add a second number",
+          lines: ["Duplicate the row.", "Get it registered properly first.", "Only then start sending."],
+          hold: "And never the other way round.",
+        } },
+      { t: 141.7, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "The one number, and the four approvals behind it — part one",
+          lines: ["10DLC — approved.", "Toll-free — approved."],
+          hold: "Read the registrations as four separate answers to four separate authorities.",
+        } },
+      { t: 148.0, kind: "typewriter", tone: "white", fx: "typewriter-run",
+        a: {
+          kicker: "The four approvals behind it — part two",
+          lines: ["Messaging profile — active.", "State — active."],
+          hold: "Before you ever queue a send, confirm the registration is approved, not pending.",
+        },
+        },
+    ],
+    outro: {
+      t: 153.9,
+      kind: "endcard",
+      tone: "blue",
+      fx: "wordmark-lockup",
+      a: {
+        word: "ListeningKit",
+        cta: "Agency Phones — one number gates every call and text",
+        url: "twenty.inferencesaver.com/objects/agencyPhones",
+      },
+    },
+  },
+
+  // ============================================================================
+  // agency-tasks
+  //
+  // Its own arc: a task is not a floating note, it is a commitment that hangs
+  // off the record it belongs to. Beat times anchored to
+  // `npm run times -- sentences agency-tasks` (the narration runs 127.8s).
+  // ============================================================================
+  "agency-tasks": {
+    arc: "Attached → three fields → next to the record → the habit",
+    promise:
+      "An Agency Task is follow-up that lives on the record it belongs to — a commitment with a name on it, not a note in a separate list.",
+    beats: [
+      // ── ACT 1 — attached, not floating ──
+      { t: 0.0, kind: "countup", fx: "number-tick",
+        a: { label: "Agency Tasks", count: 0, sub: "A to-do that lives on the record it belongs to." } },
+      { t: 5.2, kind: "split", fx: "comparison-wipe",
+        a: {
+          kicker: "The important word is attached",
+          left: ["A FLOATING NOTE", "a list somewhere", "Thursday arrives…", "nobody remembers which shop"],
+          right: ["AN AGENCY TASK", "hangs off the record", "a prospect, a lead", "an opportunity, an application"],
+          foot: "A task is not a floating note. It hangs directly off the record it belongs to.",
+        } },
+      { t: 8.1, kind: "relations", fx: "stroke-trace",
+        a: {
+          title: "Agency Task", api: "agencyTasks",
+          r: [["title", "call the tinting shop back"], ["status", "to do"], ["assignee", "Sam"]],
+          links: [["agencyProspects", "the shop to call"], ["agencyLeads", "the person to call"], ["agencyOpportunities", "the deal it moves"]],
+        } },
+      { t: 15.5, kind: "overwhelm", tone: "blue",
+        a: {
+          label: "ZERO TASKS",
+          blockers: [
+            "an honest picture",
+            "of where the team is",
+            "no follow-up yet",
+            ["the design still matters", "check-circle"],
+          ],
+        } },
+      { t: 20.8, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "Why the design is the thing worth understanding",
+          lines: ["The difference between a business that follows up,", "and a business that means to."],
+          hold: "The design is the thing worth understanding.",
+        } },
+
+      // ── ACT 2 — the three load-bearing fields ──
+      { t: 27.6, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "Three fields, and all three are load-bearing",
+          title: "Agency Task", api: "agencyTasks",
+          r: [["title", "call the tinting shop back"], ["status", "to do"], ["assignee", "Sam"]],
+          focus: "assignee",
+          note: "Drop the assignee and you have a wish. Drop the status and you have a note.",
+        } },
+      { t: 30.2, kind: "record",
+        a: {
+          kicker: "title — what the work is",
+          title: "Agency Task", api: "agencyTasks",
+          r: [["title", "call the tinting shop back"], ["status", "to do"]],
+          focus: "title",
+          note: "Written so that somebody who was not in the room understands it in two seconds.",
+        } },
+      { t: 36.0, kind: "record", fx: "chip-rail-tick",
+        a: {
+          kicker: "status — the real state of the work",
+          title: "Agency Task", api: "agencyTasks",
+          r: [["status", "to do"], ["status", "in progress"], ["status", "blocked"], ["status", "done"]],
+          focus: "status",
+          note: "One glance tells anybody whether the work is waiting, moving, stuck, or finished.",
+        } },
+      { t: 41.0, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "What the status buys you",
+          steps: [
+            ["To do", "still waiting", "1"],
+            ["In progress", "somebody is on it", "2"],
+            ["Blocked", "stuck, and visible as stuck", "3"],
+            ["Done", "finished, and it shows", "4"],
+          ],
+          note: "Anybody can glance at the record and see the real state of it.",
+        } },
+      { t: 45.1, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "assignee — the named human doing it",
+          title: "Agency Task", api: "agencyTasks",
+          r: [["assignee", "Sam"], ["dueAt", "Thu"], ["status", "to do"]],
+          focus: "assignee",
+          note: "An unassigned task is a wish, and a wish does not get done on Thursday.",
+        } },
+      { t: 48.0, kind: "split", fx: "comparison-wipe",
+        a: {
+          kicker: "Drop a field, lose the commitment",
+          left: ["DROP THE ASSIGNEE", "you have a wish", "nobody is named"],
+          right: ["DROP THE STATUS", "you have a note", "nothing says where it stands"],
+          foot: "With all three, you have a commitment with a name on it.",
+        } },
+
+      // ── ACT 3 — why follow-up lives next to the record ──
+      { t: 55.5, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "Why not a separate list?",
+          lines: ["Because separate lists are where work goes to die."],
+          hold: "Separate lists are where work goes to die.",
+        } },
+      { t: 64.7, kind: "table",
+        a: {
+          kicker: "The note in the notes app, and what happens next",
+          title: "Notes app", api: "agencyTasks", count: "0 records",
+          cols: ["what was written", "Thursday arrives", "which shop?", "the deal"],
+          rows: [
+            ["call this shop back Thursday", "—", "nobody remembers", "goes cold"],
+          ],
+          focus: 0, focusCol: "which shop?",
+        } },
+      { t: 70.6, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "The deal goes cold",
+          lines: ["Nobody can remember which shop.", "The deal goes cold, and nobody can explain why."],
+          hold: "Separate lists are where work goes to die.",
+        } },
+      { t: 76.7, kind: "record", fx: "field-resolve",
+        a: {
+          kicker: "When the task hangs off the record instead",
+          title: "Prospect", api: "agencyProspects",
+          r: [["nextAction", "call back Thursday"], ["assignee", "Sam"], ["status", "in progress"]],
+          focus: "nextAction",
+          note: "Opening the prospect tells you exactly what still needs doing and who owns it.",
+        } },
+      { t: 84.4, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "You cannot look at a live deal without seeing the work",
+          lines: ["You cannot look at a live deal", "without seeing the outstanding work attached to it."],
+          hold: "The work is visible on the record itself.",
+        } },
+
+      // ── ACT 4 — day to day, then the habit ──
+      { t: 89.5, kind: "record",
+        a: {
+          kicker: "Where it is used — the five-second check",
+          title: "Agency Task", api: "agencyTasks",
+          r: [["status", "to do"], ["assignee", "Sam"]],
+          focus: "status",
+          note: "In the five-second check before anything is dropped.",
+        } },
+      { t: 91.9, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "Three moments, one habit — part one",
+          steps: [
+            ["A call goes badly", "task: call back Thursday", "1"],
+            ["An advert goes live", "task: check rankings in two weeks", "2"],
+          ],
+          note: "The task appears on the record, at the moment the work appears.",
+        } },
+      { t: 99.8, kind: "journey", fx: "card-assemble",
+        a: {
+          kicker: "Three moments, one habit — part two",
+          steps: [
+            ["An application comes in", "task: reply", "1"],
+            ["That is the entire lifecycle", "three moments, one habit", "2"],
+          ],
+          note: "That is the entire lifecycle — three moments, one habit.",
+        } },
+      { t: 106.2, kind: "record",
+        a: {
+          kicker: "The opportunity hiding in zero tasks",
+          title: "Agency Task", api: "agencyTasks",
+          r: [["count", "0"], ["status", "to do"]],
+          focus: "count",
+          note: "No tasks is an opportunity, not a problem. The first useful thing anybody does is attach a task.",
+        } },
+      { t: 113.1, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "The first task you should ever create — part one",
+          lines: ["Attach it to the record you are already on.", "Set the status to to-do."],
+          hold: "Do it while you are still on the record.",
+        } },
+      { t: 119.5, kind: "typewriter", fx: "typewriter-run",
+        a: {
+          kicker: "The first task you should ever create",
+          lines: ["Assign it to a named person — you, today.", "Do it every time, and the pipeline runs itself."],
+          hold: "Then the record tells the next person what is outstanding. That is the entire return on this object.",
+        } },
+    ],
+    outro: {
+      t: 127.0,
+      kind: "endcard",
+      tone: "blue",
+      fx: "wordmark-lockup",
+      a: {
+        word: "ListeningKit",
+        cta: "Agency Tasks — a commitment with a name on it",
+        url: "twenty.inferencesaver.com/objects/agencyTasks",
+      },
+    },
+  },
 };
 
 /**
