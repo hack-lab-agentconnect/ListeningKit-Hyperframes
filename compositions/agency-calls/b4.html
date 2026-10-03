@@ -233,7 +233,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -243,10 +243,21 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -270,38 +281,87 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
 </style>
   </head>
   <body>
     <div id="root" data-composition-id="agency-calls-b4" data-start="0" data-duration="6.000" data-width="1920" data-height="1080" data-fps="30">
-<div class="stagec">
+<div class="fx stagec">
         
-        <div class="pan" data-a="p" style="max-width:1180px;background:#2A8CFF;border-radius:24px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;overflow:hidden"><div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid rgba(255,255,255,0.22)">
+        <div class="recrow">
+        <div class="pan" data-a="p" style="max-width:1000px;background:#2A8CFF;border-radius:24px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;overflow:hidden"><div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid rgba(255,255,255,0.22)">
         <span class="ico on-bluecard" style="width:56px;height:56px;border-radius:12px"><svg class="ic" width="32" height="32" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
  aria-hidden="true" focusable="false"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg></span>
         <span class="h3" style="font-weight:900;color:#FFFFFF">Call</span>
-        <span class="apichip on-blue">agencyCalls</span></div><div style="padding:26px 30px 30px;color:#FFFFFF"><div class="rows"><div class="row irow" data-row="direction"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+        <span class="apichip on-blue">agencyCalls</span></div><div style="padding:26px 30px 30px;color:#FFFFFF"><div class="rows"><div class="row irow" data-row="direction" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">direction</span><span class="rv">outbound</span><span class="rdot"></span></div><div class="row irow" data-row="status"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">direction</span><span class="rv">outbound</span><span class="rdot"></span></div><div class="row irow" data-row="status" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></svg></span><span class="rk">status</span><span class="rv">connected</span><span class="rdot"></span></div><div class="row irow" data-row="fromNumber"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></svg></span><span class="rk">status</span><span class="rv">connected</span><span class="rdot"></span></div><div class="row irow" data-row="fromNumber" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"/></svg></span><span class="rk">fromNumber</span><span class="rv">(xxx) xxx-0147</span><span class="rdot"></span></div><div class="row irow" data-row="toNumber"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M14.25 9.75v-4.5m0 4.5h4.5m-4.5 0 6-6m-3 18c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"/></svg></span><span class="rk">fromNumber</span><span class="rv">(xxx) xxx-0147</span><span class="rdot"></span></div><div class="row irow" data-row="toNumber" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
  aria-hidden="true" focusable="false"><path d="M20.25 3.75v4.5m0-4.5h-4.5m4.5 0-6 6m3 12c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"/></svg></span><span class="rk">toNumber</span><span class="rv">(xxx) xxx-9920</span><span class="rdot"></span></div></div></div></div>
-        <div class="note" data-a="n" style="max-width:560px;background:#2A8CFF;border-radius:20px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;padding:26px 28px;opacity:0;color:#FFFFFF">
+        <div class="note inrow" data-a="n" style="max-width:600px;background:#2A8CFF;border-radius:20px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;padding:26px 28px;opacity:0;color:#FFFFFF">
           <div class="label" style="color:#FFFFFF">status</div>
           <div class="body" style="font-weight:500;margin-top:10px">Did it connect, bounce, or go to voicemail?</div>
+        </div>
         </div>
         
       </div>
     </div>
     <script>
+const __fx = {
+  // Heroicons 24 outline "check" (heroicons/md/24), inlined: a treatment cannot
+  // import lkicons.mjs, and the tick has to match the rest of the icon set.
+  tickSvg: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.75 6 6 9-13.5"/></svg>',
+  blue: "#2A8CFF",      // button.tsx:22
+  blueText: "#2B7FFF", // button.tsx:26
+  sel: (h, s) => {
+  const el = h.q(s);
+  return el ? (Array.isArray(el) ? el : [el]) : [];
+},
+  words: (el) => {
+  if (!el || el.dataset.fxSplit === "1") return [];
+  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
+  if (!text) return [];
+  el.dataset.fxSplit = "1";
+  el.innerHTML = text
+    .split(" ")
+    .map((w) => `<span class="w">${w}</span>`)
+    .join(" ");
+  return Array.from(el.querySelectorAll(".w"));
+},
+  chars: (el) => {
+  if (!el || el.dataset.fxChars === "1") return [];
+  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
+  if (!text) return [];
+  el.dataset.fxChars = "1";
+  el.innerHTML = text
+    .split("")
+    .map((c) => `<span class="c">${c === " " ? "&nbsp;" : c}</span>`)
+    .join("");
+  return Array.from(el.querySelectorAll(".c"));
+},
+};
+
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-calls-b4"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;
+const __base=function (tl, t0, { q, qq }) {
         if (kicker) tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
         tl.fromTo(q('[data-a="p"]'), { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, t0 + 0.1);
         const all = qq(".pan .row");
@@ -309,12 +369,12 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
         all.forEach((el, i) => {
           const isT = el === target;
           const at = t0 + 0.4 + i * (isT ? 0.85 : 0.26);
-          el.style.background = rowFill;
+          el.style.background = el.dataset.fill || "";
           tl.to(el, { opacity: 1, duration: 0.3, ease: "power2.out" }, at);
           if (isT) {
             // the named field lifts and stays lit â€” this is the "motion carries
             // the explanation" beat: the row the narration is saying lights up.
-            tl.to(el, { background: focusFill, scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
+            tl.to(el, { background: el.dataset.focusfill || "", scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
             tl.to(el, { scale: 1.0, duration: 0.9, yoyo: true, repeat: -1, ease: "sine.inOut" }, at + 0.9);
             tl.fromTo(q('[data-a="n"]'), { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, at + 0.45);
             if (cursor) {
@@ -323,7 +383,44 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
             }
           }
         });
-      });})({"title":"Call","api":"agencyCalls","r":[["direction","outbound"],["status","connected"],["fromNumber","(xxx) xxx-0147"],["toNumber","(xxx) xxx-9920"]],"focus":"status","note":"Did it connect, bounce, or go to voicemail?"});
+      };
+const __fxrun=function (tl, t0, h) {
+      const fx = (h.A && h.A.fx) || {};
+      const target = fx.target || ".apichip";
+      const steps = fx.steps ?? 8;
+      const frame = fx.frame ?? 0.035;
+      const at = t0 + (fx.at ?? 0.9);
+      const glyphs = fx.glyphs || "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      __fx.sel(h, target).forEach((el) => {
+        const final = el.textContent;
+        const state = { i: 0 };
+        let seed = final.length * 7919 + steps;
+        const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+        tl.to(
+          state,
+          {
+            i: steps,
+            duration: steps * frame,
+            ease: "none",
+            onUpdate() {
+              const k = state.i / steps;
+              el.textContent = final
+                .split("")
+                .map((c, ci) => {
+                  if (c === " ") return " ";
+                  // Character-by-character settle, left to right: the name
+                  // resolves rather than the whole string flickering.
+                  return ci / final.length < k ? c : glyphs[Math.floor(rnd() * glyphs.length)];
+                })
+                .join("");
+            },
+          },
+          at,
+        );
+      });
+    };
+return function (tl,at,h){h.A=A;__base(tl,at,h);__fxrun(tl,at,h);};
+})({"title":"Call","api":"agencyCalls","fx":{"at":0.8,"steps":9},"r":[["direction","outbound"],["status","connected"],["fromNumber","(xxx) xxx-0147"],["toNumber","(xxx) xxx-9920"]],"focus":"status","note":"Did it connect, bounce, or go to voicemail?"});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

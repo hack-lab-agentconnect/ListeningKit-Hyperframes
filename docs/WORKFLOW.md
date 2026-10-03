@@ -6,6 +6,8 @@ Two things live here and nowhere else:
 
 - **[DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md)** — the *visual* rules. Binding, and
   machine-enforced by `scripts/lint-design.mjs`.
+- **[COMPONENT_LIBRARY.md](./COMPONENT_LIBRARY.md)** — the motion language: which treatment
+  animates which beat, and what data it needs.
 - **This file** — the *repo* rules. What may be committed, where output goes, and
   the order of operations for a change. Enforced by `scripts/lint-repo.mjs`.
 
@@ -19,6 +21,7 @@ src/         build + design-system modules (the only place source lives)
   lkchrome.mjs     shared stylesheet: stage, dither, captions, icons, cursor
   lkicons.mjs      Heroicons 24 outline, read from the product's own package
   scenes.mjs       the scene library — one factory per beat type
+  lkmotion.mjs     the treatment library — how a beat is animated (see COMPONENT_LIBRARY.md)
   storyboards.mjs  per-object beat plans, timed against Deepgram word timings
   cues.mjs         narration beat cues
   build-beats.mjs  emits compositions/<slug>.html + one sub-composition per beat

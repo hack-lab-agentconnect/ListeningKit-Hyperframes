@@ -174,13 +174,20 @@ export function apiChip(api, onBlue = false) {
  * heroicon sits at the LEFT of the row, in the key's own column, so the icon
  * column aligns down the panel.
  */
-function rowsHTML(rows) {
+function rowsHTML(rows, fill = "", focusFill = "") {
   return `<div class="rows">${rows
     .map((row) => {
       const [ic, k, v] = row.length === 3 ? row : [null, row[0], row[1]];
       const icn = ic || fieldIcon(k);
       return (
-        `<div class="row irow" data-row="${k}">` +
+        `<div class="row irow" data-row="${k}"` +
+        // The row's resting fill and the fill it takes when the narration names
+        // it travel as DATA, not as closure. build-beats.mjs serialises this
+        // animation with toString() and re-creates it inside a sub-composition
+        // page, where the factory's local `rowFill` does not exist — so a
+        // reference to it in here was a ReferenceError at render time, on every
+        // record beat in the film.
+        ` data-fill="${fill}" data-focusfill="${focusFill}">` +
         `<span class="ico plain">${icon(icn, 34)}</span>` +
         `<span class="rk">${k}</span><span class="rv">${v}</span><span class="rdot"></span></div>`
       );
@@ -359,7 +366,7 @@ export const beats = {
         ${apiChip(api, cardIsBlue)}</div>`;
     const rowFill = cardIsBlue ? "rgba(255,255,255,0.10)" : "rgba(42,140,255,0.06)";
     const focusFill = cardIsBlue ? "rgba(255,255,255,0.26)" : C.selected;
-    const body = `<div style="padding:26px 30px 30px;color:${ink}">${rowsHTML(r)}</div>`;
+    const body = `<div style="padding:26px 30px 30px;color:${ink}">${rowsHTML(r, rowFill, focusFill)}</div>`;
     return {
       name: "record",
       tone,
@@ -367,12 +374,14 @@ export const beats = {
       type: "feature_showcase",
       html: `<div class="stagec">
         ${kicker ? `<div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>` : ""}
-        <div class="pan" data-a="p" style="${cardFor(tone, 1180, R.panel)};overflow:hidden">${head}${body}</div>
-        <div class="note" data-a="n" style="${cardFor(tone, 560, R.card)};padding:26px 28px;opacity:0;color:${
+        <div class="recrow">
+        <div class="pan" data-a="p" style="${cardFor(tone, 1000, R.panel)};overflow:hidden">${head}${body}</div>
+        <div class="note inrow" data-a="n" style="${cardFor(tone, 600, R.card)};padding:26px 28px;opacity:0;color:${
           cardIsBlue ? C.white : C.slate900
         }">
           <div class="label" style="color:${cardIsBlue ? C.white : C.blue}">${focus}</div>
           <div class="body" style="font-weight:500;margin-top:10px">${note}</div>
+        </div>
         </div>
         ${
           cursor
@@ -388,12 +397,12 @@ export const beats = {
         all.forEach((el, i) => {
           const isT = el === target;
           const at = t0 + 0.4 + i * (isT ? 0.85 : 0.26);
-          el.style.background = rowFill;
+          el.style.background = el.dataset.fill || "";
           tl.to(el, { opacity: 1, duration: 0.3, ease: "power2.out" }, at);
           if (isT) {
             // the named field lifts and stays lit â€” this is the "motion carries
             // the explanation" beat: the row the narration is saying lights up.
-            tl.to(el, { background: focusFill, scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
+            tl.to(el, { background: el.dataset.focusfill || "", scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
             tl.to(el, { scale: 1.0, duration: 0.9, yoyo: true, repeat: -1, ease: "sine.inOut" }, at + 0.9);
             tl.fromTo(q('[data-a="n"]'), { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, at + 0.45);
             if (cursor) {
