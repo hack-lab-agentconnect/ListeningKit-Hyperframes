@@ -233,7 +233,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -243,10 +243,21 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -270,29 +281,43 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
 </style>
   </head>
   <body>
     <div id="root" data-composition-id="agency-prospects-b12" data-start="0" data-duration="12.700" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
         <div class="eyebrow blue" data-a="k" style="opacity:0">As deals progress, one field marks where they sit</div>
-        <div class="pan" data-a="p" style="max-width:1180px;background:#2A8CFF;border-radius:24px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;overflow:hidden"><div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid rgba(255,255,255,0.22)">
+        <div class="recrow">
+        <div class="pan" data-a="p" style="max-width:1000px;background:#2A8CFF;border-radius:24px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;overflow:hidden"><div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid rgba(255,255,255,0.22)">
         <span class="ico on-bluecard" style="width:56px;height:56px;border-radius:12px"><svg class="ic" width="32" height="32" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
  aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg></span>
         <span class="h3" style="font-weight:900;color:#FFFFFF">Prospect</span>
-        <span class="apichip on-blue">agencyProspects</span></div><div style="padding:26px 30px 30px;color:#FFFFFF"><div class="rows"><div class="row irow" data-row="label"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+        <span class="apichip on-blue">agencyProspects</span></div><div style="padding:26px 30px 30px;color:#FFFFFF"><div class="rows"><div class="row irow" data-row="label" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">new</span><span class="rdot"></span></div><div class="row irow" data-row="label"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">new</span><span class="rdot"></span></div><div class="row irow" data-row="label" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">working</span><span class="rdot"></span></div><div class="row irow" data-row="label"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">working</span><span class="rdot"></span></div><div class="row irow" data-row="label" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">won</span><span class="rdot"></span></div><div class="row irow" data-row="label"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">won</span><span class="rdot"></span></div><div class="row irow" data-row="label" data-fill="rgba(255,255,255,0.10)" data-focusfill="rgba(255,255,255,0.26)"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
  aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="rk">label</span><span class="rv">lost</span><span class="rdot"></span></div></div></div></div>
-        <div class="note" data-a="n" style="max-width:560px;background:#2A8CFF;border-radius:20px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;padding:26px 28px;opacity:0;color:#FFFFFF">
+        <div class="note inrow" data-a="n" style="max-width:600px;background:#2A8CFF;border-radius:20px;box-shadow:0 6px 0 0 #1F6FE6;color:#FFFFFF;;padding:26px 28px;opacity:0;color:#FFFFFF">
           <div class="label" style="color:#FFFFFF">label</div>
           <div class="body" style="font-weight:500;margin-top:10px">New. Working. Won. Lost. If the label is blank, nobody has looked at this row — it is still raw machine output.</div>
+        </div>
         </div>
         <div class="cursor" data-a="cur"></div>
       </div>
@@ -301,7 +326,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-prospects-b12"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;return (function (tl, t0, { q, qq }) {
         if (kicker) tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
         tl.fromTo(q('[data-a="p"]'), { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, t0 + 0.1);
         const all = qq(".pan .row");
@@ -309,12 +334,12 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
         all.forEach((el, i) => {
           const isT = el === target;
           const at = t0 + 0.4 + i * (isT ? 0.85 : 0.26);
-          el.style.background = rowFill;
+          el.style.background = el.dataset.fill || "";
           tl.to(el, { opacity: 1, duration: 0.3, ease: "power2.out" }, at);
           if (isT) {
             // the named field lifts and stays lit â€” this is the "motion carries
             // the explanation" beat: the row the narration is saying lights up.
-            tl.to(el, { background: focusFill, scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
+            tl.to(el, { background: el.dataset.focusfill || "", scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
             tl.to(el, { scale: 1.0, duration: 0.9, yoyo: true, repeat: -1, ease: "sine.inOut" }, at + 0.9);
             tl.fromTo(q('[data-a="n"]'), { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, at + 0.45);
             if (cursor) {

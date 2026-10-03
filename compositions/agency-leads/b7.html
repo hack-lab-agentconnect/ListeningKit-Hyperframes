@@ -233,7 +233,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -243,10 +243,21 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -270,11 +281,23 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
 </style>
   </head>
   <body>
     <div id="root" data-composition-id="agency-leads-b7" data-start="0" data-duration="5.700" data-width="1920" data-height="1080" data-fps="30">
-<div class="stagec">
+<div class="fx stagec">
         <div class="eyebrow white" data-a="k" style="opacity:0">outboundMessage — the words we actually sent</div>
         <div class="twl" style="display:flex;flex-direction:column;gap:20px;align-items:center">
           <p class="twl-line h2 white" data-text="Hi Marcus — Sam from ListeningKit."><span class="t"></span><span class="caret" style="width:4px;height:52px;background:#FFFFFF;display:inline-block"></span></p><p class="twl-line h2 white" data-text="We build booking systems for tinting shops."><span class="t"></span><span class="caret" style="width:4px;height:52px;background:#FFFFFF;display:inline-block"></span></p><p class="twl-line h2 white" data-text="Worth 15 minutes this week?"><span class="t"></span><span class="caret" style="width:4px;height:52px;background:#FFFFFF;display:inline-block"></span></p>
@@ -283,10 +306,45 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
       </div>
     </div>
     <script>
+const __fx = {
+  // Heroicons 24 outline "check" (heroicons/md/24), inlined: a treatment cannot
+  // import lkicons.mjs, and the tick has to match the rest of the icon set.
+  tickSvg: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.75 6 6 9-13.5"/></svg>',
+  blue: "#2A8CFF",      // button.tsx:22
+  blueText: "#2B7FFF", // button.tsx:26
+  sel: (h, s) => {
+  const el = h.q(s);
+  return el ? (Array.isArray(el) ? el : [el]) : [];
+},
+  words: (el) => {
+  if (!el || el.dataset.fxSplit === "1") return [];
+  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
+  if (!text) return [];
+  el.dataset.fxSplit = "1";
+  el.innerHTML = text
+    .split(" ")
+    .map((w) => `<span class="w">${w}</span>`)
+    .join(" ");
+  return Array.from(el.querySelectorAll(".w"));
+},
+  chars: (el) => {
+  if (!el || el.dataset.fxChars === "1") return [];
+  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
+  if (!text) return [];
+  el.dataset.fxChars = "1";
+  el.innerHTML = text
+    .split("")
+    .map((c) => `<span class="c">${c === " " ? "&nbsp;" : c}</span>`)
+    .join("");
+  return Array.from(el.querySelectorAll(".c"));
+},
+};
+
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-leads-b7"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;
+const __base=function (tl, t0, { q, qq }) {
         tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
         const lines = qq(".twl-line");
         lines.forEach((el, li) => {
@@ -298,7 +356,61 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
         });
         qq(".caret").forEach((c, i) => tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i));
         tl.fromTo(q('[data-a="h"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 0.5 + lines.length * 1.5 + 0.5);
-      });})({"kicker":"outboundMessage — the words we actually sent","lines":["Hi Marcus — Sam from ListeningKit.","We build booking systems for tinting shops.","Worth 15 minutes this week?"],"hold":"Kept on the row, not in somebody's sent folder. Six weeks later this is the only honest record of what was promised."});
+      };
+const __fxrun=function (tl, t0, h) {
+      const fx = (h.A && h.A.fx) || {};
+      const cps = fx.cps ?? 28;
+      const lineGap = fx.lineGap ?? 1.5;
+      const caret = fx.caret || "line";
+      const lines = h.qq(".twl-line");
+      tl.fromTo(
+        __fx.sel(h, '[data-a="k"]'),
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+        t0,
+      );
+      let cursor = 0.5;
+      lines.forEach((el, li) => {
+        const target = el.querySelector(".t");
+        const text = el.dataset.text || "";
+        if (!target) return;
+        const dur = Math.max(0.45, text.length / cps);
+        const state = { n: 0 };
+        tl.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35 }, t0 + cursor);
+        tl.to(
+          state,
+          {
+            n: text.length,
+            duration: dur,
+            ease: "none",
+            onUpdate() {
+              target.textContent = text.slice(0, Math.round(state.n));
+            },
+          },
+          t0 + cursor,
+        );
+        cursor += dur + lineGap;
+      });
+      if (caret !== "none") {
+        h.qq(".caret").forEach((c, i) => {
+          if (caret === "block") {
+            c.style.width = "18px";
+            c.style.borderRadius = "3px";
+          }
+          tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i * 0.2);
+        });
+      } else {
+        h.qq(".caret").forEach((c) => c.remove());
+      }
+      tl.fromTo(
+        __fx.sel(h, '[data-a="h"]'),
+        { opacity: 0, y: 26 },
+        { opacity: 1, y: 0, duration: 0.5 },
+        t0 + cursor + 0.3,
+      );
+    };
+return function (tl,at,h){h.A=A;__fxrun(tl,at,h);};
+})({"kicker":"outboundMessage — the words we actually sent","lines":["Hi Marcus — Sam from ListeningKit.","We build booking systems for tinting shops.","Worth 15 minutes this week?"],"hold":"Kept on the row, not in somebody's sent folder. Six weeks later this is the only honest record of what was promised."});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

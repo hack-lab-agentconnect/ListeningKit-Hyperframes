@@ -1,4 +1,4 @@
-// Emits compositions/<slug>.html from storyboards.mjs + Deepgram word timings.
+﻿// Emits compositions/<slug>.html from storyboards.mjs + Deepgram word timings.
 //
 // The visual layer is the ListeningKit design system, not a video-template look:
 // flat #2A8CFF / #FFFFFF stages (never a gradient), plain rounded-md/rounded-lg
@@ -7,7 +7,7 @@
 // blue-on-white. See lkdesign.mjs and lkchrome.mjs for per-value provenance.
 //
 // Beats OVERLAP by XF so every change is a real transition, and each beat's
-// animation is offset a further LEAD earlier than its narration names it ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â that
+// animation is offset a further LEAD earlier than its narration names it ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â that
 // offset is the J-cut: you see the next idea land before it is spoken.
 
 import fs from "node:fs";
@@ -17,6 +17,14 @@ import { beats as B } from "./scenes.mjs";
 import { ARCS } from "./storyboards.mjs";
 import { css } from "./lkchrome.mjs";
 import { C } from "./lkdesign.mjs";
+import {
+  TREATMENTS,
+  TRANSITIONS,
+  FLAG_TO_XF,
+  motionCSS,
+  motionRuntimeJS,
+  withMotionClass,
+} from "./lkmotion.mjs";
 
 // Resolve from THIS file, never from the CWD. These modules now live in src/,
 // and a script that only works when invoked from the repo root is one npm-script
@@ -48,8 +56,53 @@ const ALL_KEYS = [
   "blockers", "count", "foot", "from", "head", "kicker", "label", "left", "lines", "marker",
   "mystery", "n", "note", "panels", "r", "reveal", "right", "hold", "links", "focus",
   "fieldGlow", "rowKeys", "bars", "rows", "steps", "sub", "to", "unit", "url", "cta", "title",
-  "api", "big", "verdict", "cursor", "dur", "labels",
+"api", "big", "verdict", "cursor", "dur", "labels", "fx",
 ];
+
+/**
+ * Which treatment, if any, this beat opted into.
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
+ * A treatment is chosen at the STORYBOARD level, one key: `fx: "<name>"`. It is
+ * deliberately not a beat argument: a treatment is a decision about how a moment
+ * is animated, which belongs beside the beat's `kind` and `tone`, not inside the
+ * content it animates.
+ */
+const treatmentOf = (b) => (b.fx ? TREATMENTS[b.fx] : null);
+
+/**
+ * Which transition this beat's seam uses.
+ *
+ * The storyboard's existing flags (zx / blur / slide) still mean exactly what
+ * they always meant Ã¢â‚¬â€ they now resolve to a NAMED transition in lkmotion.mjs
+ * instead of an inline crossfade. `xf: "<name>"` selects one directly. Anything
+ * unnamed keeps the plain crossfade, so a beat with no transition intent is
+ * unaffected.
+ */
+const transitionOf = (b) => {
+  if (b.xf) return TRANSITIONS[b.xf] ? b.xf : null;
+  for (const [flag, name] of Object.entries(FLAG_TO_XF)) if (b[flag]) return name;
+  return null;
+};
+
+/** Serialise a treatment + the beat's own animation into ONE standalone body. */
+function composeAnimSrc(beat, built) {
+  const base = built.anim.toString().replace(/^\s*\w+\s*\(/, "function (");
+  const t = treatmentOf(beat);
+  const args = JSON.stringify(beat.a);
+  if (!t) {
+    return `(function(A){const{${ALL_KEYS.join(",")}}=A;return (${base});})(${args})`;
+  }
+  const fx = t.anim.toString().replace(/^\s*\w+\s*\(/, "function (");
+  // `only` treatments REPLACE the beat's animation. That is not a preference:
+  // typewriter-run and wordmark-lockup are different ways of doing the same
+  // moment, and running both would put two typewriters on one beat.
+  const body = t.mode === "only" ? `__fxrun(tl,at,h);` : `__base(tl,at,h);__fxrun(tl,at,h);`;
+  return `(function(A){const{${ALL_KEYS.join(",")}}=A;
+const __base=${base};
+const __fxrun=${fx};
+return function (tl,at,h){h.A=A;${body}};
+})(${args})`;
+}
 
 /** Scene-level CSS on top of the shared chrome in lkchrome.mjs. */
 function sceneCSS() {
@@ -61,7 +114,7 @@ function sceneCSS() {
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -71,10 +124,21 @@ function sceneCSS() {
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -98,6 +162,12 @@ function sceneCSS() {
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:${C.blue};opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+${motionCSS}
 `;
 }
 
@@ -155,7 +225,7 @@ function buildOne(slug) {
   // its own overlay, and a single file carrying all scenes reaches ~47 heavy
   // overlays at once. HyperFrames' capture layer renders solid-black past
   // roughly the halfway point of a composition that dense (lint:
-  // composition_heavy_overlay_count_high) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â which is exactly why
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
   // the first build came back with beats 12-18 blank. Each scene gets its own
   // file so any single capture only ever sees one scene's overlays.
   const subDir = path.join(OUT, slug);
@@ -178,10 +248,15 @@ const sceneAssetsPrefix = "assets";
     // blue-tone content (white type) on a white stage: pale, low-contrast, and
     // effectively invisible. Passing the storyboard's tone in means the factory
     // builds the markup for the stage it will actually sit on.
-    const built = B[b.kind]({ tone: b.tone, ...b.a });
+const built = B[b.kind]({ tone: b.tone, ...b.a });
     // The storyboard owns the stage tone so the two-tone rhythm is explicit and
     // editable in one place, rather than implied by whichever scene builder runs.
     if (b.tone) built.tone = b.tone;
+    const treated = !!treatmentOf(b);
+    // The `fx` class goes on only when a treatment runs. It gates the
+    // treatment-only CSS (per-word/char spans are inline-block, and the marker
+    // underline), so an untreated beat's DOM is byte-identical to before.
+    const sceneHTML = treated ? withMotionClass(built.html) : built.html;
     const subId = `${slug}-b${i}`;
     // The anim bodies close over nothing but their own params, so they serialise
     // straight into the page as source. Function.prototype.toString() yields
@@ -189,8 +264,7 @@ const sceneAssetsPrefix = "assets";
     // as a function expression. toString() also drops closure scope, so each body
     // is wrapped in an IIFE that re-establishes every possible key from the literal
     // args object.
-    const src = built.anim.toString().replace(/^\s*\w+\s*\(/, "function (");
-    animSrc.push(`(function(A){const{${ALL_KEYS.join(",")}}=A;return (${src});})(${JSON.stringify(b.a)})`);
+animSrc.push(composeAnimSrc(b, built));
 
     const start = +(INTRO + b.t - (i === 0 ? 0 : LEAD)).toFixed(3);
     const nextT = i + 1 < seq.length ? seq[i + 1].t : seq[i].t + OUTRO;
@@ -200,10 +274,12 @@ const sceneAssetsPrefix = "assets";
       sel: `.beat[data-b="${i}"]`,
       start,
       dur,
-      tone: built.tone,
+tone: built.tone,
       name: built.name,
       blueprint: built.blueprint,
       type: built.type,
+      fx: b.fx || null,
+      xf: transitionOf(b),
     });
 
     fs.writeFileSync(
@@ -218,9 +294,9 @@ const sceneAssetsPrefix = "assets";
   </head>
   <body>
     <div id="root" data-composition-id="${subId}" data-start="0" data-duration="${dur.toFixed(3)}" data-width="1920" data-height="1080" data-fps="30">
-${built.html.replace(/(src=")assets\//g, `$1${subAssets}/`)}
+${sceneHTML.replace(/(src=")assets\//g, `$1${subAssets}/`)}
     </div>
-    <script>
+    <script>${treated ? motionRuntimeJS : ""}
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["${subId}"] = tl;
@@ -265,6 +341,8 @@ ${plan
   .join("\n")}
       </div>
       <div id="dither"></div>
+      <div class="wipesheet"></div>
+      
 
 ${mounts.join("\n")}
 
@@ -280,11 +358,26 @@ ${captions(caps)}
       window.__timelines["${slug}"] = tl;
 
       const PLAN = ${JSON.stringify(plan)};
+      // The named transitions, serialised the same way scene animations are:
+      // a transition is a function of (timeline, time, element), nothing else.
+      const XFN = {
+${Object.entries(TRANSITIONS)
+  .map(
+    ([n, t]) =>
+      `        ${JSON.stringify(n)}: ${t.anim.toString().replace(/^\s*\w+\s*\(/, "function (")}`,
+  )
+  .join(",\n")}
+};
       const XF = ${XF};
       const LEAD = ${LEAD};
       const TOTAL = ${TOTAL.toFixed(3)};
       const OUTRO_END = TOTAL - 2.4;
-      const root = document.getElementById("root");
+const root = document.getElementById("root");
+      // Declared HERE, after root. A const read above its declaration is a
+      // temporal-dead-zone ReferenceError, and it kills the whole root script:
+      // every stage, caption and transition stops running while the file still
+      // lints clean and renders a plausible-looking frame.
+      const sheetEl = root.querySelector(".wipesheet");
 
       tl.to({}, { duration: TOTAL }, 0);
 
@@ -326,7 +419,19 @@ ${captions(caps)}
       Array.from(root.querySelectorAll(".beat")).forEach((el) => {
         const s = parseFloat(el.dataset.start);
         const d = parseFloat(el.dataset.duration);
+        const i = parseInt(el.dataset.b, 10);
+        const xf = PLAN[i] && PLAN[i].xf;
+        // The OUTGOING treatment always crossfades at this beat's own tail. A
+        // named transition is layered on top at this beat's start; it never
+        // replaces this, because a beat that skipped its own fade-out would sit
+        // at full opacity underneath the next beat for the rest of the film.
         tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: XF, ease: "power1.inOut" }, s + d - XF);
+        if (i > 0 && xf && XFN[xf]) {
+          // XF and LEAD are untouched, so the beat still lands exactly where
+          // the narration puts it - the transition changes how the cut looks,
+          // never when it happens.
+          XFN[xf](tl, s, { el, dur: XF, sheet: sheetEl });
+        }
       });
 
       Array.from(root.querySelectorAll(".cap")).forEach((c) => {

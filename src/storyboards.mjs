@@ -39,8 +39,12 @@ export const ARCS = {
         kind: "overwhelm",
         tone: "blue",
         blur: true,
+        fx: "per-word-rise",
         a: {
           label: "A PROSPECT",
+          // The pill's own label is the subject here, not the kicker the
+          // treatment reaches for by default.
+          fx: { target: '[data-a="box"] .h3', start: 0.2, stagger: 0.09 },
           blockers: ["not a person", "not a conversation", "not a deal", "not a quote", "not a task"],
         },
       },
@@ -49,6 +53,7 @@ export const ARCS = {
         kind: "journey",
         tone: "white",
         slide: true,
+        fx: "marker-highlight",
         a: {
           kicker: "Just a business, in a city, doing a kind of work",
           steps: [
@@ -57,6 +62,8 @@ export const ARCS = {
             ["Window tinting", "the highest-fit niche", "niche"],
           ],
           note: "The niche is what tells us whether we know how to sell into this shop at all.",
+          // The phrase is already in the note above. The treatment only marks it.
+          fx: { phrase: "niche", target: ".note", at: 1.9 },
         },
       },
       {
@@ -173,6 +180,7 @@ export const ARCS = {
         kind: "converge",
         tone: "blue",
         blur: true,
+        fx: "converge-chain",
         a: {
           kicker: "Everything downstream exists only because this row does",
           n: 9,
@@ -199,6 +207,7 @@ export const ARCS = {
         kind: "split",
         tone: "white",
         zx: true,
+        fx: "comparison-wipe",
         a: {
           kicker: "Get one of these wrong and the damage spreads",
           left: ["ORPHANED LEADS", "leads that had no other home", "a duplicate delete, or a bad merge"],
@@ -329,9 +338,12 @@ export const ARCS = {
         kind: "record",
         tone: "white",
         slide: true,
+        fx: "scramble-resolve",
         a: {
           title: "Call",
           api: "agencyCalls",
+          // The object name is looked up, not typed: it resolves out of noise.
+          fx: { at: 0.8, steps: 9 },
           r: [
             ["direction", "outbound"],
             ["status", "connected"],
@@ -528,6 +540,7 @@ export const ARCS = {
         kind: "typewriter",
         tone: "blue",
         zx: true,
+        fx: "typewriter-run",
         a: {
           kicker: "ONE LAST CHECK",
           lines: [
@@ -535,6 +548,7 @@ export const ARCS = {
             "Inbound and outbound are two different conversations that happen to share a table.",
           ],
           hold: "Do it on a handful of records and the table stops being a log. It becomes a training set.",
+          fx: { cps: 22, lineGap: 1.8 },
         },
       },
     ],
@@ -542,6 +556,7 @@ export const ARCS = {
       t: 192.6,
       kind: "endcard",
       tone: "blue",
+      fx: "wordmark-lockup",
       a: {
         word: "ListeningKit",
         cta: "Call records — one per call, kept forever",
@@ -569,6 +584,7 @@ export const ARCS = {
         t: 0.0,
         kind: "countup",
         tone: "white",
+        fx: "number-tick",
         a: {
           label: "Agency Leads",
           count: 18,
@@ -595,6 +611,7 @@ export const ARCS = {
         kind: "journey",
         tone: "white",
         slide: true,
+        fx: "card-assemble",
         a: {
           kicker: "One shop in Leeds is one prospect — and three leads",
           steps: [
@@ -610,6 +627,7 @@ export const ARCS = {
         kind: "record",
         tone: "blue",
         blur: true,
+        fx: "field-resolve",
         a: {
           kicker: "This is where the commercial state lands",
           title: "Lead",
@@ -629,6 +647,7 @@ export const ARCS = {
         kind: "record",
         tone: "white",
         zx: true,
+        fx: "focus-blur-resolve",
         a: {
           kicker: "Identity and provenance",
           title: "Lead",
@@ -663,6 +682,7 @@ export const ARCS = {
         kind: "record",
         tone: "white",
         slide: true,
+        fx: "chip-rail-tick",
         a: {
           kicker: "coldCallStatus — the operational truth",
           title: "Lead",
@@ -680,6 +700,7 @@ export const ARCS = {
         t: 69.7,
         kind: "typewriter",
         tone: "blue",
+        fx: "typewriter-run",
         a: {
           kicker: "outboundMessage — the words we actually sent",
           lines: [
@@ -697,6 +718,7 @@ export const ARCS = {
         kind: "costCount",
         tone: "white",
         zx: true,
+        fx: "number-tick",
         a: {
           label: "Rows we have decided to spend money and time on",
           from: 0,
@@ -710,6 +732,7 @@ export const ARCS = {
         kind: "relations",
         tone: "blue",
         blur: true,
+        fx: "stroke-trace",
         a: {
           title: "Lead",
           api: "agencyLeads",
@@ -729,6 +752,7 @@ export const ARCS = {
         kind: "record",
         tone: "white",
         slide: true,
+        fx: "field-resolve",
         a: {
           kicker: "Ask where a number in a report came from",
           title: "Report",
@@ -750,6 +774,7 @@ export const ARCS = {
         kind: "journey",
         tone: "blue",
         zx: true,
+        fx: "card-assemble",
         a: {
           kicker: "Where leads are used day to day — two places, mainly",
           steps: [
@@ -765,6 +790,7 @@ export const ARCS = {
         tone: "white",
         zx: true,
         cursor: true,
+        fx: "chip-rail-tick",
         a: {
           kicker: "qualificationStatus — the verdict, and the reason behind it",
           title: "Lead",
@@ -783,6 +809,7 @@ export const ARCS = {
         kind: "converge",
         tone: "blue",
         slide: true,
+        fx: "converge-chain",
         a: {
           kicker: "The practical summary",
           n: 3,
@@ -797,6 +824,7 @@ export const ARCS = {
       t: 151.2,
       kind: "endcard",
       tone: "blue",
+      fx: "wordmark-lockup",
       a: {
         word: "ListeningKit",
         cta: "Agency Leads — the person, not the company",

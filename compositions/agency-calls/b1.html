@@ -233,7 +233,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -243,10 +243,21 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -270,6 +281,18 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
 </style>
   </head>
   <body>
@@ -283,7 +306,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-calls-b1"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q, qq }) {
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;return (function (tl, t0, { q, qq }) {
         const box = q('[data-a="box"]');
         tl.fromTo(box, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, t0);
         const els = qq(".ovcard");

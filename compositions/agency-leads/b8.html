@@ -233,7 +233,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -243,10 +243,21 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -270,21 +281,68 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
 </style>
   </head>
   <body>
     <div id="root" data-composition-id="agency-leads-b8" data-start="0" data-duration="15.400" data-width="1920" data-height="1080" data-fps="30">
-<div class="stagec">
+<div class="fx stagec">
         <div class="eyebrow blue" data-a="l" style="opacity:0">Rows we have decided to spend money and time on</div>
         <div class="count" data-a="c"><span class="n blue" style="opacity:0">0</span><span class="u blue" data-a="u" style="opacity:0">leads</span></div>
         <div class="body blue dim" data-a="s" style="opacity:0">Prospects are cheap — they are just rows. A lead is somebody we have decided to ring, message, and chase.</div>
       </div>
     </div>
     <script>
+const __fx = {
+  // Heroicons 24 outline "check" (heroicons/md/24), inlined: a treatment cannot
+  // import lkicons.mjs, and the tick has to match the rest of the icon set.
+  tickSvg: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.75 6 6 9-13.5"/></svg>',
+  blue: "#2A8CFF",      // button.tsx:22
+  blueText: "#2B7FFF", // button.tsx:26
+  sel: (h, s) => {
+  const el = h.q(s);
+  return el ? (Array.isArray(el) ? el : [el]) : [];
+},
+  words: (el) => {
+  if (!el || el.dataset.fxSplit === "1") return [];
+  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
+  if (!text) return [];
+  el.dataset.fxSplit = "1";
+  el.innerHTML = text
+    .split(" ")
+    .map((w) => `<span class="w">${w}</span>`)
+    .join(" ");
+  return Array.from(el.querySelectorAll(".w"));
+},
+  chars: (el) => {
+  if (!el || el.dataset.fxChars === "1") return [];
+  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
+  if (!text) return [];
+  el.dataset.fxChars = "1";
+  el.innerHTML = text
+    .split("")
+    .map((c) => `<span class="c">${c === " " ? "&nbsp;" : c}</span>`)
+    .join("");
+  return Array.from(el.querySelectorAll(".c"));
+},
+};
+
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-leads-b8"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels}=A;return (function (tl, t0, { q }) {
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;
+const __base=function (tl, t0, { q }) {
         const n = q('[data-a="c"] .n');
         tl.fromTo(n, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, t0);
         tl.fromTo(q('[data-a="l"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
@@ -293,7 +351,51 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
         tl.to(c, { v: to, duration: 2.3, ease: "power2.inOut", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 1.7);
         tl.fromTo(q('[data-a="s"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.2);
         tl.to(q('[data-a="c"]'), { scale: 1.02, duration: 1.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 4.2);
-      });})({"label":"Rows we have decided to spend money and time on","from":0,"to":18,"unit":"leads","sub":"Prospects are cheap — they are just rows. A lead is somebody we have decided to ring, message, and chase."});
+      };
+const __fxrun=function (tl, t0, h) {
+      const A = h.A || {};
+      const fx = A.fx || {};
+      const dur = fx.dur ?? 1.4;
+      const label = __fx.sel(h, '[data-a="label"], [data-a="l"]')[0];
+      const num = __fx.sel(h, fx.number || '[data-a="count"] .n, [data-a="c"] .n')[0];
+      const unit = __fx.sel(h, '[data-a="u"]')[0];
+      const sub = __fx.sel(h, '[data-a="sub"], [data-a="s"]')[0];
+      if (label) tl.fromTo(label, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+      const from = A.from ?? 0;
+      const to = A.count ?? A.to ?? 0;
+      if (num) {
+        const state = { n: from };
+        const decimals = String(to).includes(".") ? String(to).split(".")[1].length : 0;
+        // The number ships in the markup at opacity:0, so the treatment has to
+        // bring it in itself. Not optional: a treatment that REPLACES the beat's
+        // own animation inherits the duty to reveal everything that animation
+        // revealed. Missing this produced an empty frame on every counted beat.
+        tl.fromTo(num, { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
+        tl.to(
+          state,
+          {
+            n: to,
+            duration: dur,
+            ease: "power2.out",
+            onUpdate() {
+              num.textContent = decimals
+                ? state.n.toFixed(decimals)
+                : Math.round(state.n).toLocaleString("en-US");
+            },
+          },
+          t0 + 0.5,
+        );
+        tl.fromTo(num, { scale: 0.94 }, { scale: 1, duration: 0.45, ease: `back.out(${fx.settle ?? 1.9})` }, t0 + 0.5 + dur);
+        // Every beat animates continuously, so the number keeps a slow breathe.
+        // A transform only: letterSpacing or y reflow snaps glyphs under
+        // frame-by-frame capture.
+        tl.to(num, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 0.5 + dur + 0.4);
+      }
+      if (unit) tl.fromTo(unit, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4 }, t0 + 0.5 + dur * 0.6);
+      if (sub) tl.fromTo(sub, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 0.5 + dur + 0.6);
+    };
+return function (tl,at,h){h.A=A;__fxrun(tl,at,h);};
+})({"label":"Rows we have decided to spend money and time on","from":0,"to":18,"unit":"leads","sub":"Prospects are cheap — they are just rows. A lead is somebody we have decided to ring, message, and chase."});
       const root = document.getElementById("root");
       ANIM(tl, 0, {
         q: (s) => root.querySelector(s),

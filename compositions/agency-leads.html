@@ -233,7 +233,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
-/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
@@ -243,10 +243,21 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
 .myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:22px}
 
 /* record panel + note callout */
 .pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
 .note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
 .relsvg{z-index:1}
 
 /* agent work */
@@ -270,6 +281,18 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 /* split */
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
 </style>
   </head>
   <body>
@@ -292,6 +315,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
         <div class="stage " data-s="14" style="opacity:0"></div>
       </div>
       <div id="dither"></div>
+      <div class="wipesheet"></div>
+      
 
       <div class="clip beat" id="beat-0" data-b="0" data-composition-id="agency-leads-b0" data-composition-src="compositions/agency-leads/b0.html" data-start="0.8" data-duration="13.2" data-track-index="1"></div>
       <div class="clip beat" id="beat-1" data-b="1" data-composition-id="agency-leads-b1" data-composition-src="compositions/agency-leads/b1.html" data-start="12.45" data-duration="5.3" data-track-index="2"></div>
@@ -387,12 +412,57 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-leads"] = tl;
 
-      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":13.2,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook"},{"i":1,"sel":".beat[data-b=\"1\"]","start":12.45,"dur":5.3,"tone":"blue","name":"overwhelm","blueprint":"overwhelm-surround","type":"pain_point"},{"i":2,"sel":".beat[data-b=\"2\"]","start":16.75,"dur":10.3,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature"},{"i":3,"sel":".beat[data-b=\"3\"]","start":26.05,"dur":10.8,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":4,"sel":".beat[data-b=\"4\"]","start":35.85,"dur":14.8,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":5,"sel":".beat[data-b=\"5\"]","start":49.65,"dur":15.9,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature"},{"i":6,"sel":".beat[data-b=\"6\"]","start":64.55,"dur":6.4,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":7,"sel":".beat[data-b=\"7\"]","start":69.95,"dur":5.7,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase"},{"i":8,"sel":".beat[data-b=\"8\"]","start":74.65,"dur":15.4,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight"},{"i":9,"sel":".beat[data-b=\"9\"]","start":89.05,"dur":9.7,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase"},{"i":10,"sel":".beat[data-b=\"10\"]","start":97.75,"dur":14.2,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":11,"sel":".beat[data-b=\"11\"]","start":110.95,"dur":21.1,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature"},{"i":12,"sel":".beat[data-b=\"12\"]","start":131.05,"dur":12.1,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase"},{"i":13,"sel":".beat[data-b=\"13\"]","start":142.15,"dur":10.3,"tone":"blue","name":"converge","blueprint":"center-outward-expansion","type":"social_proof"},{"i":14,"sel":".beat[data-b=\"14\"]","start":151.45,"dur":8.55,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta"}];
+      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":13.2,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":"number-tick","xf":null},{"i":1,"sel":".beat[data-b=\"1\"]","start":12.45,"dur":5.3,"tone":"blue","name":"overwhelm","blueprint":"overwhelm-surround","type":"pain_point","fx":null,"xf":"blur-crossfade"},{"i":2,"sel":".beat[data-b=\"2\"]","start":16.75,"dur":10.3,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-slide"},{"i":3,"sel":".beat[data-b=\"3\"]","start":26.05,"dur":10.8,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"field-resolve","xf":"blur-crossfade"},{"i":4,"sel":".beat[data-b=\"4\"]","start":35.85,"dur":14.8,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"focus-blur-resolve","xf":"zoom-through"},{"i":5,"sel":".beat[data-b=\"5\"]","start":49.65,"dur":15.9,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"blur-crossfade"},{"i":6,"sel":".beat[data-b=\"6\"]","start":64.55,"dur":6.4,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"chip-rail-tick","xf":"push-slide"},{"i":7,"sel":".beat[data-b=\"7\"]","start":69.95,"dur":5.7,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":null},{"i":8,"sel":".beat[data-b=\"8\"]","start":74.65,"dur":15.4,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight","fx":"number-tick","xf":"zoom-through"},{"i":9,"sel":".beat[data-b=\"9\"]","start":89.05,"dur":9.7,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":"stroke-trace","xf":"blur-crossfade"},{"i":10,"sel":".beat[data-b=\"10\"]","start":97.75,"dur":14.2,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"field-resolve","xf":"push-slide"},{"i":11,"sel":".beat[data-b=\"11\"]","start":110.95,"dur":21.1,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"zoom-through"},{"i":12,"sel":".beat[data-b=\"12\"]","start":131.05,"dur":12.1,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"chip-rail-tick","xf":"zoom-through"},{"i":13,"sel":".beat[data-b=\"13\"]","start":142.15,"dur":10.3,"tone":"blue","name":"converge","blueprint":"center-outward-expansion","type":"social_proof","fx":"converge-chain","xf":"push-slide"},{"i":14,"sel":".beat[data-b=\"14\"]","start":151.45,"dur":8.55,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":null}];
+      // The named transitions, serialised the same way scene animations are:
+      // a transition is a function of (timeline, time, element), nothing else.
+      const XFN = {
+        "zoom-through": function (tl, at, h) {
+      const el = h.el;
+      tl.fromTo(el, { opacity: 0, scale: 1.14 }, { opacity: 1, scale: 1, duration: h.dur, ease: "power2.inOut" }, at);
+    },
+        "blur-crossfade": function (tl, at, h) {
+      const el = h.el;
+      tl.fromTo(el, { opacity: 0, filter: "blur(22px)" }, { opacity: 1, filter: "blur(0px)", duration: h.dur, ease: "power2.inOut" }, at);
+    },
+        "push-slide": function (tl, at, h) {
+      const el = h.el;
+      tl.fromTo(el, { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: h.dur, ease: "power3.out" }, at);
+    },
+        "wipe": function (tl, at, h) {
+      const sheet = h.sheet;
+      if (!sheet) return;
+      const dir = h.dir || "left";
+      const prop = dir === "right" ? "xPercent" : dir === "up" ? "yPercent" : "xPercent";
+      const sign = dir === "right" || dir === "up" ? 100 : -100;
+      tl.set(sheet, { opacity: 1 }, at - h.dur * 0.5);
+      tl.fromTo(sheet, { [prop]: sign }, { [prop]: 0, duration: h.dur * 0.5, ease: "power2.in" }, at - h.dur * 0.5);
+      tl.to(sheet, { [prop]: -sign, duration: h.dur * 0.5, ease: "power2.out" }, at);
+      tl.set(sheet, { opacity: 0 }, at + h.dur * 0.5);
+    },
+        "shared-axis-y": function (tl, at, h) {
+      const el = h.el;
+      tl.fromTo(el, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: h.dur, ease: "power2.out" }, at);
+    },
+        "iris": function (tl, at, h) {
+      const el = h.el;
+      tl.fromTo(
+        el,
+        { opacity: 0, clipPath: "inset(50% 50% 50% 50% round 24px)" },
+        { opacity: 1, clipPath: "inset(0% 0% 0% 0% round 0px)", duration: h.dur, ease: "power3.inOut" },
+        at,
+      );
+    }
+};
       const XF = 0.45;
       const LEAD = 0.55;
       const TOTAL = 160.000;
       const OUTRO_END = TOTAL - 2.4;
-      const root = document.getElementById("root");
+const root = document.getElementById("root");
+      // Declared HERE, after root. A const read above its declaration is a
+      // temporal-dead-zone ReferenceError, and it kills the whole root script:
+      // every stage, caption and transition stops running while the file still
+      // lints clean and renders a plausible-looking frame.
+      const sheetEl = root.querySelector(".wipesheet");
 
       tl.to({}, { duration: TOTAL }, 0);
 
@@ -434,7 +504,19 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
       Array.from(root.querySelectorAll(".beat")).forEach((el) => {
         const s = parseFloat(el.dataset.start);
         const d = parseFloat(el.dataset.duration);
+        const i = parseInt(el.dataset.b, 10);
+        const xf = PLAN[i] && PLAN[i].xf;
+        // The OUTGOING treatment always crossfades at this beat's own tail. A
+        // named transition is layered on top at this beat's start; it never
+        // replaces this, because a beat that skipped its own fade-out would sit
+        // at full opacity underneath the next beat for the rest of the film.
         tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: XF, ease: "power1.inOut" }, s + d - XF);
+        if (i > 0 && xf && XFN[xf]) {
+          // XF and LEAD are untouched, so the beat still lands exactly where
+          // the narration puts it - the transition changes how the cut looks,
+          // never when it happens.
+          XFN[xf](tl, s, { el, dur: XF, sheet: sheetEl });
+        }
       });
 
       Array.from(root.querySelectorAll(".cap")).forEach((c) => {
