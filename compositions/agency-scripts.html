@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-scripts" data-start="0" data-duration="152.585" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Script</div>
+        <div class="api">agencyScripts</div>
+        <div class="rule"></div>
+        <div class="count">9 records</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="25.260" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">The actual words we say out loud, stored as data</h2>
+          <p class="body">Reusable talk tracks, not a doc somebody edits</p>
+        </div>
+        <div class="clip card" data-start="29.260" data-duration="27.666" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">A name, structured script data, and the campaign it serves</h2>
+          <p class="body">Structured, so a machine can actually read it</p>
+        </div>
+        <div class="clip card" data-start="56.926" data-duration="22.373" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">It is the single source of truth for how we sound</h2>
+          <p class="body">Two people should never sell the same thing differently</p>
+        </div>
+        <div class="clip card" data-start="79.300" data-duration="24.539" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">On the call, in the text, and in the training</h2>
+          <p class="body">Used live during outreach, not just read once</p>
+        </div>
+        <div class="clip card" data-start="103.838" data-duration="44.747" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">Changing the words and keeping the record</h2>
+          <p class="body">Edit here, never in a notes app</p>
+        </div>
+
+      <div class="clip slidelist" data-start="148.585" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>name</li>
+          <li>scriptData</li>
+          <li>campaign</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.080" data-duration="2.480" data-track-index="3"><span>A script record is the actual words we say</span></div>
+        <div class="clip cap" data-start="6.560" data-duration="2.800" data-track-index="3"><span>when we ring somebody, or the actual words we</span></div>
+        <div class="clip cap" data-start="9.360" data-duration="1.840" data-track-index="3"><span>put in a text message.</span></div>
+        <div class="clip cap" data-start="11.200" data-duration="1.680" data-track-index="3"><span>We have nine of them.</span></div>
+        <div class="clip cap" data-start="12.880" data-duration="2.480" data-track-index="3"><span>This is the object people are most surprised to</span></div>
+        <div class="clip cap" data-start="15.360" data-duration="2.560" data-track-index="3"><span>find in a CRM, because a script feels like</span></div>
+        <div class="clip cap" data-start="17.920" data-duration="2.105" data-track-index="3"><span>a document, not data.</span></div>
+        <div class="clip cap" data-start="20.025" data-duration="2.640" data-track-index="3"><span>But the whole point is that it is data.</span></div>
+        <div class="clip cap" data-start="22.665" data-duration="2.160" data-track-index="3"><span>Once the words live here, they can be handed</span></div>
+        <div class="clip cap" data-start="24.825" data-duration="3.760" data-track-index="3"><span>to a dialer, versioned, reviewed, linked to the campaign</span></div>
+        <div class="clip cap" data-start="28.585" data-duration="2.240" data-track-index="3"><span>they belong to, and improved.</span></div>
+        <div class="clip cap" data-start="30.825" data-duration="2.480" data-track-index="3"><span>A script living in a Google Doc is already</span></div>
+        <div class="clip cap" data-start="33.305" data-duration="0.880" data-track-index="3"><span>dead.</span></div>
+        <div class="clip cap" data-start="34.185" data-duration="3.015" data-track-index="3"><span>It drifts, it gets gets forked, and two people</span></div>
+        <div class="clip cap" data-start="37.200" data-duration="1.840" data-track-index="3"><span>end up saying different things.</span></div>
+        <div class="clip cap" data-start="39.040" data-duration="2.800" data-track-index="3"><span>There are three fields, and the second one is</span></div>
+        <div class="clip cap" data-start="41.840" data-duration="1.520" data-track-index="3"><span>the interesting one.</span></div>
+        <div class="clip cap" data-start="43.360" data-duration="3.360" data-track-index="3"><span>The name identifies the script, something like a cold</span></div>
+        <div class="clip cap" data-start="46.720" data-duration="2.545" data-track-index="3"><span>call opener for window tinting.</span></div>
+        <div class="clip cap" data-start="49.265" data-duration="3.440" data-track-index="3"><span>Then script data, which is the script itself, and</span></div>
+        <div class="clip cap" data-start="52.705" data-duration="2.640" data-track-index="3"><span>the word structured is doing real work in that</span></div>
+        <div class="clip cap" data-start="55.345" data-duration="1.040" data-track-index="3"><span>sentence.</span></div>
+        <div class="clip cap" data-start="56.385" data-duration="2.160" data-track-index="3"><span>It is not a blob of prose.</span></div>
+        <div class="clip cap" data-start="58.545" data-duration="2.720" data-track-index="3"><span>It is the script broken into its parts: the</span></div>
+        <div class="clip cap" data-start="61.265" data-duration="5.285" data-track-index="3"><span>opening line, the qualifying questions, the objection handling,</span></div>
+        <div class="clip cap" data-start="66.550" data-duration="1.920" data-track-index="3"><span>the close for the next step.</span></div>
+        <div class="clip cap" data-start="68.470" data-duration="2.800" data-track-index="3"><span>Because it is structured, software can read it and</span></div>
+        <div class="clip cap" data-start="71.270" data-duration="2.640" data-track-index="3"><span>pick the right part at the right moment, and</span></div>
+        <div class="clip cap" data-start="73.910" data-duration="2.640" data-track-index="3"><span>the campaign field links it to the agency campaign</span></div>
+        <div class="clip cap" data-start="76.550" data-duration="2.545" data-track-index="3"><span>it was written for, so you can tell which</span></div>
+        <div class="clip cap" data-start="79.095" data-duration="1.920" data-track-index="3"><span>motion it belongs to.</span></div>
+        <div class="clip cap" data-start="81.015" data-duration="3.040" data-track-index="3"><span>Why insist on keeping scripts in the CRM rather</span></div>
+        <div class="clip cap" data-start="84.055" data-duration="1.520" data-track-index="3"><span>than in a document?</span></div>
+        <div class="clip cap" data-start="85.575" data-duration="3.440" data-track-index="3"><span>Consistency If two people sell the same package using</span></div>
+        <div class="clip cap" data-start="89.015" data-duration="3.760" data-track-index="3"><span>two different stories, the customer experience is incoherent and</span></div>
+        <div class="clip cap" data-start="92.775" data-duration="2.965" data-track-index="3"><span>we cannot improve either version, because we do not</span></div>
+        <div class="clip cap" data-start="95.740" data-duration="1.600" data-track-index="3"><span>know which one they heard.</span></div>
+        <div class="clip cap" data-start="97.340" data-duration="2.800" data-track-index="3"><span>Storing them here means the whole team, and every</span></div>
+        <div class="clip cap" data-start="100.140" data-duration="3.200" data-track-index="3"><span>automated agent that dials on our behalf, works from</span></div>
+        <div class="clip cap" data-start="103.340" data-duration="2.320" data-track-index="3"><span>exactly the same source of truth.</span></div>
+        <div class="clip cap" data-start="105.660" data-duration="2.445" data-track-index="3"><span>It also means means when a script works, everybody</span></div>
+        <div class="clip cap" data-start="108.105" data-duration="3.360" data-track-index="3"><span>gets the improvement immediately, rather than three weeks later</span></div>
+        <div class="clip cap" data-start="111.465" data-duration="2.560" data-track-index="3"><span>when somebody mentions it in a meeting.</span></div>
+        <div class="clip cap" data-start="114.025" data-duration="2.640" data-track-index="3"><span>Where does a script actually get used?</span></div>
+        <div class="clip cap" data-start="116.665" data-duration="2.000" data-track-index="3"><span>Directly during outreach.</span></div>
+        <div class="clip cap" data-start="118.665" data-duration="2.320" data-track-index="3"><span>When the dialer places a call, it is reading</span></div>
+        <div class="clip cap" data-start="120.985" data-duration="1.445" data-track-index="3"><span>from this object.</span></div>
+        <div class="clip cap" data-start="122.430" data-duration="2.720" data-track-index="3"><span>When we send a follow-up text, the wording comes</span></div>
+        <div class="clip cap" data-start="125.150" data-duration="1.040" data-track-index="3"><span>from here.</span></div>
+        <div class="clip cap" data-start="126.190" data-duration="3.200" data-track-index="3"><span>And then there is a second, less obvious use,</span></div>
+        <div class="clip cap" data-start="129.390" data-duration="1.440" data-track-index="3"><span>which is training.</span></div>
+        <div class="clip cap" data-start="130.830" data-duration="2.960" data-track-index="3"><span>When a new joiner starts, the fastest way to</span></div>
+        <div class="clip cap" data-start="133.790" data-duration="2.480" data-track-index="3"><span>understand how the business sells is to read the</span></div>
+        <div class="clip cap" data-start="136.270" data-duration="1.995" data-track-index="3"><span>nine scripts end to end.</span></div>
+        <div class="clip cap" data-start="138.265" data-duration="3.040" data-track-index="3"><span>They are short, they are written down, and they</span></div>
+        <div class="clip cap" data-start="141.305" data-duration="2.560" data-track-index="3"><span>encode the objections we hit, and the answers that</span></div>
+        <div class="clip cap" data-start="143.865" data-duration="0.800" data-track-index="3"><span>work.</span></div>
+        <div class="clip cap" data-start="144.665" data-duration="2.400" data-track-index="3"><span>Nine scripts is a tiny object with an outsized</span></div>
+        <div class="clip cap" data-start="147.065" data-duration="1.520" data-track-index="3"><span>effect on the whole sales floor.</span></div>
+
+      <audio id="agency-scripts-audio" src="assets/audio/agency-scripts.mp3" data-start="4" data-duration="144.585" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 144.585;
+      const OUTRO = 4;
+      const TOTAL = 152.585;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-scripts"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

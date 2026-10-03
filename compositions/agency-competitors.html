@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-competitors" data-start="0" data-duration="211.280" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Agency Competitor</div>
+        <div class="api">agencyCompetitors</div>
+        <div class="rule"></div>
+        <div class="count">1 record</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="35.499" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">What we know about a rival, and where they rank</h2>
+          <p class="body">The fact base, so we argue from evidence</p>
+        </div>
+        <div class="clip card" data-start="39.499" data-duration="36.503" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">Domains, industry, how competitive they are, and their keywords</h2>
+          <p class="body">The ranked keywords are the part that matters most</p>
+        </div>
+        <div class="clip card" data-start="76.002" data-duration="32.485" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">Their keywords tell us what they actually sell</h2>
+          <p class="body">Their ranking list is closer to a sales report</p>
+        </div>
+        <div class="clip card" data-start="108.487" data-duration="38.178" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">Before writing a single line of a comparison page</h2>
+          <p class="body">The pre-flight check on every competitive claim</p>
+        </div>
+        <div class="clip card" data-start="146.664" data-duration="60.616" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">Turning a keyword list into a page</h2>
+          <p class="body">From data to a comparison page</p>
+        </div>
+
+      <div class="clip slidelist" data-start="207.280" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>name</li>
+          <li>domainName</li>
+          <li>website</li>
+          <li>industry</li>
+          <li>competitiveLevel</li>
+          <li>rankedKeywords</li>
+          <li>gtmPriority</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.320" data-duration="2.800" data-track-index="3"><span>An agency competitor record is what we know about</span></div>
+        <div class="clip cap" data-start="7.120" data-duration="2.080" data-track-index="3"><span>a business that is competing with us for the</span></div>
+        <div class="clip cap" data-start="9.200" data-duration="1.520" data-track-index="3"><span>same customers.</span></div>
+        <div class="clip cap" data-start="10.720" data-duration="1.840" data-track-index="3"><span>We have one right now.</span></div>
+        <div class="clip cap" data-start="12.560" data-duration="3.440" data-track-index="3"><span>This object exists because comparison pages are one on</span></div>
+        <div class="clip cap" data-start="16.000" data-duration="0.885" data-track-index="3"><span>facts.</span></div>
+        <div class="clip cap" data-start="16.885" data-duration="2.320" data-track-index="3"><span>If we publish a page saying we are better</span></div>
+        <div class="clip cap" data-start="19.205" data-duration="3.120" data-track-index="3"><span>than somebody, and we cannot back it up, that</span></div>
+        <div class="clip cap" data-start="22.325" data-duration="3.040" data-track-index="3"><span>page is marketing opinion, and it will not survive</span></div>
+        <div class="clip cap" data-start="25.365" data-duration="2.480" data-track-index="3"><span>contact with a skeptical buyer.</span></div>
+        <div class="clip cap" data-start="27.845" data-duration="3.280" data-track-index="3"><span>So this record is deliberately a fact base, not</span></div>
+        <div class="clip cap" data-start="31.125" data-duration="1.515" data-track-index="3"><span>an opinion store.</span></div>
+        <div class="clip cap" data-start="32.640" data-duration="2.000" data-track-index="3"><span>It is where we keep what we can actually</span></div>
+        <div class="clip cap" data-start="34.640" data-duration="3.040" data-track-index="3"><span>verify about arrival, so that when we write the</span></div>
+        <div class="clip cap" data-start="37.680" data-duration="3.280" data-track-index="3"><span>comparison, every claim has a source behind it.</span></div>
+        <div class="clip cap" data-start="40.960" data-duration="3.280" data-track-index="3"><span>The fields are mostly identifiers and measurements.</span></div>
+        <div class="clip cap" data-start="44.240" data-duration="1.705" data-track-index="3"><span>The name is the company.</span></div>
+        <div class="clip cap" data-start="45.945" data-duration="2.800" data-track-index="3"><span>The domain name and the website are the addresses</span></div>
+        <div class="clip cap" data-start="48.745" data-duration="1.440" data-track-index="3"><span>we analyze.</span></div>
+        <div class="clip cap" data-start="50.185" data-duration="2.640" data-track-index="3"><span>The industry places them against us.</span></div>
+        <div class="clip cap" data-start="52.825" data-duration="2.960" data-track-index="3"><span>Competitive level is our assessment of how directly they</span></div>
+        <div class="clip cap" data-start="55.785" data-duration="2.880" data-track-index="3"><span>compete, whether they are in our market and our</span></div>
+        <div class="clip cap" data-start="58.665" data-duration="2.215" data-track-index="3"><span>geography or merely adjacent.</span></div>
+        <div class="clip cap" data-start="60.880" data-duration="2.880" data-track-index="3"><span>Then ranked keywords, which is the most valuable field</span></div>
+        <div class="clip cap" data-start="63.760" data-duration="2.320" data-track-index="3"><span>on the object because it is the list of</span></div>
+        <div class="clip cap" data-start="66.080" data-duration="2.720" data-track-index="3"><span>searches this competitor already ranks for.</span></div>
+        <div class="clip cap" data-start="68.800" data-duration="2.720" data-track-index="3"><span>And finally, a go to market priority, which is</span></div>
+        <div class="clip cap" data-start="71.520" data-duration="2.160" data-track-index="3"><span>our own ranking of whether it is worth writing</span></div>
+        <div class="clip cap" data-start="73.680" data-duration="2.905" data-track-index="3"><span>about them all, because there is no point researching</span></div>
+        <div class="clip cap" data-start="76.585" data-duration="1.920" data-track-index="3"><span>a competitor we will never mention.</span></div>
+        <div class="clip cap" data-start="78.505" data-duration="3.360" data-track-index="3"><span>Why does the ranked keywords field matter so much?</span></div>
+        <div class="clip cap" data-start="81.865" data-duration="3.120" data-track-index="3"><span>Because a competitor's keyword list is a free, honest</span></div>
+        <div class="clip cap" data-start="84.985" data-duration="3.005" data-track-index="3"><span>description of what their business is actually selling.</span></div>
+        <div class="clip cap" data-start="87.990" data-duration="2.560" data-track-index="3"><span>Not what they say on their website, which is</span></div>
+        <div class="clip cap" data-start="90.550" data-duration="3.760" data-track-index="3"><span>aspirational, but what customers are searching for and finding</span></div>
+        <div class="clip cap" data-start="94.310" data-duration="0.880" data-track-index="3"><span>them for.</span></div>
+        <div class="clip cap" data-start="95.190" data-duration="2.960" data-track-index="3"><span>If they rank for cheap window tinting in leads,</span></div>
+        <div class="clip cap" data-start="98.150" data-duration="2.315" data-track-index="3"><span>that is what their revenue looks like.</span></div>
+        <div class="clip cap" data-start="100.465" data-duration="2.560" data-track-index="3"><span>Also tells us where they are weak, because the</span></div>
+        <div class="clip cap" data-start="103.025" data-duration="2.400" data-track-index="3"><span>searches that appear on our list and not theirs</span></div>
+        <div class="clip cap" data-start="105.425" data-duration="1.600" data-track-index="3"><span>are the openings.</span></div>
+        <div class="clip cap" data-start="107.025" data-duration="3.120" data-track-index="3"><span>This single field turns competitive research from a guessing</span></div>
+        <div class="clip cap" data-start="110.145" data-duration="2.085" data-track-index="3"><span>game into a comparison.</span></div>
+        <div class="clip cap" data-start="112.230" data-duration="2.560" data-track-index="3"><span>Where does this get used in practice?</span></div>
+        <div class="clip cap" data-start="114.790" data-duration="2.080" data-track-index="3"><span>It is a pre flight check.</span></div>
+        <div class="clip cap" data-start="116.870" data-duration="3.200" data-track-index="3"><span>Before anybody writes a comparison page, they open this</span></div>
+        <div class="clip cap" data-start="120.070" data-duration="2.560" data-track-index="3"><span>record and every claim in the draft must map</span></div>
+        <div class="clip cap" data-start="122.630" data-duration="1.695" data-track-index="3"><span>to a field in here.</span></div>
+        <div class="clip cap" data-start="124.325" data-duration="2.480" data-track-index="3"><span>If the claim is not supported, it does not</span></div>
+        <div class="clip cap" data-start="126.805" data-duration="1.520" data-track-index="3"><span>get published.</span></div>
+        <div class="clip cap" data-start="128.325" data-duration="2.720" data-track-index="3"><span>That single discipline is what stops us from saying</span></div>
+        <div class="clip cap" data-start="131.045" data-duration="2.640" data-track-index="3"><span>something embarrassing about a competitor.</span></div>
+        <div class="clip cap" data-start="133.685" data-duration="2.560" data-track-index="3"><span>The record is also what feeds the agency content</span></div>
+        <div class="clip cap" data-start="136.245" data-duration="3.575" data-track-index="3"><span>object, since comparison pages are created and tracked there</span></div>
+        <div class="clip cap" data-start="139.820" data-duration="1.600" data-track-index="3"><span>like any other page.</span></div>
+        <div class="clip cap" data-start="141.420" data-duration="3.280" data-track-index="3"><span>This object is small and deliberately boring, and it</span></div>
+        <div class="clip cap" data-start="144.700" data-duration="2.080" data-track-index="3"><span>is what will let us compete on facts once</span></div>
+        <div class="clip cap" data-start="146.780" data-duration="1.120" data-track-index="3"><span>it is not.</span></div>
+        <div class="clip cap" data-start="147.900" data-duration="2.720" data-track-index="3"><span>So here is the practical end of this object.</span></div>
+        <div class="clip cap" data-start="150.620" data-duration="2.485" data-track-index="3"><span>You have one competitor row, and it has a</span></div>
+        <div class="clip cap" data-start="153.105" data-duration="2.080" data-track-index="3"><span>ranked keyword list on it.</span></div>
+        <div class="clip cap" data-start="155.185" data-duration="2.320" data-track-index="3"><span>Read that list as a set of questions people</span></div>
+        <div class="clip cap" data-start="157.505" data-duration="1.680" data-track-index="3"><span>are already typing.</span></div>
+        <div class="clip cap" data-start="159.185" data-duration="2.080" data-track-index="3"><span>Every phrase in there is a person at a</span></div>
+        <div class="clip cap" data-start="161.265" data-duration="3.440" data-track-index="3"><span>keyboard who has a problem and is comparing options.</span></div>
+        <div class="clip cap" data-start="164.705" data-duration="2.915" data-track-index="3"><span>That list is the outline for a comparison page.</span></div>
+        <div class="clip cap" data-start="167.620" data-duration="2.720" data-track-index="3"><span>Not the features we happen to like, not the</span></div>
+        <div class="clip cap" data-start="170.340" data-duration="2.800" data-track-index="3"><span>things we are proudest of, but the things people</span></div>
+        <div class="clip cap" data-start="173.140" data-duration="2.960" data-track-index="3"><span>are actively searching for in the order they search</span></div>
+        <div class="clip cap" data-start="176.100" data-duration="1.040" data-track-index="3"><span>for them.</span></div>
+        <div class="clip cap" data-start="177.140" data-duration="2.560" data-track-index="3"><span>And the priority field tells you which of those</span></div>
+        <div class="clip cap" data-start="179.700" data-duration="2.855" data-track-index="3"><span>phrases is worth a page of its own, versus</span></div>
+        <div class="clip cap" data-start="182.555" data-duration="1.360" data-track-index="3"><span>a paragraph.</span></div>
+        <div class="clip cap" data-start="183.915" data-duration="2.560" data-track-index="3"><span>The competitive level tells you how hard the fight</span></div>
+        <div class="clip cap" data-start="186.475" data-duration="3.920" data-track-index="3"><span>is, which decides whether you write something genuinely useful</span></div>
+        <div class="clip cap" data-start="190.395" data-duration="2.240" data-track-index="3"><span>or simply accurate.</span></div>
+        <div class="clip cap" data-start="192.635" data-duration="2.725" data-track-index="3"><span>The industry field is the sanity check.</span></div>
+        <div class="clip cap" data-start="195.360" data-duration="2.480" data-track-index="3"><span>If a record claims to be a competitor in</span></div>
+        <div class="clip cap" data-start="197.840" data-duration="2.240" data-track-index="3"><span>an industry we do not work in, it is</span></div>
+        <div class="clip cap" data-start="200.080" data-duration="2.720" data-track-index="3"><span>a data error and it will quietly poison whatever</span></div>
+        <div class="clip cap" data-start="202.800" data-duration="2.080" data-track-index="3"><span>you build on top of it.</span></div>
+        <div class="clip cap" data-start="204.880" data-duration="2.400" data-track-index="3"><span>So verify the row before you write a word.</span></div>
+
+      <audio id="agency-competitors-audio" src="assets/audio/agency-competitors.mp3" data-start="4" data-duration="203.280" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 203.280;
+      const OUTRO = 4;
+      const TOTAL = 211.280;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-competitors"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -599,13 +599,23 @@ export const beats = {
       const a = (i / n) * Math.PI * 2;
       const cx = Math.cos(a) * R0;
       const cy = Math.sin(a) * R0 * 0.56;
+      const text = texts[i % texts.length];
+      // Heroicon to the LEFT of each object name. Nine chips reading
+      // "agencyLeads / agencyCalls / ..." told you what hung off the prospect
+      // but not what each one IS; the tile carries that. The tile follows the
+      // same colour rule as every other icon tile - solid brand blue with a
+      // white glyph on a white card, inverted to solid white with a blue glyph
+      // on a blue card, because a blue tile on a blue card is the icon gone.
+      const icn = OBJECT_ICON[text] || fieldIcon(text);
+      const tileCls = onBlue ? "ico xs" : "ico xs on-bluecard";
       // Auto width, not a fixed 300px box. A fixed box clipped the longer
       // labels mid-word ("cancel the contract" lost its tail) because the text
       // simply overflowed a box that could not grow.
-      return `<div class="chip cvchip" style="position:absolute;padding:13px 22px;border-radius:${R.lg}px;
+      return `<div class="chip cvchip" style="position:absolute;display:flex;align-items:center;gap:14px;
+ padding:11px 20px;border-radius:${R.lg}px;
  background:${chipFill};border:1.5px solid ${chipFill};
  color:${chipInk};white-space:nowrap;box-shadow:0 ${SHADOW.y}px 0 0 ${onBlue ? SHADOW.grey : C.blueHover}"
- data-cx="${cx.toFixed(0)}" data-cy="${cy.toFixed(0)}">${texts[i % texts.length]}</div>`;
+ data-cx="${cx.toFixed(0)}" data-cy="${cy.toFixed(0)}"><span class="${tileCls}">${icon(icn, 26)}</span><span>${text}</span></div>`;
     }).join("");
     return {
       name: "converge",
@@ -617,10 +627,10 @@ export const beats = {
         <div class="cvf" style="position:relative;width:1300px;height:560px">${chips}
           <div class="cvcore" data-a="core" style="position:absolute;left:330px;top:185px;
  max-width:640px;padding:40px 44px;border-radius:${R.panel}px;
- background:rgba(255,255,255,0.86);border:1.5px solid ${onBlue ? "rgba(255,255,255,0.34)" : "rgba(42,140,255,0.22)"};
- box-shadow:0 ${SHADOW.yLg}px 0 0 ${onBlue ? SHADOW.greyGlass : SHADOW.grey};text-align:center;opacity:0">
-            <div class="label" style="color:${C.blue};opacity:.7">one signal</div>
-            <div class="h2" style="color:${onBlue ? C.slate900 : C.slate900};margin-top:10px">${verdict}</div>
+ background:${C.blue};border:1.5px solid ${C.blue};
+ box-shadow:0 ${SHADOW.yLg}px 0 0 ${SHADOW.grey};text-align:center;opacity:0">
+            <div class="label" style="color:${C.white};opacity:.78">one signal</div>
+            <div class="h2" style="color:${C.white};margin-top:10px">${verdict}</div>
           </div>
         </div>
       </div>`,

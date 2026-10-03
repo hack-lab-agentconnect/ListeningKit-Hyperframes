@@ -166,6 +166,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:${stageBg}}
    the exact failure the white-stage cards had. */
 .ico.on-bluecard{background:${C.white};color:${C.blue}}
 .ico.plain{background:none;width:auto;height:auto;color:inherit}
+/* Compact tile for a chip / inline row, where the 72px panel tile would make the
+   label wrap. Same colour rule as .ico - solid brand blue with a white glyph on
+   a white card, inverted to solid white with a blue glyph on a blue card. */
+.ico.xs{width:44px;height:44px;border-radius:${R.sm}px}
 .irow{display:flex;align-items:center;gap:24px}
 .irow > .itx{flex:1;min-width:0}
 

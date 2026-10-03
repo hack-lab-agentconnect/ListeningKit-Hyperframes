@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-opportunities" data-start="0" data-duration="151.881" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Agency Opportunity</div>
+        <div class="api">agencyOpportunities</div>
+        <div class="rule"></div>
+        <div class="count">0 records</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="27.370" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">A priced piece of work with an owner attached</h2>
+          <p class="body">The moment a lead becomes a real deal</p>
+        </div>
+        <div class="clip card" data-start="31.370" data-duration="25.863" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">A name, a stage, a description, and a human being</h2>
+          <p class="body">Four fields, and every one of them earns its place</p>
+        </div>
+        <div class="clip card" data-start="57.233" data-duration="25.361" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">It is the only object that represents revenue</h2>
+          <p class="body">Everything else is activity, this is the money</p>
+        </div>
+        <div class="clip card" data-start="82.595" data-duration="25.863" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">Forecasting, and the moment of truth with the client</h2>
+          <p class="body">Empty today, and that is a real signal to read</p>
+        </div>
+        <div class="clip card" data-start="108.458" data-duration="39.423" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">What belongs in a deal and what does not</h2>
+          <p class="body">Priced work with a name on it</p>
+        </div>
+
+      <div class="clip slidelist" data-start="147.881" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>name</li>
+          <li>stage</li>
+          <li>description</li>
+          <li>owner</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.240" data-duration="3.280" data-track-index="3"><span>An agency opportunity is a specific commercial deal that</span></div>
+        <div class="clip cap" data-start="7.520" data-duration="1.120" data-track-index="3"><span>is in flight.</span></div>
+        <div class="clip cap" data-start="8.640" data-duration="2.240" data-track-index="3"><span>Right now there are zero, and that is not</span></div>
+        <div class="clip cap" data-start="10.880" data-duration="0.800" data-track-index="3"><span>a bug.</span></div>
+        <div class="clip cap" data-start="11.680" data-duration="2.320" data-track-index="3"><span>That is just where we are honestly at.</span></div>
+        <div class="clip cap" data-start="14.000" data-duration="2.880" data-track-index="3"><span>An opportunity is the moment a lead stops being</span></div>
+        <div class="clip cap" data-start="16.880" data-duration="4.155" data-track-index="3"><span>a conversation and becomes a priced, staged, owned piece</span></div>
+        <div class="clip cap" data-start="21.035" data-duration="1.040" data-track-index="3"><span>of work.</span></div>
+        <div class="clip cap" data-start="22.075" data-duration="2.640" data-track-index="3"><span>It sits on top of a lead, always.</span></div>
+        <div class="clip cap" data-start="24.715" data-duration="2.560" data-track-index="3"><span>It cannot exist on its own because an opportunity</span></div>
+        <div class="clip cap" data-start="27.275" data-duration="2.480" data-track-index="3"><span>without a person to sell to and a company</span></div>
+        <div class="clip cap" data-start="29.755" data-duration="2.085" data-track-index="3"><span>to sell for is just a number in a</span></div>
+        <div class="clip cap" data-start="31.840" data-duration="0.640" data-track-index="3"><span>spreadsheet.</span></div>
+        <div class="clip cap" data-start="32.480" data-duration="2.800" data-track-index="3"><span>If somebody asks you why the count is zero,</span></div>
+        <div class="clip cap" data-start="35.280" data-duration="2.480" data-track-index="3"><span>that is a fact about where the business is,</span></div>
+        <div class="clip cap" data-start="37.760" data-duration="1.520" data-track-index="3"><span>not a data problem.</span></div>
+        <div class="clip cap" data-start="39.280" data-duration="2.720" data-track-index="3"><span>There are only four fields on an opportunity, and</span></div>
+        <div class="clip cap" data-start="42.000" data-duration="2.240" data-track-index="3"><span>every one of them earns its place.</span></div>
+        <div class="clip cap" data-start="44.240" data-duration="3.135" data-track-index="3"><span>The name is the deal's identity, usually the client</span></div>
+        <div class="clip cap" data-start="47.375" data-duration="1.920" data-track-index="3"><span>name and the package name.</span></div>
+        <div class="clip cap" data-start="49.295" data-duration="2.240" data-track-index="3"><span>The stage is where it sits in the pipeline,</span></div>
+        <div class="clip cap" data-start="51.535" data-duration="3.120" data-track-index="3"><span>and this is the field that actually drives forecasting.</span></div>
+        <div class="clip cap" data-start="54.655" data-duration="3.855" data-track-index="3"><span>The description is the short written summary of what</span></div>
+        <div class="clip cap" data-start="58.510" data-duration="2.560" data-track-index="3"><span>is being sold, and at what price.</span></div>
+        <div class="clip cap" data-start="61.070" data-duration="2.560" data-track-index="3"><span>And the owner is the single most important field</span></div>
+        <div class="clip cap" data-start="63.630" data-duration="1.440" data-track-index="3"><span>on the object.</span></div>
+        <div class="clip cap" data-start="65.070" data-duration="2.720" data-track-index="3"><span>An opportunity without a named owner is a deal</span></div>
+        <div class="clip cap" data-start="67.790" data-duration="3.575" data-track-index="3"><span>nobody is chasing, and those quietly die.</span></div>
+        <div class="clip cap" data-start="71.365" data-duration="2.160" data-track-index="3"><span>The owner is who picks up the phone.</span></div>
+        <div class="clip cap" data-start="73.525" data-duration="2.240" data-track-index="3"><span>Why build a separate object for this rather than</span></div>
+        <div class="clip cap" data-start="75.765" data-duration="1.920" data-track-index="3"><span>just a status on the lead?</span></div>
+        <div class="clip cap" data-start="77.685" data-duration="2.720" data-track-index="3"><span>Because it separates activity from money.</span></div>
+        <div class="clip cap" data-start="80.405" data-duration="3.225" data-track-index="3"><span>Everything else in this library is activity.</span></div>
+        <div class="clip cap" data-start="83.630" data-duration="1.520" data-track-index="3"><span>Prospects were found.</span></div>
+        <div class="clip cap" data-start="85.150" data-duration="1.360" data-track-index="3"><span>Leads were rung.</span></div>
+        <div class="clip cap" data-start="86.510" data-duration="1.520" data-track-index="3"><span>Calls were placed.</span></div>
+        <div class="clip cap" data-start="88.030" data-duration="1.680" data-track-index="3"><span>Scripts were read.</span></div>
+        <div class="clip cap" data-start="89.710" data-duration="1.760" data-track-index="3"><span>None of that is revenue.</span></div>
+        <div class="clip cap" data-start="91.470" data-duration="2.640" data-track-index="3"><span>An opportunity is the first object in the system</span></div>
+        <div class="clip cap" data-start="94.110" data-duration="3.095" data-track-index="3"><span>that represents money we might actually receive.</span></div>
+        <div class="clip cap" data-start="97.205" data-duration="2.320" data-track-index="3"><span>That is why it gets its own stage field,</span></div>
+        <div class="clip cap" data-start="99.525" data-duration="2.800" data-track-index="3"><span>its own owner field, and its own record.</span></div>
+        <div class="clip cap" data-start="102.325" data-duration="2.000" data-track-index="3"><span>It is also why the stage field has to</span></div>
+        <div class="clip cap" data-start="104.325" data-duration="3.520" data-track-index="3"><span>be kept honest, because every forecast anybody gives is</span></div>
+        <div class="clip cap" data-start="107.845" data-duration="2.455" data-track-index="3"><span>a rollup of opportunity stages.</span></div>
+        <div class="clip cap" data-start="110.300" data-duration="2.400" data-track-index="3"><span>So where will this object get used once it</span></div>
+        <div class="clip cap" data-start="112.700" data-duration="1.440" data-track-index="3"><span>is populated?</span></div>
+        <div class="clip cap" data-start="114.140" data-duration="1.440" data-track-index="3"><span>In two places.</span></div>
+        <div class="clip cap" data-start="115.580" data-duration="3.520" data-track-index="3"><span>The first is forecasting, which is simply grouping opportunities</span></div>
+        <div class="clip cap" data-start="119.100" data-duration="2.720" data-track-index="3"><span>by stage to answer the question how much money</span></div>
+        <div class="clip cap" data-start="121.820" data-duration="1.760" data-track-index="3"><span>is coming and when.</span></div>
+        <div class="clip cap" data-start="123.580" data-duration="1.835" data-track-index="3"><span>The second is the handover.</span></div>
+        <div class="clip cap" data-start="125.415" data-duration="2.960" data-track-index="3"><span>When a client agrees to buy, somebody creates the</span></div>
+        <div class="clip cap" data-start="128.375" data-duration="3.760" data-track-index="3"><span>opportunity off the agency offer object, sets the stage,</span></div>
+        <div class="clip cap" data-start="132.135" data-duration="1.600" data-track-index="3"><span>and assigns the owner.</span></div>
+        <div class="clip cap" data-start="133.735" data-duration="2.480" data-track-index="3"><span>It is the moment the sales conversation becomes a</span></div>
+        <div class="clip cap" data-start="136.215" data-duration="0.800" data-track-index="3"><span>commitment.</span></div>
+        <div class="clip cap" data-start="137.015" data-duration="2.000" data-track-index="3"><span>And because it is empty right now, it is</span></div>
+        <div class="clip cap" data-start="139.015" data-duration="2.146" data-track-index="3"><span>worth understanding honestly.</span></div>
+        <div class="clip cap" data-start="141.161" data-duration="3.520" data-track-index="3"><span>Zero opportunities with 18 leads means the motion is</span></div>
+        <div class="clip cap" data-start="144.681" data-duration="3.200" data-track-index="3"><span>running, but the closing conversation has not landed yet.</span></div>
+
+      <audio id="agency-opportunities-audio" src="assets/audio/agency-opportunities.mp3" data-start="4" data-duration="143.881" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 143.881;
+      const OUTRO = 4;
+      const TOTAL = 151.881;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-opportunities"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

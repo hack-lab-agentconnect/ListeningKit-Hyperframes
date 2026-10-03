@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-phones" data-start="0" data-duration="161.900" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Agency Phone</div>
+        <div class="api">agencyPhones</div>
+        <div class="rule"></div>
+        <div class="count">1 record</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="24.807" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">A number we own, and what it is legally allowed to do</h2>
+          <p class="body">One record, but it gates every call and text</p>
+        </div>
+        <div class="clip card" data-start="28.807" data-duration="30.828" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">The number, and the four registrations behind it</h2>
+          <p class="body">Compliance paperwork, stored as data</p>
+        </div>
+        <div class="clip card" data-start="59.635" data-duration="26.011" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">Regulators and carriers, not us, decide the pace</h2>
+          <p class="body">Lose the number and the whole outbound motion dies</p>
+        </div>
+        <div class="clip card" data-start="85.646" data-duration="26.975" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">Before a send, not after a complaint</h2>
+          <p class="body">The check that stops the messages ever being sent</p>
+        </div>
+        <div class="clip card" data-start="112.621" data-duration="45.279" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">The one number, and the four approvals behind it</h2>
+          <p class="body">Sending is a privilege, not a default</p>
+        </div>
+
+      <div class="clip slidelist" data-start="157.900" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>phoneNumber</li>
+          <li>countryCode</li>
+          <li>numberType</li>
+          <li>state</li>
+          <li>tenDlcCampaignId</li>
+          <li>tollFreeVerificationId</li>
+          <li>messagingProfileId</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.400" data-duration="2.800" data-track-index="3"><span>An agency phone is a dialing or messaging number</span></div>
+        <div class="clip cap" data-start="7.200" data-duration="1.200" data-track-index="3"><span>that we own.</span></div>
+        <div class="clip cap" data-start="8.400" data-duration="2.480" data-track-index="3"><span>There is only one record right now, and at</span></div>
+        <div class="clip cap" data-start="10.880" data-duration="2.000" data-track-index="3"><span>first glance that does not look like a very</span></div>
+        <div class="clip cap" data-start="12.880" data-duration="1.520" data-track-index="3"><span>important object.</span></div>
+        <div class="clip cap" data-start="14.400" data-duration="2.400" data-track-index="3"><span>It is actually one of the most consequential in</span></div>
+        <div class="clip cap" data-start="16.800" data-duration="2.925" data-track-index="3"><span>the whole library, Because that single row is the</span></div>
+        <div class="clip cap" data-start="19.725" data-duration="2.800" data-track-index="3"><span>thing that decides whether every call we place and</span></div>
+        <div class="clip cap" data-start="22.525" data-duration="2.240" data-track-index="3"><span>every text we send is allowed to happen at</span></div>
+        <div class="clip cap" data-start="24.765" data-duration="0.880" data-track-index="3"><span>all.</span></div>
+        <div class="clip cap" data-start="25.645" data-duration="2.400" data-track-index="3"><span>Get it wrong, and the carrier or the regulator</span></div>
+        <div class="clip cap" data-start="28.045" data-duration="3.415" data-track-index="3"><span>takes the number away, and suddenly the entire outbound</span></div>
+        <div class="clip cap" data-start="31.460" data-duration="2.720" data-track-index="3"><span>engine, the calls and the messages and the leads</span></div>
+        <div class="clip cap" data-start="34.180" data-duration="3.120" data-track-index="3"><span>and the conversations, all of it stops.</span></div>
+        <div class="clip cap" data-start="37.300" data-duration="3.280" data-track-index="3"><span>The fields are mostly regulatory housekeeping, and that is</span></div>
+        <div class="clip cap" data-start="40.580" data-duration="1.040" data-track-index="3"><span>the point.</span></div>
+        <div class="clip cap" data-start="41.620" data-duration="2.320" data-track-index="3"><span>There is the phone number itself, and the country</span></div>
+        <div class="clip cap" data-start="43.940" data-duration="3.765" data-track-index="3"><span>code, so the system knows which country's rules apply.</span></div>
+        <div class="clip cap" data-start="47.705" data-duration="2.240" data-track-index="3"><span>There is the number type, so it is clear</span></div>
+        <div class="clip cap" data-start="49.945" data-duration="2.800" data-track-index="3"><span>whether this is a local number, a mobile, or</span></div>
+        <div class="clip cap" data-start="52.745" data-duration="1.680" data-track-index="3"><span>a toll free line.</span></div>
+        <div class="clip cap" data-start="54.425" data-duration="2.480" data-track-index="3"><span>Then the state field, which is simply the current</span></div>
+        <div class="clip cap" data-start="56.905" data-duration="1.475" data-track-index="3"><span>status of the number.</span></div>
+        <div class="clip cap" data-start="58.380" data-duration="3.120" data-track-index="3"><span>And then the three registration identifiers, which are the</span></div>
+        <div class="clip cap" data-start="61.500" data-duration="0.960" data-track-index="3"><span>real payload.</span></div>
+        <div class="clip cap" data-start="62.460" data-duration="2.720" data-track-index="3"><span>There is a 10 DLC campaign ID, which is</span></div>
+        <div class="clip cap" data-start="65.180" data-duration="3.280" data-track-index="3"><span>The United States registration for business texting.</span></div>
+        <div class="clip cap" data-start="68.460" data-duration="2.480" data-track-index="3"><span>There is a toll free verification ID, which is</span></div>
+        <div class="clip cap" data-start="70.940" data-duration="2.400" data-track-index="3"><span>the separate check toll free numbers have to pass</span></div>
+        <div class="clip cap" data-start="73.340" data-duration="1.655" data-track-index="3"><span>before they can send.</span></div>
+        <div class="clip cap" data-start="74.995" data-duration="2.480" data-track-index="3"><span>And there is a messaging profile ID, which is</span></div>
+        <div class="clip cap" data-start="77.475" data-duration="1.840" data-track-index="3"><span>the Telmix profile.</span></div>
+        <div class="clip cap" data-start="79.315" data-duration="1.680" data-track-index="3"><span>The number sends through.</span></div>
+        <div class="clip cap" data-start="80.995" data-duration="2.640" data-track-index="3"><span>Why is compliance stored in the CRM at all,</span></div>
+        <div class="clip cap" data-start="83.635" data-duration="1.840" data-track-index="3"><span>rather than just in somebody's head?</span></div>
+        <div class="clip cap" data-start="85.475" data-duration="2.400" data-track-index="3"><span>Because compliance is not a preference.</span></div>
+        <div class="clip cap" data-start="87.875" data-duration="2.625" data-track-index="3"><span>It is a hard constraint imposed by carriers and</span></div>
+        <div class="clip cap" data-start="90.500" data-duration="3.040" data-track-index="3"><span>regulators who are not interested in our pipeline.</span></div>
+        <div class="clip cap" data-start="93.540" data-duration="3.200" data-track-index="3"><span>If a number is not registered properly, text messages</span></div>
+        <div class="clip cap" data-start="96.740" data-duration="2.160" data-track-index="3"><span>to it get silently dropped.</span></div>
+        <div class="clip cap" data-start="98.900" data-duration="2.800" data-track-index="3"><span>If complaint rates go too high on a campaign,</span></div>
+        <div class="clip cap" data-start="101.700" data-duration="1.855" data-track-index="3"><span>the messaging profile is suspended.</span></div>
+        <div class="clip cap" data-start="103.555" data-duration="2.400" data-track-index="3"><span>If we try to send from a number that</span></div>
+        <div class="clip cap" data-start="105.955" data-duration="3.520" data-track-index="3"><span>has not passed toll free verification, nothing arrives and</span></div>
+        <div class="clip cap" data-start="109.475" data-duration="1.600" data-track-index="3"><span>no error is shown.</span></div>
+        <div class="clip cap" data-start="111.075" data-duration="2.240" data-track-index="3"><span>So this object is our single source of truth</span></div>
+        <div class="clip cap" data-start="113.315" data-duration="3.125" data-track-index="3"><span>for whether our outbound is actually permitted.</span></div>
+        <div class="clip cap" data-start="116.440" data-duration="3.360" data-track-index="3"><span>One row enormous blast radius: Where does it get</span></div>
+        <div class="clip cap" data-start="119.800" data-duration="1.440" data-track-index="3"><span>used in practice?</span></div>
+        <div class="clip cap" data-start="121.240" data-duration="3.360" data-track-index="3"><span>At the moment of sending, before anything goes out,</span></div>
+        <div class="clip cap" data-start="124.600" data-duration="3.280" data-track-index="3"><span>the messaging system reads this record, checks the profile</span></div>
+        <div class="clip cap" data-start="127.880" data-duration="3.425" data-track-index="3"><span>is active, checks the registration is valid, and only</span></div>
+        <div class="clip cap" data-start="131.305" data-duration="1.920" data-track-index="3"><span>then releases the message.</span></div>
+        <div class="clip cap" data-start="133.225" data-duration="1.680" data-track-index="3"><span>That is the whole point of putting it in</span></div>
+        <div class="clip cap" data-start="134.905" data-duration="2.880" data-track-index="3"><span>the database it turns a legal constraint into an</span></div>
+        <div class="clip cap" data-start="137.785" data-duration="1.840" data-track-index="3"><span>automated precondition.</span></div>
+        <div class="clip cap" data-start="139.625" data-duration="2.800" data-track-index="3"><span>When something is not working and texts are mysteriously</span></div>
+        <div class="clip cap" data-start="142.425" data-duration="3.315" data-track-index="3"><span>not landing, this is the first record you open.</span></div>
+        <div class="clip cap" data-start="145.740" data-duration="1.600" data-track-index="3"><span>And if you ever want to add a second</span></div>
+        <div class="clip cap" data-start="147.340" data-duration="3.440" data-track-index="3"><span>number, a new city, or a different channel, you</span></div>
+        <div class="clip cap" data-start="150.780" data-duration="3.920" data-track-index="3"><span>duplicate this row, get it registered properly first, and</span></div>
+        <div class="clip cap" data-start="154.700" data-duration="1.920" data-track-index="3"><span>only then start sending.</span></div>
+        <div class="clip cap" data-start="156.620" data-duration="1.280" data-track-index="3"><span>Never the other way round.</span></div>
+
+      <audio id="agency-phones-audio" src="assets/audio/agency-phones.mp3" data-start="4" data-duration="153.900" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 153.900;
+      const OUTRO = 4;
+      const TOTAL = 161.900;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-phones"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-campaigns" data-start="0" data-duration="210.655" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Agency Campaign</div>
+        <div class="api">agencyCampaigns</div>
+        <div class="rule"></div>
+        <div class="count">6 records</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="33.286" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">A named outbound motion that groups its own work</h2>
+          <p class="body">One motion, its own prospects, leads and scripts</p>
+        </div>
+        <div class="clip card" data-start="37.286" data-duration="38.508" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">The name, the type, and the URLs we measure against</h2>
+          <p class="body">Attribution lives on this object, not on the prospect</p>
+        </div>
+        <div class="clip card" data-start="75.794" data-duration="33.286" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">It is where attribution actually lives</h2>
+          <p class="body">Attribution attaches here, not on the prospect row</p>
+        </div>
+        <div class="clip card" data-start="109.080" data-duration="35.897" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">Grouping, reporting, and pausing what does not work</h2>
+          <p class="body">The first thing to check when a number looks wrong</p>
+        </div>
+        <div class="clip card" data-start="144.977" data-duration="61.678" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">Turning a campaign on and off without guessing</h2>
+          <p class="body">Status is the only switch that matters</p>
+        </div>
+
+      <div class="clip slidelist" data-start="206.655" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>name</li>
+          <li>status</li>
+          <li>campaignType</li>
+          <li>urlKey</li>
+          <li>funnelBaseUrl</li>
+          <li>templateBaseUrl</li>
+          <li>packDir</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.240" data-duration="3.360" data-track-index="3"><span>An agency campaign is a named outbound motion.</span></div>
+        <div class="clip cap" data-start="7.600" data-duration="1.680" data-track-index="3"><span>We have six of them.</span></div>
+        <div class="clip cap" data-start="9.280" data-duration="2.640" data-track-index="3"><span>The idea is simple, and it saves an enormous</span></div>
+        <div class="clip cap" data-start="11.920" data-duration="1.840" data-track-index="3"><span>amount of misery later.</span></div>
+        <div class="clip cap" data-start="13.760" data-duration="4.640" data-track-index="3"><span>Instead of one enormous undifferentiated pile of 200 prospects,</span></div>
+        <div class="clip cap" data-start="18.400" data-duration="2.535" data-track-index="3"><span>we group them into campaigns.</span></div>
+        <div class="clip cap" data-start="20.935" data-duration="3.200" data-track-index="3"><span>So a campaign called window tinting lead gen holds</span></div>
+        <div class="clip cap" data-start="24.135" data-duration="2.560" data-track-index="3"><span>the tinting shops, the leads that came out of</span></div>
+        <div class="clip cap" data-start="26.695" data-duration="3.040" data-track-index="3"><span>them, and the scripts written for that motion.</span></div>
+        <div class="clip cap" data-start="29.735" data-duration="3.040" data-track-index="3"><span>That means when somebody asks how lead gen is</span></div>
+        <div class="clip cap" data-start="32.775" data-duration="3.425" data-track-index="3"><span>performing, we can answer by looking at one campaign</span></div>
+        <div class="clip cap" data-start="36.200" data-duration="3.360" data-track-index="3"><span>instead of hand filtering the entire database, and hoping</span></div>
+        <div class="clip cap" data-start="39.560" data-duration="2.240" data-track-index="3"><span>they did it the same way last time.</span></div>
+        <div class="clip cap" data-start="41.800" data-duration="2.480" data-track-index="3"><span>The fields tell you two different stories.</span></div>
+        <div class="clip cap" data-start="44.280" data-duration="2.080" data-track-index="3"><span>The name and the status tell you the business</span></div>
+        <div class="clip cap" data-start="46.360" data-duration="3.905" data-track-index="3"><span>story, which motion is live, and which are paused.</span></div>
+        <div class="clip cap" data-start="50.265" data-duration="2.080" data-track-index="3"><span>The campaign type tells you the shape of the</span></div>
+        <div class="clip cap" data-start="52.345" data-duration="7.520" data-track-index="3"><span>motion Then there are the four technical fields, and</span></div>
+        <div class="clip cap" data-start="59.865" data-duration="2.115" data-track-index="3"><span>these are the ones people overlook.</span></div>
+        <div class="clip cap" data-start="61.980" data-duration="2.320" data-track-index="3"><span>There is a URL key, which is a short</span></div>
+        <div class="clip cap" data-start="64.300" data-duration="3.040" data-track-index="3"><span>unique identifier that gets stamped onto every link we</span></div>
+        <div class="clip cap" data-start="67.340" data-duration="1.840" data-track-index="3"><span>publish for this campaign.</span></div>
+        <div class="clip cap" data-start="69.180" data-duration="2.320" data-track-index="3"><span>There is a funnel based URL and a template</span></div>
+        <div class="clip cap" data-start="71.500" data-duration="3.200" data-track-index="3"><span>based URL, which are where the landing pages actually</span></div>
+        <div class="clip cap" data-start="74.700" data-duration="0.745" data-track-index="3"><span>live.</span></div>
+        <div class="clip cap" data-start="75.445" data-duration="2.240" data-track-index="3"><span>And there is a pack directory, which is the</span></div>
+        <div class="clip cap" data-start="77.685" data-duration="2.560" data-track-index="3"><span>folder of assets and templates that belong to this</span></div>
+        <div class="clip cap" data-start="80.245" data-duration="1.360" data-track-index="3"><span>specific campaign.</span></div>
+        <div class="clip cap" data-start="81.605" data-duration="2.720" data-track-index="3"><span>Why do the URL fields matter so much?</span></div>
+        <div class="clip cap" data-start="84.325" data-duration="3.120" data-track-index="3"><span>Because attribution attaches to the campaign, not to the</span></div>
+        <div class="clip cap" data-start="87.445" data-duration="1.035" data-track-index="3"><span>prospect.</span></div>
+        <div class="clip cap" data-start="88.480" data-duration="2.000" data-track-index="3"><span>When we publish a listing page or run an</span></div>
+        <div class="clip cap" data-start="90.480" data-duration="2.400" data-track-index="3"><span>advert for window tinting, the link that gets clicked</span></div>
+        <div class="clip cap" data-start="92.880" data-duration="2.560" data-track-index="3"><span>carries this campaign's URL key.</span></div>
+        <div class="clip cap" data-start="95.440" data-duration="1.840" data-track-index="3"><span>So when a shop brings us back, we can</span></div>
+        <div class="clip cap" data-start="97.280" data-duration="2.080" data-track-index="3"><span>look at that key and know precisely which motion</span></div>
+        <div class="clip cap" data-start="99.360" data-duration="1.840" data-track-index="3"><span>produced the conversation.</span></div>
+        <div class="clip cap" data-start="101.200" data-duration="2.225" data-track-index="3"><span>Without it, every lead just looks like a lead,</span></div>
+        <div class="clip cap" data-start="103.425" data-duration="2.640" data-track-index="3"><span>and we are arguing about marketing on opinion.</span></div>
+        <div class="clip cap" data-start="106.065" data-duration="2.000" data-track-index="3"><span>With it, we can kill the campaigns that do</span></div>
+        <div class="clip cap" data-start="108.065" data-duration="0.960" data-track-index="3"><span>not work.</span></div>
+        <div class="clip cap" data-start="109.025" data-duration="2.080" data-track-index="3"><span>That is the difference between a sales system and</span></div>
+        <div class="clip cap" data-start="111.105" data-duration="1.680" data-track-index="3"><span>a guessing contest.</span></div>
+        <div class="clip cap" data-start="112.785" data-duration="2.240" data-track-index="3"><span>So in practice, where does a person use this</span></div>
+        <div class="clip cap" data-start="115.025" data-duration="0.985" data-track-index="3"><span>object?</span></div>
+        <div class="clip cap" data-start="116.010" data-duration="2.000" data-track-index="3"><span>When you open the campaign, you should be able</span></div>
+        <div class="clip cap" data-start="118.010" data-duration="3.200" data-track-index="3"><span>to answer three questions without leaving the record: Which</span></div>
+        <div class="clip cap" data-start="121.210" data-duration="1.920" data-track-index="3"><span>prospects are in this motion?</span></div>
+        <div class="clip cap" data-start="123.130" data-duration="1.760" data-track-index="3"><span>Which leads came out of it?</span></div>
+        <div class="clip cap" data-start="124.890" data-duration="1.920" data-track-index="3"><span>Which scripts are aimed at it?</span></div>
+        <div class="clip cap" data-start="126.810" data-duration="2.480" data-track-index="3"><span>And then the fourth question, the real one: Is</span></div>
+        <div class="clip cap" data-start="129.290" data-duration="1.035" data-track-index="3"><span>it working?</span></div>
+        <div class="clip cap" data-start="130.325" data-duration="3.520" data-track-index="3"><span>Compare fit scores, compare call connect rates, compare how</span></div>
+        <div class="clip cap" data-start="133.845" data-duration="1.520" data-track-index="3"><span>far the leads got.</span></div>
+        <div class="clip cap" data-start="135.365" data-duration="3.280" data-track-index="3"><span>Campaigns exist so that when something is underperforming, we</span></div>
+        <div class="clip cap" data-start="138.645" data-duration="2.160" data-track-index="3"><span>find out by looking at one screen instead of</span></div>
+        <div class="clip cap" data-start="140.805" data-duration="0.720" data-track-index="3"><span>arguing.</span></div>
+        <div class="clip cap" data-start="141.525" data-duration="3.195" data-track-index="3"><span>If you only remember one thing about this object,</span></div>
+        <div class="clip cap" data-start="144.720" data-duration="2.080" data-track-index="3"><span>remember that it is the unit of measurement for</span></div>
+        <div class="clip cap" data-start="146.800" data-duration="1.520" data-track-index="3"><span>the whole outbound engine.</span></div>
+        <div class="clip cap" data-start="148.320" data-duration="2.560" data-track-index="3"><span>So how does a person actually use this object</span></div>
+        <div class="clip cap" data-start="150.880" data-duration="1.200" data-track-index="3"><span>day to day?</span></div>
+        <div class="clip cap" data-start="152.080" data-duration="2.880" data-track-index="3"><span>Almost entirely through one field, and that is the</span></div>
+        <div class="clip cap" data-start="154.960" data-duration="1.040" data-track-index="3"><span>status.</span></div>
+        <div class="clip cap" data-start="156.000" data-duration="2.275" data-track-index="3"><span>A campaign sits sits in draft while somebody is</span></div>
+        <div class="clip cap" data-start="158.275" data-duration="2.640" data-track-index="3"><span>still writing the script and building the list.</span></div>
+        <div class="clip cap" data-start="160.915" data-duration="2.560" data-track-index="3"><span>It goes live when the script, the numbers, and</span></div>
+        <div class="clip cap" data-start="163.475" data-duration="2.480" data-track-index="3"><span>the compliance checks are all done, and not one</span></div>
+        <div class="clip cap" data-start="165.955" data-duration="1.360" data-track-index="3"><span>moment before.</span></div>
+        <div class="clip cap" data-start="167.315" data-duration="2.815" data-track-index="3"><span>And it goes paused when the evidence says stop,</span></div>
+        <div class="clip cap" data-start="170.130" data-duration="2.800" data-track-index="3"><span>which on outbound is usually a specific and measurable</span></div>
+        <div class="clip cap" data-start="172.930" data-duration="1.840" data-track-index="3"><span>thing rather than a feeling.</span></div>
+        <div class="clip cap" data-start="174.770" data-duration="2.480" data-track-index="3"><span>The numbers are in here for a reason.</span></div>
+        <div class="clip cap" data-start="177.250" data-duration="2.560" data-track-index="3"><span>The URL key is the little identifier that appears</span></div>
+        <div class="clip cap" data-start="179.810" data-duration="2.160" data-track-index="3"><span>in the link we put in the message, and</span></div>
+        <div class="clip cap" data-start="181.970" data-duration="2.305" data-track-index="3"><span>the funnel and template base URLs are the two</span></div>
+        <div class="clip cap" data-start="184.275" data-duration="2.400" data-track-index="3"><span>places that identifier resolves to.</span></div>
+        <div class="clip cap" data-start="186.675" data-duration="2.080" data-track-index="3"><span>That is how a reply or a booking gets</span></div>
+        <div class="clip cap" data-start="188.755" data-duration="2.960" data-track-index="3"><span>attributed back to this exact campaign instead of just</span></div>
+        <div class="clip cap" data-start="191.715" data-duration="1.280" data-track-index="3"><span>to the business.</span></div>
+        <div class="clip cap" data-start="192.995" data-duration="2.300" data-track-index="3"><span>So the reason this object exists at all in</span></div>
+        <div class="clip cap" data-start="195.295" data-duration="2.560" data-track-index="3"><span>one sentence is that it lets you switch emotion</span></div>
+        <div class="clip cap" data-start="197.855" data-duration="0.880" data-track-index="3"><span>off.</span></div>
+        <div class="clip cap" data-start="198.735" data-duration="2.560" data-track-index="3"><span>Most teams cannot switch anything off.</span></div>
+        <div class="clip cap" data-start="201.295" data-duration="2.400" data-track-index="3"><span>This one can, and the reason they can is</span></div>
+        <div class="clip cap" data-start="203.695" data-duration="2.000" data-track-index="3"><span>that the switch lives in a table instead of</span></div>
+        <div class="clip cap" data-start="205.695" data-duration="0.960" data-track-index="3"><span>in somebody's head.</span></div>
+
+      <audio id="agency-campaigns-audio" src="assets/audio/agency-campaigns.mp3" data-start="4" data-duration="202.655" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 202.655;
+      const OUTRO = 4;
+      const TOTAL = 210.655;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-campaigns"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-messages" data-start="0" data-duration="149.083" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Message</div>
+        <div class="api">agencyMessages</div>
+        <div class="rule"></div>
+        <div class="count">0 records</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="21.724" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">One row per SMS we sent or received</h2>
+          <p class="body">The atom of the texting motion, one per message</p>
+        </div>
+        <div class="clip card" data-start="25.724" data-duration="28.070" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">The words, the direction, and the delivery receipt</h2>
+          <p class="body">A delivery receipt we can actually check</p>
+        </div>
+        <div class="clip card" data-start="53.794" data-duration="28.802" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">Text-back and missed-call follow-up is the whole motion</h2>
+          <p class="body">If a text never arrived, the follow-up never happens</p>
+        </div>
+        <div class="clip card" data-start="82.596" data-duration="26.117" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">Reconstructing a thread, and chasing a delivery failure</h2>
+          <p class="body">The place to look when a reply never arrived</p>
+        </div>
+        <div class="clip card" data-start="108.714" data-duration="36.369" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">Reading a thread and spotting a failure</h2>
+          <p class="body">Direction, status, and the receipt</p>
+        </div>
+
+      <div class="clip slidelist" data-start="145.083" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>body</li>
+          <li>direction</li>
+          <li>fromNumber</li>
+          <li>toNumber</li>
+          <li>status</li>
+          <li>telnyxMessageId</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.160" data-duration="3.200" data-track-index="3"><span>A message record is one individual text message, sent</span></div>
+        <div class="clip cap" data-start="7.360" data-duration="2.800" data-track-index="3"><span>to or received from a prospect or a lead.</span></div>
+        <div class="clip cap" data-start="10.160" data-duration="2.000" data-track-index="3"><span>We have zero of them right now.</span></div>
+        <div class="clip cap" data-start="12.160" data-duration="2.400" data-track-index="3"><span>That is worth understanding because it tells you something</span></div>
+        <div class="clip cap" data-start="14.560" data-duration="2.515" data-track-index="3"><span>real about where the motion currently is.</span></div>
+        <div class="clip cap" data-start="17.075" data-duration="2.000" data-track-index="3"><span>But the shape of the object is simple and</span></div>
+        <div class="clip cap" data-start="19.075" data-duration="2.080" data-track-index="3"><span>it is worth understanding anyway.</span></div>
+        <div class="clip cap" data-start="21.155" data-duration="2.560" data-track-index="3"><span>Where the conversation object holds a whole back and</span></div>
+        <div class="clip cap" data-start="23.715" data-duration="3.120" data-track-index="3"><span>forth thread, the message object is the atom.</span></div>
+        <div class="clip cap" data-start="26.835" data-duration="1.680" data-track-index="3"><span>One row per text.</span></div>
+        <div class="clip cap" data-start="28.515" data-duration="2.465" data-track-index="3"><span>That granularity is deliberate and it is what makes</span></div>
+        <div class="clip cap" data-start="30.980" data-duration="2.240" data-track-index="3"><span>the delivery pipeline auditable.</span></div>
+        <div class="clip cap" data-start="33.220" data-duration="1.840" data-track-index="3"><span>The fields are straightforward.</span></div>
+        <div class="clip cap" data-start="35.060" data-duration="2.720" data-track-index="3"><span>The body is the actual text that was written.</span></div>
+        <div class="clip cap" data-start="37.780" data-duration="2.080" data-track-index="3"><span>The direction tells you whether we sent it or</span></div>
+        <div class="clip cap" data-start="39.860" data-duration="2.960" data-track-index="3"><span>they did, which matters enormously when you are reconstructing</span></div>
+        <div class="clip cap" data-start="42.820" data-duration="1.440" data-track-index="3"><span>a conversation.</span></div>
+        <div class="clip cap" data-start="44.260" data-duration="2.055" data-track-index="3"><span>The from number and the number tie the message</span></div>
+        <div class="clip cap" data-start="46.315" data-duration="2.720" data-track-index="3"><span>to a specific agency phone on our side, and</span></div>
+        <div class="clip cap" data-start="49.035" data-duration="2.720" data-track-index="3"><span>a specific prospect or lead on theirs.</span></div>
+        <div class="clip cap" data-start="51.755" data-duration="2.800" data-track-index="3"><span>Then the status field, which is the delivery state,</span></div>
+        <div class="clip cap" data-start="54.555" data-duration="3.285" data-track-index="3"><span>whether it was queued, sent, delivered, or failed.</span></div>
+        <div class="clip cap" data-start="57.840" data-duration="2.800" data-track-index="3"><span>And finally, the Telmics Message ID, which is the</span></div>
+        <div class="clip cap" data-start="60.640" data-duration="2.240" data-track-index="3"><span>reference our provider gives us.</span></div>
+        <div class="clip cap" data-start="62.880" data-duration="2.480" data-track-index="3"><span>That last field is the important one, because it</span></div>
+        <div class="clip cap" data-start="65.360" data-duration="2.080" data-track-index="3"><span>lets us go back to the carrier and prove</span></div>
+        <div class="clip cap" data-start="67.440" data-duration="2.955" data-track-index="3"><span>what actually happened to that specific message.</span></div>
+        <div class="clip cap" data-start="70.395" data-duration="2.080" data-track-index="3"><span>Why does the business care this much about a</span></div>
+        <div class="clip cap" data-start="72.475" data-duration="1.520" data-track-index="3"><span>text message log?</span></div>
+        <div class="clip cap" data-start="73.995" data-duration="3.040" data-track-index="3"><span>Because texting is most of our outbound motion, not</span></div>
+        <div class="clip cap" data-start="77.035" data-duration="1.360" data-track-index="3"><span>a side channel.</span></div>
+        <div class="clip cap" data-start="78.395" data-duration="2.400" data-track-index="3"><span>When somebody rings us and misses it, we text</span></div>
+        <div class="clip cap" data-start="80.795" data-duration="0.960" data-track-index="3"><span>them back.</span></div>
+        <div class="clip cap" data-start="81.755" data-duration="1.945" data-track-index="3"><span>When we cannot get through on a call, we</span></div>
+        <div class="clip cap" data-start="83.700" data-duration="0.880" data-track-index="3"><span>text.</span></div>
+        <div class="clip cap" data-start="84.580" data-duration="3.040" data-track-index="3"><span>When a leave goes quiet, we follow-up by text.</span></div>
+        <div class="clip cap" data-start="87.620" data-duration="1.840" data-track-index="3"><span>Every one of those steps is a row in</span></div>
+        <div class="clip cap" data-start="89.460" data-duration="2.640" data-track-index="3"><span>this object, and each of those steps can fail</span></div>
+        <div class="clip cap" data-start="92.100" data-duration="1.120" data-track-index="3"><span>silently.</span></div>
+        <div class="clip cap" data-start="93.220" data-duration="3.425" data-track-index="3"><span>A message queued at midnight, a carrier filtering it,</span></div>
+        <div class="clip cap" data-start="96.645" data-duration="3.280" data-track-index="3"><span>a bad number, a registration that lapsed.</span></div>
+        <div class="clip cap" data-start="99.925" data-duration="2.320" data-track-index="3"><span>Without this log, we would simply believe we had</span></div>
+        <div class="clip cap" data-start="102.245" data-duration="3.600" data-track-index="3"><span>followed up, when in fact nothing was ever delivered.</span></div>
+        <div class="clip cap" data-start="105.845" data-duration="2.000" data-track-index="3"><span>This object is our proof that we did the</span></div>
+        <div class="clip cap" data-start="107.845" data-duration="0.705" data-track-index="3"><span>thing.</span></div>
+        <div class="clip cap" data-start="108.550" data-duration="3.120" data-track-index="3"><span>So where does a person actually use this object?</span></div>
+        <div class="clip cap" data-start="111.670" data-duration="2.400" data-track-index="3"><span>When a lead says they never bought our text,</span></div>
+        <div class="clip cap" data-start="114.070" data-duration="2.240" data-track-index="3"><span>this is the first place to look, and the</span></div>
+        <div class="clip cap" data-start="116.310" data-duration="2.960" data-track-index="3"><span>Status field usually settles it immediately.</span></div>
+        <div class="clip cap" data-start="119.270" data-duration="2.880" data-track-index="3"><span>When we are reconstructing a conversation with a shop,</span></div>
+        <div class="clip cap" data-start="122.150" data-duration="5.115" data-track-index="3"><span>these rows are evidence And when the agency phone's</span></div>
+        <div class="clip cap" data-start="127.265" data-duration="2.480" data-track-index="3"><span>record needs auditing, this is where you find out</span></div>
+        <div class="clip cap" data-start="129.745" data-duration="3.520" data-track-index="3"><span>in practice whether messages are actually landing, because the</span></div>
+        <div class="clip cap" data-start="133.265" data-duration="3.578" data-track-index="3"><span>failure rate shows up here long before anybody complains.</span></div>
+        <div class="clip cap" data-start="136.843" data-duration="3.200" data-track-index="3"><span>Zero records today means the texting side is not</span></div>
+        <div class="clip cap" data-start="140.043" data-duration="1.040" data-track-index="3"><span>running yet.</span></div>
+        <div class="clip cap" data-start="141.083" data-duration="2.800" data-track-index="3"><span>It also means when it starts, this object is</span></div>
+        <div class="clip cap" data-start="143.883" data-duration="1.200" data-track-index="3"><span>what makes it trustworthy.</span></div>
+
+      <audio id="agency-messages-audio" src="assets/audio/agency-messages.mp3" data-start="4" data-duration="141.083" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 141.083;
+      const OUTRO = 4;
+      const TOTAL = 149.083;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-messages"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

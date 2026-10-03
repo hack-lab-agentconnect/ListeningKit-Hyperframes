@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-conversations" data-start="0" data-duration="203.845" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Conversation</div>
+        <div class="api">agencyConversations</div>
+        <div class="rule"></div>
+        <div class="count">0 records</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="31.150" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">One thread, one phone number, the whole back and forth</h2>
+          <p class="body">Messages rolled up into a readable thread</p>
+        </div>
+        <div class="clip card" data-start="35.150" data-duration="40.097" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">A stable key, the peer number, and a preview of the latest</h2>
+          <p class="body">Grouped by a pair key so threads never fragment</p>
+        </div>
+        <div class="clip card" data-start="75.246" data-duration="33.469" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">A scatter of messages is not a conversation</h2>
+          <p class="body">Context is the difference between a reply and a repeat</p>
+        </div>
+        <div class="clip card" data-start="108.716" data-duration="37.446" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">The handover between the dialer and whoever replies</h2>
+          <p class="body">The inbox view for the whole outbound motion</p>
+        </div>
+        <div class="clip card" data-start="146.162" data-duration="53.683" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">The handover, and why the key is stable</h2>
+          <p class="body">Picking up a thread mid-flight</p>
+        </div>
+
+      <div class="clip slidelist" data-start="199.845" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>pairKey</li>
+          <li>peerPhone</li>
+          <li>latestPreview</li>
+          <li>latestDirection</li>
+          <li>blasterConversationId</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.000" data-duration="2.960" data-track-index="3"><span>A conversation record is a rolling thread of messages</span></div>
+        <div class="clip cap" data-start="6.960" data-duration="1.680" data-track-index="3"><span>with one phone number.</span></div>
+        <div class="clip cap" data-start="8.640" data-duration="1.840" data-track-index="3"><span>We have zero right now.</span></div>
+        <div class="clip cap" data-start="10.480" data-duration="2.480" data-track-index="3"><span>Where the message object holds one text at a</span></div>
+        <div class="clip cap" data-start="12.960" data-duration="2.880" data-track-index="3"><span>time, a conversation holds all of the texts with</span></div>
+        <div class="clip cap" data-start="15.840" data-duration="2.560" data-track-index="3"><span>that one person in order as a single thing</span></div>
+        <div class="clip cap" data-start="18.400" data-duration="1.120" data-track-index="3"><span>you can read.</span></div>
+        <div class="clip cap" data-start="19.520" data-duration="2.755" data-track-index="3"><span>It mirrored in from Blaster, which is the system</span></div>
+        <div class="clip cap" data-start="22.275" data-duration="1.920" data-track-index="3"><span>that runs the actual messaging.</span></div>
+        <div class="clip cap" data-start="24.195" data-duration="1.600" data-track-index="3"><span>So think of it this way.</span></div>
+        <div class="clip cap" data-start="25.795" data-duration="2.560" data-track-index="3"><span>The message object is the raw material and the</span></div>
+        <div class="clip cap" data-start="28.355" data-duration="3.040" data-track-index="3"><span>conversation object is the finished, readable thread that a</span></div>
+        <div class="clip cap" data-start="31.395" data-duration="2.965" data-track-index="3"><span>human being can actually open and understand.</span></div>
+        <div class="clip cap" data-start="34.360" data-duration="2.640" data-track-index="3"><span>The fields are built around keeping a thread stable</span></div>
+        <div class="clip cap" data-start="37.000" data-duration="1.200" data-track-index="3"><span>and readable.</span></div>
+        <div class="clip cap" data-start="38.200" data-duration="3.040" data-track-index="3"><span>The pair key is the internal identifier that groups</span></div>
+        <div class="clip cap" data-start="41.240" data-duration="2.720" data-track-index="3"><span>messages together, and it is what stops a thread</span></div>
+        <div class="clip cap" data-start="43.960" data-duration="6.955" data-track-index="3"><span>fragmenting into a dozen separate conversations The peer phone</span></div>
+        <div class="clip cap" data-start="50.915" data-duration="2.320" data-track-index="3"><span>is the prospect's number, which is how you know</span></div>
+        <div class="clip cap" data-start="53.235" data-duration="1.680" data-track-index="3"><span>whose thread you are reading.</span></div>
+        <div class="clip cap" data-start="54.915" data-duration="2.240" data-track-index="3"><span>The Latest Preview is a short snippet of the</span></div>
+        <div class="clip cap" data-start="57.155" data-duration="2.560" data-track-index="3"><span>most recent message, so you can scan a list</span></div>
+        <div class="clip cap" data-start="59.715" data-duration="2.745" data-track-index="3"><span>of conversations without opening each one.</span></div>
+        <div class="clip cap" data-start="62.460" data-duration="2.560" data-track-index="3"><span>The latest direction tells you whether we spoke last</span></div>
+        <div class="clip cap" data-start="65.020" data-duration="2.880" data-track-index="3"><span>or they did, and that single fact changes who</span></div>
+        <div class="clip cap" data-start="67.900" data-duration="1.280" data-track-index="3"><span>should be chasing.</span></div>
+        <div class="clip cap" data-start="69.180" data-duration="2.800" data-track-index="3"><span>And the Blaster conversation ID ties the thread back</span></div>
+        <div class="clip cap" data-start="71.980" data-duration="2.320" data-track-index="3"><span>to the system that actually owns it.</span></div>
+        <div class="clip cap" data-start="74.300" data-duration="3.040" data-track-index="3"><span>Why roll messages up into conversations at all?</span></div>
+        <div class="clip cap" data-start="77.340" data-duration="3.425" data-track-index="3"><span>Because scatter of individual messages is not a conversation.</span></div>
+        <div class="clip cap" data-start="80.765" data-duration="1.120" data-track-index="3"><span>It is a pile.</span></div>
+        <div class="clip cap" data-start="81.885" data-duration="2.240" data-track-index="3"><span>And the value in talking to a prospect is</span></div>
+        <div class="clip cap" data-start="84.125" data-duration="2.880" data-track-index="3"><span>almost entirely in the context of what was already</span></div>
+        <div class="clip cap" data-start="87.005" data-duration="0.640" data-track-index="3"><span>said.</span></div>
+        <div class="clip cap" data-start="87.645" data-duration="2.575" data-track-index="3"><span>If somebody rings us back, the person on the</span></div>
+        <div class="clip cap" data-start="90.220" data-duration="2.720" data-track-index="3"><span>phone needs to know they already texted twice about</span></div>
+        <div class="clip cap" data-start="92.940" data-duration="2.160" data-track-index="3"><span>a price and what we offered.</span></div>
+        <div class="clip cap" data-start="95.100" data-duration="3.280" data-track-index="3"><span>The latest direction field makes that instant because if</span></div>
+        <div class="clip cap" data-start="98.380" data-duration="2.640" data-track-index="3"><span>the last message was ours, it is our turn</span></div>
+        <div class="clip cap" data-start="101.020" data-duration="1.760" data-track-index="3"><span>and we are being ignored.</span></div>
+        <div class="clip cap" data-start="102.780" data-duration="2.960" data-track-index="3"><span>If the last message was theirs, somebody needs to</span></div>
+        <div class="clip cap" data-start="105.740" data-duration="1.495" data-track-index="3"><span>read it and respond.</span></div>
+        <div class="clip cap" data-start="107.235" data-duration="2.000" data-track-index="3"><span>Where does this get used in the day to</span></div>
+        <div class="clip cap" data-start="109.235" data-duration="0.640" data-track-index="3"><span>day?</span></div>
+        <div class="clip cap" data-start="109.875" data-duration="2.880" data-track-index="3"><span>It becomes the inbox view for the entire outbound</span></div>
+        <div class="clip cap" data-start="112.755" data-duration="0.800" data-track-index="3"><span>motion.</span></div>
+        <div class="clip cap" data-start="113.555" data-duration="3.520" data-track-index="3"><span>Instead of hunting through individual messages, somebody opens</span></div>
+        <div class="clip cap" data-start="117.075" data-duration="3.600" data-track-index="3"><span>this object, sorts by latest activity, and works the</span></div>
+        <div class="clip cap" data-start="120.675" data-duration="1.175" data-track-index="3"><span>top of the list.</span></div>
+        <div class="clip cap" data-start="121.850" data-duration="2.800" data-track-index="3"><span>That is the handoff between the dialer, which makes</span></div>
+        <div class="clip cap" data-start="124.650" data-duration="2.800" data-track-index="3"><span>the calls, and whoever is replying to the text</span></div>
+        <div class="clip cap" data-start="127.450" data-duration="1.120" data-track-index="3"><span>that come back.</span></div>
+        <div class="clip cap" data-start="128.570" data-duration="2.400" data-track-index="3"><span>It is also the object a new joiner reads</span></div>
+        <div class="clip cap" data-start="130.970" data-duration="2.880" data-track-index="3"><span>first to understand how the business actually talks to</span></div>
+        <div class="clip cap" data-start="133.850" data-duration="1.035" data-track-index="3"><span>customers.</span></div>
+        <div class="clip cap" data-start="134.885" data-duration="3.600" data-track-index="3"><span>Zero records today means messaging is not yet live.</span></div>
+        <div class="clip cap" data-start="138.485" data-duration="2.240" data-track-index="3"><span>When it is, this is the screen that makes</span></div>
+        <div class="clip cap" data-start="140.725" data-duration="2.400" data-track-index="3"><span>it feel like a real sales floor rather than</span></div>
+        <div class="clip cap" data-start="143.125" data-duration="2.000" data-track-index="3"><span>a list of phone numbers.</span></div>
+        <div class="clip cap" data-start="145.125" data-duration="2.480" data-track-index="3"><span>This is the object that makes the outbound motion</span></div>
+        <div class="clip cap" data-start="147.605" data-duration="3.485" data-track-index="3"><span>feel human, rather than automated, so it is worth</span></div>
+        <div class="clip cap" data-start="151.090" data-duration="2.480" data-track-index="3"><span>being concrete about the handover.</span></div>
+        <div class="clip cap" data-start="153.570" data-duration="3.440" data-track-index="3"><span>A number rings, it goes to voicemail, and an</span></div>
+        <div class="clip cap" data-start="157.010" data-duration="2.160" data-track-index="3"><span>automated text goes out.</span></div>
+        <div class="clip cap" data-start="159.170" data-duration="2.675" data-track-index="3"><span>Two hours later, a human being replies.</span></div>
+        <div class="clip cap" data-start="161.845" data-duration="2.640" data-track-index="3"><span>That reply has to land somewhere a human will</span></div>
+        <div class="clip cap" data-start="164.485" data-duration="3.280" data-track-index="3"><span>actually see, attached to the business it came from,</span></div>
+        <div class="clip cap" data-start="167.765" data-duration="3.760" data-track-index="3"><span>with the earlier automated message still visible above it.</span></div>
+        <div class="clip cap" data-start="171.525" data-duration="2.545" data-track-index="3"><span>That is what a conversation row is.</span></div>
+        <div class="clip cap" data-start="174.070" data-duration="2.240" data-track-index="3"><span>The Pair Key is the part people get wrong</span></div>
+        <div class="clip cap" data-start="176.310" data-duration="1.680" data-track-index="3"><span>when they first look at it.</span></div>
+        <div class="clip cap" data-start="177.990" data-duration="2.640" data-track-index="3"><span>It is not a database identifier it is a</span></div>
+        <div class="clip cap" data-start="180.630" data-duration="3.120" data-track-index="3"><span>stable fingerprint of this number paired with this business.</span></div>
+        <div class="clip cap" data-start="183.750" data-duration="3.135" data-track-index="3"><span>And it is deliberately not something a human types.</span></div>
+        <div class="clip cap" data-start="186.885" data-duration="2.480" data-track-index="3"><span>It is computed so that the same thread always</span></div>
+        <div class="clip cap" data-start="189.365" data-duration="1.680" data-track-index="3"><span>lands on the same row.</span></div>
+        <div class="clip cap" data-start="191.045" data-duration="2.480" data-track-index="3"><span>Change how it is computed and you orphan every</span></div>
+        <div class="clip cap" data-start="193.525" data-duration="1.360" data-track-index="3"><span>existing thread.</span></div>
+        <div class="clip cap" data-start="194.885" data-duration="2.400" data-track-index="3"><span>So if you are building anything that reads these,</span></div>
+        <div class="clip cap" data-start="197.285" data-duration="2.560" data-track-index="3"><span>use the key as given, and never parse it.</span></div>
+
+      <audio id="agency-conversations-audio" src="assets/audio/agency-conversations.mp3" data-start="4" data-duration="195.845" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 195.845;
+      const OUTRO = 4;
+      const TOTAL = 203.845;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-conversations"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

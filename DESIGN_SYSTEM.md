@@ -66,6 +66,13 @@ any beat. If you reach for it, you are about to reintroduce this bug.
 edge-masked on **both** backgrounds (`OnboardingShell.tsx:15`). Removing that mask
 is what turned every white beat pale blue.
 
+**Exception, deliberate (matt, 2026-10-03): the converge core card.** The centre
+card of the converge beat — the one captioned `THE SPINE` — is **solid brand blue
+on both tones**, including the blue stage where it deliberately goes against its
+own background. It is the one object the whole beat is about, so it earns the
+break; it is separated from the blue stage by its grey drop shadow and by the
+white ink, not by an alpha or a hairline. Do not "fix" this one back to white.
+
 `frost()` (translucent white card) exists in `scenes.mjs` but is no longer used by
 the journey or split beats. If you reach for it, you are probably about to
 reintroduce this bug.

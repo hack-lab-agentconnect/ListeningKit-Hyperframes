@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-contents" data-start="0" data-duration="204.455" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Agency Content</div>
+        <div class="api">agencyContents</div>
+        <div class="rule"></div>
+        <div class="count">14 records</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="31.247" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">Every page on the site, one row per URL</h2>
+          <p class="body">This is the CMS, and the site renders from it</p>
+        </div>
+        <div class="clip card" data-start="35.247" data-duration="37.562" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">The path, the page family, and the SEO and CTA settings</h2>
+          <p class="body">Metadata and calls to action, per page</p>
+        </div>
+        <div class="clip card" data-start="72.809" data-duration="32.576" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">The website is a rendering of this table</h2>
+          <p class="body">Copy, SEO and conversion live on the same row</p>
+        </div>
+        <div class="clip card" data-start="105.385" data-duration="37.562" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">Launching pages, and measuring whether they work</h2>
+          <p class="body">Where the funnel and the website meet</p>
+        </div>
+        <div class="clip card" data-start="142.948" data-duration="57.507" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">Reading one row and knowing the whole page</h2>
+          <p class="body">If it is not in this row, we did not build it</p>
+        </div>
+
+      <div class="clip slidelist" data-start="200.455" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>name</li>
+          <li>slug</li>
+          <li>canonicalPath</li>
+          <li>family</li>
+          <li>status</li>
+          <li>seoTitle</li>
+          <li>primaryCta</li>
+          <li>primaryHref</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.240" data-duration="2.960" data-track-index="3"><span>An agency contact record is one page on the</span></div>
+        <div class="clip cap" data-start="7.200" data-duration="3.920" data-track-index="3"><span>Listening Kit website, 14 of them, at the moment.</span></div>
+        <div class="clip cap" data-start="11.120" data-duration="3.040" data-track-index="3"><span>One row equals one URL, and that is the</span></div>
+        <div class="clip cap" data-start="14.160" data-duration="1.760" data-track-index="3"><span>whole mental model.</span></div>
+        <div class="clip cap" data-start="15.920" data-duration="2.965" data-track-index="3"><span>This object is the content management system.</span></div>
+        <div class="clip cap" data-start="18.885" data-duration="1.760" data-track-index="3"><span>It is not a blog, it is not a</span></div>
+        <div class="clip cap" data-start="20.645" data-duration="2.160" data-track-index="3"><span>page builder, and it does not live in a</span></div>
+        <div class="clip cap" data-start="22.805" data-duration="0.960" data-track-index="3"><span>deployment.</span></div>
+        <div class="clip cap" data-start="23.765" data-duration="2.800" data-track-index="3"><span>It lives here in the CRM, and the website</span></div>
+        <div class="clip cap" data-start="26.565" data-duration="1.360" data-track-index="3"><span>reads from it.</span></div>
+        <div class="clip cap" data-start="27.925" data-duration="2.560" data-track-index="3"><span>That means the person who owns the copy and</span></div>
+        <div class="clip cap" data-start="30.485" data-duration="2.320" data-track-index="3"><span>the person who owns the pipeline are looking at</span></div>
+        <div class="clip cap" data-start="32.805" data-duration="3.835" data-track-index="3"><span>the same record, which is unusual and very valuable.</span></div>
+        <div class="clip cap" data-start="36.640" data-duration="4.000" data-track-index="3"><span>The fields start with identity: the name, the slug,</span></div>
+        <div class="clip cap" data-start="40.640" data-duration="3.040" data-track-index="3"><span>and the canonical path, which is the definitive address</span></div>
+        <div class="clip cap" data-start="43.680" data-duration="1.440" data-track-index="3"><span>of the page.</span></div>
+        <div class="clip cap" data-start="45.120" data-duration="3.135" data-track-index="3"><span>Then the family field, which groups pages that belong</span></div>
+        <div class="clip cap" data-start="48.255" data-duration="3.120" data-track-index="3"><span>together, like all the tinting pages or all the</span></div>
+        <div class="clip cap" data-start="51.375" data-duration="1.600" data-track-index="3"><span>career pages.</span></div>
+        <div class="clip cap" data-start="52.975" data-duration="2.880" data-track-index="3"><span>That grouping is how you change something once and</span></div>
+        <div class="clip cap" data-start="55.855" data-duration="2.400" data-track-index="3"><span>have it land in many places.</span></div>
+        <div class="clip cap" data-start="58.255" data-duration="2.955" data-track-index="3"><span>The Status controls whether the page is live or</span></div>
+        <div class="clip cap" data-start="61.210" data-duration="0.800" data-track-index="3"><span>draft.</span></div>
+        <div class="clip cap" data-start="62.010" data-duration="2.160" data-track-index="3"><span>Then the SEO title, which is the line that</span></div>
+        <div class="clip cap" data-start="64.170" data-duration="2.720" data-track-index="3"><span>appears in the search results, and it is edited</span></div>
+        <div class="clip cap" data-start="66.890" data-duration="3.200" data-track-index="3"><span>here deliberately, rather than left to whatever the page</span></div>
+        <div class="clip cap" data-start="70.090" data-duration="1.440" data-track-index="3"><span>happened to render.</span></div>
+        <div class="clip cap" data-start="71.530" data-duration="3.995" data-track-index="3"><span>Finally, the primary call to action and its HRF,</span></div>
+        <div class="clip cap" data-start="75.525" data-duration="3.040" data-track-index="3"><span>so every page has a clear next step.</span></div>
+        <div class="clip cap" data-start="78.565" data-duration="2.320" data-track-index="3"><span>Why does it matter that the website renders from</span></div>
+        <div class="clip cap" data-start="80.885" data-duration="1.760" data-track-index="3"><span>a CRM table?</span></div>
+        <div class="clip cap" data-start="82.645" data-duration="2.560" data-track-index="3"><span>Because of where the accountability sits.</span></div>
+        <div class="clip cap" data-start="85.205" data-duration="3.605" data-track-index="3"><span>When a page underperforms, somebody has to change the</span></div>
+        <div class="clip cap" data-start="88.810" data-duration="3.520" data-track-index="3"><span>copy, change the SEO title, or change the call</span></div>
+        <div class="clip cap" data-start="92.330" data-duration="0.960" data-track-index="3"><span>to action.</span></div>
+        <div class="clip cap" data-start="93.290" data-duration="2.480" data-track-index="3"><span>If the content lives in the marketing team, the</span></div>
+        <div class="clip cap" data-start="95.770" data-duration="2.160" data-track-index="3"><span>CRM never learns anything about it.</span></div>
+        <div class="clip cap" data-start="97.930" data-duration="2.640" data-track-index="3"><span>If it lives here, then the same record carries</span></div>
+        <div class="clip cap" data-start="100.570" data-duration="3.705" data-track-index="3"><span>the copy, the search metadata, and the action.</span></div>
+        <div class="clip cap" data-start="104.275" data-duration="2.080" data-track-index="3"><span>And it sits right next to the campaign records</span></div>
+        <div class="clip cap" data-start="106.355" data-duration="1.760" data-track-index="3"><span>that are driving traffic to it.</span></div>
+        <div class="clip cap" data-start="108.115" data-duration="3.200" data-track-index="3"><span>Marketing and sales stop being separate databases and start</span></div>
+        <div class="clip cap" data-start="111.315" data-duration="1.280" data-track-index="3"><span>being one system.</span></div>
+        <div class="clip cap" data-start="112.595" data-duration="2.160" data-track-index="3"><span>So where does this object get used day to</span></div>
+        <div class="clip cap" data-start="114.755" data-duration="0.400" data-track-index="3"><span>day?</span></div>
+        <div class="clip cap" data-start="115.155" data-duration="2.285" data-track-index="3"><span>When we launch a page, this is the record</span></div>
+        <div class="clip cap" data-start="117.440" data-duration="1.120" data-track-index="3"><span>that gets written.</span></div>
+        <div class="clip cap" data-start="118.560" data-duration="2.000" data-track-index="3"><span>When we change an offer, this is where the</span></div>
+        <div class="clip cap" data-start="120.560" data-duration="2.080" data-track-index="3"><span>wording on the matching page changes.</span></div>
+        <div class="clip cap" data-start="122.640" data-duration="2.720" data-track-index="3"><span>When we analyze performance, this is where we look</span></div>
+        <div class="clip cap" data-start="125.360" data-duration="2.400" data-track-index="3"><span>to see whether a weak page is weak because</span></div>
+        <div class="clip cap" data-start="127.760" data-duration="2.815" data-track-index="3"><span>of its SEO title or call to action.</span></div>
+        <div class="clip cap" data-start="130.575" data-duration="2.080" data-track-index="3"><span>And the family field is what makes bulk work</span></div>
+        <div class="clip cap" data-start="132.655" data-duration="3.520" data-track-index="3"><span>possible because updating four tinting pages should be four</span></div>
+        <div class="clip cap" data-start="136.175" data-duration="3.440" data-track-index="3"><span>edits in the database, not four separate deployments.</span></div>
+        <div class="clip cap" data-start="139.615" data-duration="1.440" data-track-index="3"><span>14 records today.</span></div>
+        <div class="clip cap" data-start="141.055" data-duration="1.920" data-track-index="3"><span>This is the object where the search side of</span></div>
+        <div class="clip cap" data-start="142.975" data-duration="2.215" data-track-index="3"><span>the business and the pipeline side of the business</span></div>
+        <div class="clip cap" data-start="145.190" data-duration="1.200" data-track-index="3"><span>finally touch.</span></div>
+        <div class="clip cap" data-start="146.390" data-duration="2.800" data-track-index="3"><span>So, to read a row properly, imagine you have</span></div>
+        <div class="clip cap" data-start="149.190" data-duration="1.520" data-track-index="3"><span>never seen the website.</span></div>
+        <div class="clip cap" data-start="150.710" data-duration="2.640" data-track-index="3"><span>The path tells you where the page lives.</span></div>
+        <div class="clip cap" data-start="153.350" data-duration="1.920" data-track-index="3"><span>The family tells you what kind of page it</span></div>
+        <div class="clip cap" data-start="155.270" data-duration="3.680" data-track-index="3"><span>is, whether that is a service page, a comparison,</span></div>
+        <div class="clip cap" data-start="158.950" data-duration="3.045" data-track-index="3"><span>a resource, which means every page of the same</span></div>
+        <div class="clip cap" data-start="161.995" data-duration="3.280" data-track-index="3"><span>kind, shares a template, and a standard.</span></div>
+        <div class="clip cap" data-start="165.275" data-duration="2.560" data-track-index="3"><span>The status tells you whether it is published, in</span></div>
+        <div class="clip cap" data-start="167.835" data-duration="3.040" data-track-index="3"><span>draft, or retired, and that status is the switch</span></div>
+        <div class="clip cap" data-start="170.875" data-duration="2.305" data-track-index="3"><span>that decides whether it appears at all.</span></div>
+        <div class="clip cap" data-start="173.180" data-duration="2.240" data-track-index="3"><span>The SEO title is the line that shows up</span></div>
+        <div class="clip cap" data-start="175.420" data-duration="2.160" data-track-index="3"><span>in a search result, and it is the highest</span></div>
+        <div class="clip cap" data-start="177.580" data-duration="3.280" data-track-index="3"><span>leverage three seconds of text on the entire page.</span></div>
+        <div class="clip cap" data-start="180.860" data-duration="2.320" data-track-index="3"><span>The primary call to action is the button you</span></div>
+        <div class="clip cap" data-start="183.180" data-duration="2.640" data-track-index="3"><span>want somebody to press, and the href is where</span></div>
+        <div class="clip cap" data-start="185.820" data-duration="1.515" data-track-index="3"><span>it actually goes.</span></div>
+        <div class="clip cap" data-start="187.335" data-duration="2.480" data-track-index="3"><span>Those last two fields being right or wrong is</span></div>
+        <div class="clip cap" data-start="189.815" data-duration="2.480" data-track-index="3"><span>the difference between a page that generates a call</span></div>
+        <div class="clip cap" data-start="192.295" data-duration="3.440" data-track-index="3"><span>and a page somebody visits, nods, and leaves.</span></div>
+        <div class="clip cap" data-start="195.735" data-duration="1.840" data-track-index="3"><span>Read them in that order and you can tell</span></div>
+        <div class="clip cap" data-start="197.575" data-duration="2.640" data-track-index="3"><span>somebody exactly what a page is for without opening</span></div>
+        <div class="clip cap" data-start="200.215" data-duration="0.240" data-track-index="3"><span>it.</span></div>
+
+      <audio id="agency-contents-audio" src="assets/audio/agency-contents.mp3" data-start="4" data-duration="196.455" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 196.455;
+      const OUTRO = 4;
+      const TOTAL = 204.455;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-contents"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>

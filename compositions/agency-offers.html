@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: local("Inter"), local("Inter-Regular"); }
+      @font-face { font-family: "StackMono"; src: local("Consolas"), local("Cascadia Mono"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #1558C4; }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: linear-gradient(160deg, #1558C4 0%, #2B7FFF 55%, #2B7FFF 100%); color: #FFFFFF; }
+      .clip { position: absolute; inset: 0; }
+      .brand { position: absolute; top: 64px; left: 96px; display: flex; align-items: center; gap: 18px; opacity: 0.92; }
+      .brand .dot { width: 22px; height: 22px; border-radius: 6px; background: #FFFFFF; }
+      .brand .label { font-size: 30px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+      .card { display: flex; flex-direction: column; justify-content: center; padding: 150px 190px 230px; }
+      .eyebrow { font-size: 30px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.85; margin-bottom: 26px; }
+      .heading { font-size: 82px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.06; margin-bottom: 34px; max-width: 1500px; }
+      .body { font-size: 40px; line-height: 1.42; font-weight: 500; max-width: 1420px; opacity: 0.96; }
+      .cap { display: flex; align-items: flex-end; justify-content: center; padding: 0 240px 84px; }
+      .cap span { display: inline-block; max-width: 1300px; text-align: center; font-size: 34px; line-height: 1.35; font-weight: 600; padding: 14px 28px; border-radius: 14px; background: rgba(6, 28, 62, 0.62); }
+      .titlewrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .titlewrap .object { font-size: 130px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.02; }
+      .titlewrap .api { font-family: "StackMono", ui-monospace, monospace; font-size: 40px; opacity: 0.85; margin-top: 26px; }
+      .titlewrap .rule { width: 220px; height: 8px; border-radius: 4px; background: #FFFFFF; margin: 44px 0; }
+      .titlewrap .count { font-size: 40px; font-weight: 600; opacity: 0.95; }
+      .slidelist { display: flex; flex-direction: column; justify-content: center; padding: 140px 190px; }
+      .slidelist h2 { font-size: 72px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 30px; }
+      .slidelist ul { list-style: none; display: flex; flex-wrap: wrap; gap: 20px; }
+      .slidelist li { font-size: 34px; font-weight: 600; padding: 16px 30px; border-radius: 999px; background: rgba(6, 28, 62, 0.42); }
+      .outwrap { display: flex; flex-direction: column; justify-content: center; padding: 0 190px; }
+      .outwrap .cta { font-size: 68px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 34px; }
+      .outwrap .url { font-family: "StackMono", ui-monospace, monospace; font-size: 36px; padding: 22px 34px; border-radius: 14px; background: rgba(6, 28, 62, 0.55); align-self: flex-start; }
+      .caprail { position: absolute; bottom: 0; left: 0; height: 10px; background: rgba(255,255,255,0.55); width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-offers" data-start="0" data-duration="153.765" data-width="1920" data-height="1080" data-fps="30">
+      <div class="brand"><span class="dot"></span><span class="label">ListeningKit</span></div>
+
+      <div class="clip titlewrap" data-start="0" data-duration="4" data-track-index="0">
+        <div class="object">Agency Offer</div>
+        <div class="api">agencyOffers</div>
+        <div class="rule"></div>
+        <div class="count">1 record</div>
+      </div>
+
+        <div class="clip card" data-start="4.000" data-duration="24.780" data-track-index="1">
+          <div class="eyebrow">The object</div>
+          <h2 class="heading">The thing we are actually selling</h2>
+          <p class="body">One sellable package, one version of the pitch</p>
+        </div>
+        <div class="clip card" data-start="28.780" data-duration="29.639" data-track-index="1">
+          <div class="eyebrow">What goes inside it</div>
+          <h2 class="heading">The words on the page, and the two links that convert</h2>
+          <p class="body">Copy, booking link, and tracking pixel in one row</p>
+        </div>
+        <div class="clip card" data-start="58.419" data-duration="24.537" data-track-index="1">
+          <div class="eyebrow">Why it matters</div>
+          <h2 class="heading">One source, so the pitch is identical everywhere</h2>
+          <p class="body">Page, ad creative and booking link all read from here</p>
+        </div>
+        <div class="clip card" data-start="82.956" data-duration="27.695" data-track-index="1">
+          <div class="eyebrow">Where it is used</div>
+          <h2 class="heading">On the page, in the advert, and on the call</h2>
+          <p class="body">The three places a customer hears the pitch</p>
+        </div>
+        <div class="clip card" data-start="110.651" data-duration="39.114" data-track-index="1">
+          <div class="eyebrow">Before you use it</div>
+          <h2 class="heading">Why one offer beats five offers</h2>
+          <p class="body">One record, every surface</p>
+        </div>
+
+      <div class="clip slidelist" data-start="149.765" data-duration="4" data-track-index="1">
+        <h2>The fields you will see</h2>
+        <ul>
+          <li>name</li>
+          <li>brandName</li>
+          <li>heroH1</li>
+          <li>ctaType</li>
+          <li>status</li>
+          <li>calendlyUrl</li>
+          <li>metaPixelId</li>
+        </ul>
+      </div>
+
+        <div class="clip cap" data-start="4.240" data-duration="2.640" data-track-index="3"><span>An agency offer is a sellable package we offer</span></div>
+        <div class="clip cap" data-start="6.880" data-duration="1.120" data-track-index="3"><span>to a client.</span></div>
+        <div class="clip cap" data-start="8.000" data-duration="2.080" data-track-index="3"><span>We have one at the moment, and that is</span></div>
+        <div class="clip cap" data-start="10.080" data-duration="2.080" data-track-index="3"><span>because we are still working out what the product</span></div>
+        <div class="clip cap" data-start="12.160" data-duration="3.040" data-track-index="3"><span>actually is, which is normal and healthy at this</span></div>
+        <div class="clip cap" data-start="15.200" data-duration="0.960" data-track-index="3"><span>stage.</span></div>
+        <div class="clip cap" data-start="16.160" data-duration="2.400" data-track-index="3"><span>This object is the commercial center of the whole</span></div>
+        <div class="clip cap" data-start="18.560" data-duration="0.960" data-track-index="3"><span>system.</span></div>
+        <div class="clip cap" data-start="19.520" data-duration="2.365" data-track-index="3"><span>Everything else exists to help us sell one of</span></div>
+        <div class="clip cap" data-start="21.885" data-duration="0.720" data-track-index="3"><span>these.</span></div>
+        <div class="clip cap" data-start="22.605" data-duration="2.480" data-track-index="3"><span>A prospect is somebody we might sell it to.</span></div>
+        <div class="clip cap" data-start="25.085" data-duration="2.000" data-track-index="3"><span>A lead is somebody we are talking to about</span></div>
+        <div class="clip cap" data-start="27.085" data-duration="0.560" data-track-index="3"><span>it.</span></div>
+        <div class="clip cap" data-start="27.645" data-duration="1.920" data-track-index="3"><span>A call is where we pitch it.</span></div>
+        <div class="clip cap" data-start="29.565" data-duration="4.375" data-track-index="3"><span>An opportunity is where they agree to buy it.</span></div>
+        <div class="clip cap" data-start="33.940" data-duration="0.720" data-track-index="3"><span>Bought.</span></div>
+        <div class="clip cap" data-start="34.660" data-duration="2.240" data-track-index="3"><span>The fields tell you how an offer reaches a</span></div>
+        <div class="clip cap" data-start="36.900" data-duration="0.720" data-track-index="3"><span>human.</span></div>
+        <div class="clip cap" data-start="37.620" data-duration="2.320" data-track-index="3"><span>There is the name and the brand name, so</span></div>
+        <div class="clip cap" data-start="39.940" data-duration="2.160" data-track-index="3"><span>we know whose product this is.</span></div>
+        <div class="clip cap" data-start="42.100" data-duration="3.120" data-track-index="3"><span>Then, hero h one, which is the big headline</span></div>
+        <div class="clip cap" data-start="45.220" data-duration="2.465" data-track-index="3"><span>that appears at the top of the offer page.</span></div>
+        <div class="clip cap" data-start="47.685" data-duration="2.480" data-track-index="3"><span>Then the call to action type, so the system</span></div>
+        <div class="clip cap" data-start="50.165" data-duration="2.320" data-track-index="3"><span>knows whether the button should book a call or</span></div>
+        <div class="clip cap" data-start="52.485" data-duration="2.320" data-track-index="3"><span>buy or start a chat.</span></div>
+        <div class="clip cap" data-start="54.805" data-duration="2.800" data-track-index="3"><span>Then the status, which controls whether the page is</span></div>
+        <div class="clip cap" data-start="57.605" data-duration="2.720" data-track-index="3"><span>live, draft, or paused.</span></div>
+        <div class="clip cap" data-start="60.325" data-duration="2.415" data-track-index="3"><span>And the two fields that actually make money.</span></div>
+        <div class="clip cap" data-start="62.740" data-duration="2.960" data-track-index="3"><span>The Calendly URL, which is the booking link the</span></div>
+        <div class="clip cap" data-start="65.700" data-duration="3.600" data-track-index="3"><span>customer lands on, and the Metapixel ID, which is</span></div>
+        <div class="clip cap" data-start="69.300" data-duration="2.960" data-track-index="3"><span>the tracking identifier that lets us attribute an advert</span></div>
+        <div class="clip cap" data-start="72.260" data-duration="2.160" data-track-index="3"><span>all the way to a booked call.</span></div>
+        <div class="clip cap" data-start="74.420" data-duration="2.315" data-track-index="3"><span>Why hold the pitch copy and the tracking inside</span></div>
+        <div class="clip cap" data-start="76.735" data-duration="3.280" data-track-index="3"><span>a CRM record rather than in a website builder?</span></div>
+        <div class="clip cap" data-start="80.015" data-duration="3.040" data-track-index="3"><span>Because consistency, and because attribution.</span></div>
+        <div class="clip cap" data-start="83.055" data-duration="2.720" data-track-index="3"><span>If the offer page says one thing, and the</span></div>
+        <div class="clip cap" data-start="85.775" data-duration="2.765" data-track-index="3"><span>advert says another, and the sales call says a</span></div>
+        <div class="clip cap" data-start="88.540" data-duration="3.200" data-track-index="3"><span>third, the customer is being confused, and we are</span></div>
+        <div class="clip cap" data-start="91.740" data-duration="1.600" data-track-index="3"><span>losing the credit.</span></div>
+        <div class="clip cap" data-start="93.340" data-duration="2.560" data-track-index="3"><span>This record is the single source for the offer</span></div>
+        <div class="clip cap" data-start="95.900" data-duration="3.840" data-track-index="3"><span>page, the advert creative, and the calendar link.</span></div>
+        <div class="clip cap" data-start="99.740" data-duration="2.560" data-track-index="3"><span>And the pixel ID being here means we can</span></div>
+        <div class="clip cap" data-start="102.300" data-duration="3.515" data-track-index="3"><span>answer the only question that matters about marketing, which</span></div>
+        <div class="clip cap" data-start="105.815" data-duration="3.840" data-track-index="3"><span>is which advert actually produced booked calls, rather than</span></div>
+        <div class="clip cap" data-start="109.655" data-duration="2.320" data-track-index="3"><span>which advert produced clicks.</span></div>
+        <div class="clip cap" data-start="111.975" data-duration="2.480" data-track-index="3"><span>So where do you meet an offer in practice?</span></div>
+        <div class="clip cap" data-start="114.455" data-duration="1.600" data-track-index="3"><span>In three places.</span></div>
+        <div class="clip cap" data-start="116.055" data-duration="3.615" data-track-index="3"><span>On the website, where the offer page renders from</span></div>
+        <div class="clip cap" data-start="119.670" data-duration="15.775" data-track-index="3"><span>the Booking button In the advertising on the call</span></div>
+        <div class="clip cap" data-start="135.445" data-duration="3.920" data-track-index="3"><span>Having only one active offer is genuinely useful, because</span></div>
+        <div class="clip cap" data-start="139.365" data-duration="3.120" data-track-index="3"><span>it forces one sharp description of what we do.</span></div>
+        <div class="clip cap" data-start="142.485" data-duration="2.320" data-track-index="3"><span>When the second one appears, this object is where</span></div>
+        <div class="clip cap" data-start="144.805" data-duration="2.240" data-track-index="3"><span>you will model it, and the fields here tell</span></div>
+        <div class="clip cap" data-start="147.045" data-duration="1.920" data-track-index="3"><span>you exactly what you have to fill in before</span></div>
+        <div class="clip cap" data-start="148.965" data-duration="0.800" data-track-index="3"><span>you can launch it.</span></div>
+
+      <audio id="agency-offers-audio" src="assets/audio/agency-offers.mp3" data-start="4" data-duration="145.765" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const INTRO = 4;
+      const SPEECH = 145.765;
+      const OUTRO = 4;
+      const TOTAL = 153.765;
+      const cards = Array.from(document.querySelectorAll(".card"));
+      const caps = Array.from(document.querySelectorAll(".cap"));
+      const rail = document.querySelector(".caprail");
+      if (rail) rail.style.display = "none";
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-offers"] = tl;
+      tl.fromTo(cards[0], { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.5 }, INTRO);
+      for (let i = 1; i < cards.length; i++) {
+        const at = INTRO + parseFloat(cards[i].dataset.start) - INTRO;
+        tl.fromTo(cards[i], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45 }, at);
+      }
+      tl.seek(0);
+    </script>
+  </body>
+</html>
