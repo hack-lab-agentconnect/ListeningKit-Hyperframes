@@ -1,5 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+// Resolve from THIS file, not the CWD, so the script edits the repo's narrations
+// rather than whatever `narrations/` happens to exist relative to wherever it was
+// invoked from.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 // Fifth section appended to each narration so every video clears three minutes.
 const ADD = [
@@ -140,7 +146,7 @@ const ADD = [
 let n = 0;
 for (const add of ADD) {
   if (add.skip) continue;
-  const p = path.join("narrations", `${add.slug}.json`);
+  const p = path.join(ROOT, "narrations", `${add.slug}.json`);
   const meta = JSON.parse(fs.readFileSync(p, "utf8"));
   const paras = meta.narration.paragraphs.filter((x) => x.eyebrow !== add.eyebrow);
   paras.push({ eyebrow: add.eyebrow, heading: add.heading, body: add.body, say: add.say });

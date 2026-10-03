@@ -9,10 +9,15 @@
  * failure it prevents, because a lint rule nobody remembers the reason for gets
  * deleted.
  *
- * Scope: the SOURCE files that generate compositions (scenes.mjs, lkdesign.mjs,
- * lkchrome.mjs, storyboards.mjs, lkicons.mjs). Generated `compositions/**` HTML is
- * excluded — it is build output, and a rule that fires on generated code trains
- * people to ignore it.
+ * Scope: the SOURCE files that generate compositions (src/scenes.mjs,
+ * src/lkdesign.mjs, src/lkchrome.mjs, src/storyboards.mjs, src/lkicons.mjs).
+ * Generated `compositions/**` HTML is excluded — it is build output, and a rule
+ * that fires on generated code trains people to ignore it.
+ *
+ * Repo hygiene (review frames, stray root files) is a DIFFERENT concern and lives
+ * in scripts/lint-repo.mjs. Mixing the two would mean one script has both a
+ * line-based scanner and a git-level scanner, and the git-level one cannot work
+ * on a single staged file.
  */
 
 import fs from "node:fs";
@@ -27,11 +32,11 @@ import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const SOURCES = [
-  "scenes.mjs",
-  "lkdesign.mjs",
-  "lkchrome.mjs",
-  "lkicons.mjs",
-  "storyboards.mjs",
+  "src/scenes.mjs",
+  "src/lkdesign.mjs",
+  "src/lkchrome.mjs",
+  "src/lkicons.mjs",
+  "src/storyboards.mjs",
 ];
 
 /** Opaque fills that must not appear on a surface. */
@@ -144,7 +149,7 @@ const RULES = [
      R.badge   -> never existed -> `border-radius:undefinedpx` on the end card
      glass(430, 128, R.card) -> args transposed -> a 128px lozenge AND a stray
                   ";20;" declaration in the same style attribute */
-const { C, R, TYPE, M, SHADOW, DITHER } = await import("../lkdesign.mjs");
+const { C, R, TYPE, M, SHADOW, DITHER } = await import("../src/lkdesign.mjs");
 const EXPORTED = new Set([
   ...Object.keys(C),
   ...Object.keys(R),
@@ -160,7 +165,7 @@ RULES.push({
     if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
     for (const m of line.matchAll(/\b(?:TYPE|R|C|M|SHADOW|DITHER)\.(\w+)/g)) {
       if (!EXPORTED.has(m[1])) {
-        return `\`${m[0]}\` is not exported by lkdesign.mjs - it emits a literal "undefined" into the composition, which the browser drops silently`;
+        return `\`${m[0]}\` is not exported by src/lkdesign.mjs - it emits a literal "undefined" into the composition, which the browser drops silently`;
       }
     }
     return null;

@@ -2,10 +2,29 @@
 node_modules/
 
 # Scratch and review output
+#
+# REVIEW FRAMES MUST NOT LIVE IN THIS REPO AT ALL. They are throwaway artefacts
+# of `npm run review`, they are megabytes, and one has already been committed here
+# by mistake. Put them outside the tree:
+#
+#     node scripts/review-frames.mjs --at 94 --no-end
+#     ->  C:\Users\0\.buzz\.scratch\hyperframes-review\<slug>\
+#
+# `npm run lint:repo` FAILS if any image or render artefact is tracked by git, and
+# if a review directory is committed into the tree. See docs/WORKFLOW.md.
 .scratch/
 .shots/
 snapshots/
+review/
+out/
+renders/
 transcripts/
+
+# Tool output. Regenerate with `npx hyperframes lint --json > lint.json`; it is a
+# report of the working tree, not source, and committing it produced diff noise on
+# every commit that changed a composition.
+lint.json
+build-report.json
 
 # Rendered video and audio.
 #

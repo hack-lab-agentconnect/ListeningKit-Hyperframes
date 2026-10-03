@@ -1,8 +1,12 @@
-# lefthook — enforces DESIGN_SYSTEM.md on every commit.
+# lefthook — enforces DESIGN_SYSTEM.md and the repo rules on every commit.
 #
-# The design-system lint runs first and is not skippable with --no-verify on
-# this repo's CI. Every rule it enforces was broken at least once; see
-# DESIGN_SYSTEM.md for the failure each one prevents.
+# Neither lint is skippable with --no-verify on this repo's CI. Every rule they
+# enforce was broken at least once; see DESIGN_SYSTEM.md for the visual failures and
+# docs/WORKFLOW.md for the repo ones.
+#
+# Two lints, deliberately separate scripts: design-system is a LINE scanner over
+# source (it works fine scoped to {staged_files}), repo-hygiene asks what git
+# tracks (a whole-repo question that cannot be scoped to one file).
 
 pre-commit:
   parallel: false
@@ -11,11 +15,16 @@ pre-commit:
       glob: "*.{mjs,html,css}"
       run: node scripts/lint-design.mjs {staged_files}
 
+    repo-hygiene:
+      # Catches tracked review frames, review/render directories committed into the
+      # tree, loose unorganised files at the root, and committed secrets.
+      run: node scripts/lint-repo.mjs
+
     build:
       # Regenerate the compositions and stage them, so a stale build can never
       # ship. `compositions/` is committed on purpose — Studio and the renderer
       # read it directly and a fresh clone must render without a build step.
-      run: node build-beats.mjs && node scripts/entry.mjs
+      run: node src/build-beats.mjs && node scripts/entry.mjs
       stage_fixed: true
 
     verify-build:
@@ -30,3 +39,5 @@ pre-push:
   commands:
     design-system:
       run: node scripts/lint-design.mjs
+    repo-hygiene:
+      run: node scripts/lint-repo.mjs

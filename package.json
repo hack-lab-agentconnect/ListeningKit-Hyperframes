@@ -7,12 +7,15 @@
   "scripts": {
     "entry": "node scripts/entry.mjs",
     "dev": "npx --yes hyperframes@0.8.112 preview",
-    "build": "node build-beats.mjs && node scripts/entry.mjs",
+    "build": "node src/build-beats.mjs && node scripts/entry.mjs",
     "check": "npx --yes hyperframes@0.8.112 check",
     "render": "node scripts/entry.mjs && npx --yes hyperframes@0.8.112 render",
     "snapshot": "node scripts/entry.mjs && npx --yes hyperframes@0.8.112 snapshot",
-    "publish": "npx --yes hyperframes@0.8.112 publish",
-    "lint:design": "node scripts/lint-design.mjs"
+    "review": "node scripts/review-frames.mjs",
+    "lint": "npm run lint:design && npm run lint:repo",
+    "lint:design": "node scripts/lint-design.mjs",
+    "lint:repo": "node scripts/lint-repo.mjs",
+    "audio": "node src/fetch-audio.mjs"
   },
   "devDependencies": {
     "lefthook": "^1.7.0"

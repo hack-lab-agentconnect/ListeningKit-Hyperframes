@@ -58,7 +58,7 @@ blue glyph; a blue tile on a blue card is the icon disappearing. Derive the inne
 ink from the same flag you derive the surface from, never from the stage tone
 independently.
 
-`frost()` (translucent white card) exists in `scenes.mjs` but is no longer used by
+`frost()` (translucent white card) exists in `src/scenes.mjs` but is no longer used by
 any beat. If you reach for it, you are about to reintroduce this bug.
 
 **Exception, deliberate:** the dither field. `rgba(42,140,255,0.30)` crossed at
@@ -81,7 +81,7 @@ treatments. It applies to THE SPINE (`2px`) and to every converge object chip
 (`1.5px`) - a border set to the chip's own fill colour is a decorative no-op that
 leaves the tile looking borderless.
 
-`frost()` (translucent white card) exists in `scenes.mjs` but is no longer used by
+`frost()` (translucent white card) exists in `src/scenes.mjs` but is no longer used by
 the journey or split beats. If you reach for it, you are probably about to
 reintroduce this bug.
 
@@ -99,7 +99,7 @@ hierarchy — create it with weight and size.
 
 Tracking is `0` everywhere, including the wordmark. Negative tracking
 (`-0.03em` on display sizes) is the one exception HyperFrames recommends for
-video, and it is applied to display type only — see `TYPE` in `lkdesign.mjs`.
+video, and it is applied to display type only — see `TYPE` in `src/lkdesign.mjs`.
 
 A tracked-out wordmark is not the wordmark. The previous end card set
 `letter-spacing: .18em` on `LISTENINGKIT` and the lockup `.14em`; both are zero now.
@@ -177,7 +177,7 @@ Cuts used: Light 300, Regular 400, Medium 500, Bold 700, Black 900.
 
 HyperFrames' typography reference is blunt: *"Weight contrast must be extreme. You
 default to 400 vs 700. Video needs 300 vs 900."* This series was built at 700-vs-500
-and read as flat body copy at 96px. The scale in `lkdesign.mjs`:
+and read as flat body copy at 96px. The scale in `src/lkdesign.mjs`:
 
 | Role | Weight | Size |
 |---|---|---|
@@ -223,7 +223,7 @@ per beat so the edit keeps cutting between white-on-blue and blue-on-white.
 
 - **Tone is an input to the scene factory, never an override applied after.**
   Each factory computes `onBlue` internally and bakes text colour into markup.
-  `build-beats.mjs` passes `tone` in; it must never do `built.tone = x`
+  `src/build-beats.mjs` passes `tone` in; it must never do `built.tone = x`
   afterwards. That bug rendered blue-tone content on a white stage — white type,
   white cards, invisible.
 - **J-cuts**: each beat's animation starts `LEAD` (0.55s) before its narration
@@ -249,7 +249,7 @@ per beat so the edit keeps cutting between white-on-blue and blue-on-white.
   reconstructed product surfaces, but a reconstructed surface that is invisible is
   not representing the product, it is contradicting it.
 - **Generated `compositions/**` HTML must be rebuilt and committed with any source
-  change.** The journey-card fix landed in `scenes.mjs` and the committed
+  change.** The journey-card fix landed in `src/scenes.mjs` and the committed
   compositions still carried the old hardcoded `background:#FFFFFF` — every frame
   reviewed after that commit was a frame of the *previous* design. Run
   `npm run build` (both compositions) before committing.

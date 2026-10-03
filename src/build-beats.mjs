@@ -1,4 +1,4 @@
-﻿// Emits compositions/<slug>.html from storyboards.mjs + Deepgram word timings.
+// Emits compositions/<slug>.html from storyboards.mjs + Deepgram word timings.
 //
 // The visual layer is the ListeningKit design system, not a video-template look:
 // flat #2A8CFF / #FFFFFF stages (never a gradient), plain rounded-md/rounded-lg
@@ -11,13 +11,17 @@
 // offset is the J-cut: you see the next idea land before it is spoken.
 
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { beats as B } from "./scenes.mjs";
 import { ARCS } from "./storyboards.mjs";
 import { css } from "./lkchrome.mjs";
 import { C } from "./lkdesign.mjs";
 
-const ROOT = path.resolve(".");
+// Resolve from THIS file, never from the CWD. These modules now live in src/,
+// and a script that only works when invoked from the repo root is one npm-script
+// rename away from silently writing compositions to the wrong place.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "compositions");
 const INTRO = 0.8; // beat 0 must be on screen at t=0
 const XF = 0.45; // transition overlap
