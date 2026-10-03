@@ -105,3 +105,17 @@ Fix all errors before presenting the result. Warnings should be reviewed before 
 4. A video with sound keeps it on the `<video>` (`data-has-audio="true"`, no `muted`). Use a separate `<audio>` for music, voiceover, replacement audio, J/L cuts, or audio detached in Studio. Silent footage and b-roll: `muted`.
 5. Sub-compositions use `data-composition-src="compositions/file.html"` to reference other HTML files
 6. Only deterministic logic — no `Date.now()`, no `Math.random()`, no network fetches
+
+## The ListeningKit series (this repo's own rules)
+
+This project is the ListeningKit object-explainer series, generated from `src/` (storyboards +
+scene library + a motion director) into `compositions/`. Before touching a scene, a beat, a seam,
+the cursor or the camera, load the project skill **`/lk-motion-grammar`** and read:
+
+- `docs/MOTION_CRITERIA.md` — what a scene must *do* (M1–M12); pacing is enforced by `npm run lint:pacing`
+- `docs/SCENE_GRAMMAR.md` — the scene kinds, the beat format, what follows what
+- `DESIGN_SYSTEM.md` — what a frame may *look* like (card inversion, tiles, the outer stroke, no blur)
+- `docs/WORKFLOW.md` — build, review, commit; `npm run refs -- list` for the curated reference set
+
+Order of operations for a change: `npm run lint` → `npm run build` → `npm run review` (read the
+frames) → `npm run check` → commit. Generated `compositions/**` is committed with every source change.

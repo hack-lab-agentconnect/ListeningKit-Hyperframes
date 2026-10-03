@@ -20,6 +20,31 @@ pre-commit:
       # tree, loose unorganised files at the root, and committed secrets.
       run: node scripts/lint-repo.mjs
 
+    springs:
+      # The motion maths: closed-form springs (overshoot, the peak the pointer waits for, one spring per change,
+      # the camera zoom) and the pointer model. Pure functions of time, checked offline.
+      glob: "{src/lkspring.mjs,src/lkpointer.mjs,src/lkdirector.mjs,scripts/test-spring.mjs,scripts/test-pointer.mjs,docs/ANIMATION.md}"
+      run: node scripts/test-spring.mjs && node scripts/test-pointer.mjs
+
+    colour:
+      # The OKLCH lip: derived from each element's own colour at render time (lightness down, hue and chroma kept).
+      glob: "{src/lkcolor.mjs,src/lkextrude.mjs,scripts/test-color.mjs}"
+      run: node scripts/test-color.mjs
+
+    components:
+      # Renders every registered component with its own sample and checks the anatomy (card, tile,
+      # icon, text; scale only; solid; extruded; pointer targets resolve; one source of truth).
+      glob: "{src/**,scripts/lint-components.mjs,docs/COMPONENTS.md}"
+      run: node scripts/lint-components.mjs
+
+    transitions:
+      # Regenerates the sample of EVERY registered transition and checks it against the method in
+      # docs/TRANSITION_FX.md (mask not overlay, one adjustment layer, pointer on top, no fades,
+      # extruded 3D items, 3 x 2 px rings, deterministic). stage_fixed so a stale sample cannot ship.
+      glob: "{src/**,scripts/lint-transitions.mjs,docs/TRANSITION_FX.md}"
+      run: node scripts/lint-transitions.mjs
+      stage_fixed: true
+
     build:
       # Regenerate the compositions and stage them, so a stale build can never
       # ship. `compositions/` is committed on purpose — Studio and the renderer
@@ -36,8 +61,9 @@ pre-commit:
       stage_fixed: false
 
 pre-push:
+  # Everything, not a subset: the whole of `npm run lint` (design system, pacing, pointer model,
+  # transition/fx maths, transition samples, repo hygiene). Nothing the docs describe can be pushed
+  # unless the code and the samples still obey it.
   commands:
-    design-system:
-      run: node scripts/lint-design.mjs
-    repo-hygiene:
-      run: node scripts/lint-repo.mjs
+    all-lints:
+      run: npm run lint

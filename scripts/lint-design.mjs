@@ -37,6 +37,18 @@ const SOURCES = [
   "src/lkchrome.mjs",
   "src/lkicons.mjs",
   "src/storyboards.mjs",
+  "src/lksatellites.mjs",
+  "src/lkdirector.mjs",
+  "src/lkmotion.mjs",
+  // the shared components (card, tile, pill, chip, table): the card and table code moved here from scenes.mjs
+  "src/components/card/index.mjs",
+  "src/components/tile/index.mjs",
+  "src/components/pill/index.mjs",
+  "src/components/chip/index.mjs",
+  "src/components/table/index.mjs",
+  "src/components/anatomy.mjs",
+  "src/components/satellite/index.mjs",
+  "src/components/layout.mjs",
 ];
 
 /** Opaque fills that must not appear on a surface. */
@@ -138,6 +150,50 @@ const RULES = [
     },
     why: "the end card shipped a blank white square because of this filter (DESIGN_SYSTEM 1.7)",
   },
+  {
+    id: "no-blur",
+    test: (line) => {
+      if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
+      if (/(backdrop-)?filter\s*:\s*blur\(|["'`]blur\(|\bblur\(\$\{/.test(line) && !/never blur|no blur|ban/i.test(line)) {
+        return "blur - foreground separates from background by the black outer stroke, scale and depth, never by defocus (DESIGN_SYSTEM 1.8)";
+      }
+      return null;
+    },
+    why: "blur was how the earlier cuts and focus treatments faked depth; the decision (matt, 2026-10-03) is edge and depth instead",
+  },
+  {
+    id: "no-bare-drop",
+    test: (line) => {
+      if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
+      // An element's shadow comes from hardDrop(), which carries the black outer stroke.
+      // A hand-written `0 6px 0 0 <colour>` is a card without its outline.
+      // The logo is a brand asset with its own treatment (DESIGN_SYSTEM 1.7): a hard drop
+      // and nothing else. It is the one exemption.
+      if (/\.ecmark/.test(line)) return null;
+      if (/box-shadow\s*:\s*0 \$\{SHADOW\./.test(line) && !/hardDrop/.test(line)) {
+        return "hand-written drop shadow - use hardDrop() so the element carries the outer stroke (DESIGN_SYSTEM 1.8)";
+      }
+      return null;
+    },
+    why: "a card without the outer black stroke is the one element that does not separate from its backdrop (DESIGN_SYSTEM 1.8)",
+  },
+  {
+    id: "no-fade",
+    test: (line) => {
+      if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
+      // An element ENTERS by scale 0 -> 1 with overshoot and LEAVES by scale 1 -> 0. It is never
+      // tweened or hidden by opacity: no `opacity: 0` / `opacity: 1` in an animation, no inline
+      // `opacity:0` to hide it first. Four honest exceptions are marked on their own line:
+      //   blink-ok (an instant steps(1) caret), swap-ok (arrow/hand sprite swap), timing-carrier-ok
+      //   (a zero-size marker that only carries time), flare-ok (the exposure flare light overlay).
+      if (/(blink|swap|timing-carrier|flare|fade)-ok/.test(line)) return null;
+      if (/\bopacity\s*:\s*[01](?![.\d])/.test(line) || /\bopacity\s*:\s*0\.\d+\s*[,}]/.test(line) && /(tl|gsap)\./.test(line)) {
+        return "opacity animation or hiding - elements enter by scale 0 -> 1 and leave by scale 1 -> 0 (DESIGN_SYSTEM 4)";
+      }
+      return null;
+    },
+    why: "matt, 2026-10-03: we always start from scale 0 to 1, never opacity 0 to 1; we do not use fades",
+  },
 ];
 
 /* Resolve the real export names so the undefined-token rule is not guesswork.
@@ -205,6 +261,45 @@ function scan(rel, text) {
   });
 }
 
+/**
+ * no-cheap-ease is a repo-wide rule, not a per-surface one: it runs over EVERY source in src/ (builders, scenes,
+ * transitions, components), except lkspring.mjs, which defines the springs.
+ */
+const CHEAP = {
+  id: "no-cheap-ease",
+  why: "cheap motion eases A to B on a fixed curve; expensive motion accelerates, overshoots a hair, settles (docs/ANIMATION.md). One spring system means every scene, component and transition moves with the same feel",
+  test: (line) => {
+    if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
+    if (/["'`]back\.(out|in|inOut)\b/.test(line)) return "a fixed-curve overshoot ease: entrances and exits have MASS - use a spring from lkspring.mjs (__spr.pop / snap / soft, __spr.popIn for exits; 'spr:pop' in component steps)";
+    return null;
+  },
+};
+const walk = (dir) => fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(`${dir}/${e.name}`) : /\.mjs$/.test(e.name) ? [`${dir}/${e.name}`] : []));
+/**
+ * no-plane-dip: a RETURN TO A SURFACE must not overshoot. An element lifted off its card (z > 0) that comes back to z = 0
+ * on an overshooting spring dips below the card plane, BEHIND the card's opaque face, and vanishes for the frames it spends
+ * there (a row disappeared when the pointer moved to the next one). A tween that sets `z: 0` must use `__spr.settle`
+ * (critically damped), or `spr:settle` in component steps.
+ */
+const DIP = {
+  id: "no-plane-dip",
+  test: (line) => {
+    if (/^\s*(\/\*|\*|\/\/)/.test(line)) return null;
+    if (/\bz:\s*0\b(?!\.)/.test(line) && /__spr\.(soft|pop|snap|row|cam)\b|spr:(soft|pop|snap|row)\b/.test(line) && !/from/.test(line)) {
+      return "returns to z = 0 on an overshooting spring: it dips BEHIND the card plane and the element vanishes. Use __spr.settle (spr:settle in component steps)";
+    }
+    return null;
+  },
+};
+let cheapScanned = 0;
+for (const rel of walk("src")) {
+  if (rel === "src/lkspring.mjs") continue;
+  cheapScanned++;
+  fs.readFileSync(path.join(ROOT, rel), "utf8").split(/\r?\n/).forEach((line, i) => {
+    for (const R of [CHEAP, DIP]) { const msg = R.test(line); if (msg) { failures++; report.push(`  ${rel}:${i + 1}  [${R.id}] ${msg}`); } }
+  });
+}
+
 for (const rel of SOURCES) {
   const abs = path.join(ROOT, rel);
   if (!fs.existsSync(abs)) continue;
@@ -218,4 +313,4 @@ if (failures) {
   process.exit(1);
 }
 
-console.log(`✓ design-system lint clean (${RULES.length} rules, ${SOURCES.length} sources)`);
+console.log(`✓ design-system lint clean (${RULES.length + 2} rules, ${SOURCES.length} sources, no-cheap-ease over ${cheapScanned} files in src/)`);

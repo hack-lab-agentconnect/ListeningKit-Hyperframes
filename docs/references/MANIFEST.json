@@ -1,0 +1,181 @@
+{
+  "about": "The curated reference set for this repo's motion language. Every entry is something already published that a ListeningKit scene borrows an idea from. `vendor: true` entries are pulled into docs/references/vendor/ by `npm run refs -- pull`, with provenance, so they can be read offline and by an agent without network. Nothing here is a runtime dependency: scenes are built from src/ and never import vendored files.",
+  "how": [
+    "npm run refs -- list                      show this manifest",
+    "npm run refs -- pull [id|--all]           fetch vendored files via the GitHub API into docs/references/vendor/<id>/",
+    "npm run refs -- search \"<terms>\" [repo]   code search across the allowed repos (gh api search/code)",
+    "npm run refs -- read <repo> <path>        print one file from a repo, raw",
+    "npm run refs -- tree <repo> [prefix]      list a repo's files"
+  ],
+  "allowedRepos": [
+    "heygen-com/hyperframes",
+    "heygen-com/hyperframes-community-skills",
+    "opusvideo/awesome-claude-video",
+    "yihui-dev/awesome-opus5-5-videos",
+    "zhuyansen/awesome-opus-5.5-video",
+    "bilaldemirerr/opus-video-recipes"
+  ],
+  "entries": [
+    {
+      "id": "caption-camera-follow",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/caption-camera-follow/caption-camera-follow.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "A camera that follows the content instead of the content moving: every pose is FITTED to the measured box of what is on screen, on a hand-solved cubic bezier.",
+      "takeaways": [
+        "fit each camera pose to a MEASURED bounding box, never a typed coordinate",
+        "cubic-bezier ease solved in-file (Newton, bisection fallback): deterministic, any overshoot you like",
+        "one shared amount tweened per move, each element carries its own share (radial smear)"
+      ],
+      "usedBy": "src/lkdirector.mjs  __dir.bez(), __dir.camera(), __dir.centre()",
+      "notTaken": "its word-by-word text layout: the subtitles stay normal bottom captions (matt, 2026-10-03)"
+    },
+    {
+      "id": "editorial-flash-overlay",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/blocks/editorial-flash-overlay/editorial-flash-overlay.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "A finite, seek-safe exposure flash used to hide a cut.",
+      "takeaways": ["light layers with finite duration, no looping CSS", "the cut happens at the peak, not before or after it"],
+      "usedBy": "src/build-beats.mjs  the .flash layer and the seam timeline"
+    },
+    {
+      "id": "camera-rig-depth-stack",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/camera-rig-depth-stack/camera-rig-depth-stack.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "A card stack at different depths under a camera rig: the parallax idea behind the depth set.",
+      "takeaways": ["perspective on a stable parent, preserve-3d on the world, z per layer", "the camera is the only thing that moves the layers relative to each other"],
+      "usedBy": "src/lksatellites.mjs, src/lkdirector.mjs __dir.pose()"
+    },
+    {
+      "id": "tilt-card",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/tilt-card/tilt-card.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "Card tilt with depth layers: how a flat card gets a tilt that reads as a surface.",
+      "takeaways": ["rotationX/Y small (<= 10deg), perspective from the parent", "inner layers at their own z"],
+      "usedBy": "src/lkdirector.mjs camera tilt (rx/ry per shot)"
+    },
+    {
+      "id": "spring-pop",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/spring-pop/spring-pop.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "A badge that pops in from a visible near-rest scale, overshoots once and settles.",
+      "takeaways": ["start from a visible scale (not 0) for the card itself", "one overshoot, then settle"],
+      "usedBy": "src/lkdirector.mjs __dir.anatomy()"
+    },
+    {
+      "id": "spotlight-card",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/spotlight-card/spotlight-card.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "A card with a scripted cursor spotlight: a pointer that is part of the choreography, not an overlay.",
+      "takeaways": ["the cursor's path is authored data, evaluated from time", "the element reacts to the pointer arriving"],
+      "usedBy": "src/lkdirector.mjs __dir.cursor()"
+    },
+    {
+      "id": "yt-camera-move",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/yt-camera-move/yt-camera-move.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "Dynamic zoom, slide and 3D tilt-pan helpers for any wrapper, with cubic-easing defaults.",
+      "takeaways": ["move the WRAPPER, never the media", "zoom and tilt are one move"],
+      "usedBy": "src/lkdirector.mjs __dir.camera()"
+    },
+    {
+      "id": "notification-stack",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/notification-stack/notification-stack.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "Cards slide-settle into a stack on cues, newest on top: entrances driven by cue times rather than fixed offsets.",
+      "takeaways": ["entrance times come from a cue list", "one card is grown slightly to carry focus"],
+      "usedBy": "src/lkdirector.mjs __dir.retime()"
+    },
+    {
+      "id": "beat-accent",
+      "repo": "heygen-com/hyperframes",
+      "files": ["registry/components/beat-accent/beat-accent.html"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "A single hit: impact flash, micro scale-pulse on the subject, immediate decay.",
+      "takeaways": ["a hit is a flash plus a pulse plus a fast decay, never a held glow"],
+      "usedBy": "src/build-beats.mjs seam flare"
+    },
+    {
+      "id": "camera-3d-captions",
+      "repo": "heygen-com/hyperframes-community-skills",
+      "files": [
+        "skills/camera-3d-captions/SKILL.md",
+        "skills/camera-3d-captions/references/recipes.md",
+        "skills/camera-3d-captions/assets/kit/cam3d.js"
+      ],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "The depth-group grammar: groups at different distances so camera moves pull them apart by parallax; focus follows depth; a whip-in that never lands.",
+      "takeaways": [
+        "every group gets its own depth; near is bigger, far is smaller and slower",
+        "the camera creep keeps a held shot alive",
+        "rules for keeping everything inside the frame (frame-bounds check)"
+      ],
+      "usedBy": "src/lksatellites.mjs (depth groups), src/lkdirector.mjs creep",
+      "notTaken": "text in 3D, matte and talking-head plate: this series has no speaker and keeps normal subtitles"
+    },
+    {
+      "id": "gsap-easing-and-stagger",
+      "repo": "heygen-com/hyperframes",
+      "files": ["skills/hyperframes-animation/adapters/gsap-easing-and-stagger.md"],
+      "license": "Apache-2.0",
+      "vendor": true,
+      "why": "The framework's own guidance on easing and stagger, including that back.out(1.7) is a deliberate playful register.",
+      "takeaways": ["power3.out is the house entrance", "overshoot is a decision, and here it is the decision: the series is cartoon-cinematic"],
+      "usedBy": "docs/MOTION_CRITERIA.md M5"
+    },
+    {
+      "id": "awesome-claude-video",
+      "repo": "opusvideo/awesome-claude-video",
+      "files": ["README.md", "IMPLEMENTATION_GUIDES.md"],
+      "license": "none declared",
+      "vendor": false,
+      "why": "Curated Opus 5.5 videos with originals and prompts; the implementation guide for the beat-synced UI morph loop is the source of 'a visible cursor must cause every click'.",
+      "takeaways": ["a visible cursor causes every click and drag", "ban dead time", "render one still per beat before the full pass"],
+      "usedBy": "docs/MOTION_CRITERIA.md M4, M8"
+    },
+    {
+      "id": "awesome-opus5-5-videos",
+      "repo": "yihui-dev/awesome-opus5-5-videos",
+      "files": ["README.md"],
+      "license": "unchecked",
+      "vendor": false,
+      "why": "The largest collection of viral Opus 5.5 videos with prompts. Search it by phrase for motion-heavy product work.",
+      "usedBy": "research only"
+    },
+    {
+      "id": "awesome-opus-5.5-video",
+      "repo": "zhuyansen/awesome-opus-5.5-video",
+      "files": ["README.md"],
+      "license": "unchecked",
+      "vendor": false,
+      "why": "A 'Product demos & ads' section with original posts and many full prompts.",
+      "usedBy": "research only"
+    },
+    {
+      "id": "opus-video-recipes",
+      "repo": "bilaldemirerr/opus-video-recipes",
+      "files": ["kinetic-typography-explainer/index.html", "captioned-vertical-clip/index.html"],
+      "license": "MIT",
+      "vendor": false,
+      "why": "Real HyperFrames compositions with the exact prompts: useful as worked examples of the composition contract.",
+      "usedBy": "research only"
+    }
+  ]
+}

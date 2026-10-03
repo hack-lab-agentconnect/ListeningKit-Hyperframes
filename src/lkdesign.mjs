@@ -26,6 +26,11 @@ export const C = {
   // #2A8CFF is the card disappearing, and the hard drop's grey is a shadow,
   // not a stroke: putting the shadow ink on the border read as two unrelated
   // treatments. One lightened blue, both stages, no exceptions.
+  // The OUTER stroke on every element and every caption word (DESIGN_SYSTEM 1.8):
+  // a near-black with a hint of the brand ink, so it reads as the system's own
+  // outline rather than a stray #000. Decided with matt 2026-10-03: depth between
+  // foreground and background comes from this stroke, never from blur or dimming.
+  outline: "#0A0F1A",
   blueGradTop: "#3B9BFF", // button.tsx:25 (blue-gradient)
   blueGradBot: "#2B7FFF", // button.tsx:25
   blueText: "#2B7FFF", // button.tsx:26, SquircleBadge.tsx:18
@@ -97,7 +102,15 @@ export const SHADOW = {
 };
 
 /** The one card shadow: a flat grey block below, no blur. */
-export const hardDrop = (y = SHADOW.y, color = SHADOW.grey) => `0 ${y}px 0 0 ${color}`;
+/**
+ * The OUTER stroke + drop of every element (DESIGN_SYSTEM 1.8): a 4px black ring,
+ * then the same ring shifted down by `y`, so the element sits on the stage with a
+ * hard black edge and a flat drop. `color` is accepted for the old call sites and
+ * ignored: a coloured drop under a black stroke is a third treatment, and the whole
+ * point of the stroke is that foreground and background separate by edge, not by
+ * blur or by tinted shadow.
+ */
+export const hardDrop = (y = SHADOW.y, color = SHADOW.grey) => `0 0 0 4px ${C.outline}, 0 ${y}px 0 4px ${C.outline}`; // eslint-disable-line no-unused-vars
 
 /* -------------------------------------------------------------------- dither */
 

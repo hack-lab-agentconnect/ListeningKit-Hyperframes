@@ -135,13 +135,13 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .ic{display:block;flex:none;overflow:visible}
 .ico{display:flex;flex:none;align-items:center;justify-content:center;
  width:72px;height:72px;border-radius:8px;
- background:#2A8CFF;color:#FFFFFF}
+ background:#2A8CFF;color:#FFFFFF;box-shadow:0 0 0 3px #0A0F1A}
 .ico.on-white{background:#EFF6FF;color:#2A8CFF}
 /* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
    a blue glyph. A blue tile on a blue card is the icon disappearing, which is
    the exact failure the white-stage cards had. */
 .ico.on-bluecard{background:#FFFFFF;color:#2A8CFF}
-.ico.plain{background:none;width:auto;height:auto;color:inherit}
+.ico.plain{background:none;width:auto;height:auto;color:inherit;box-shadow:none}
 /* Compact tile for a chip / inline row, where the 72px panel tile would make the
    label wrap. Same colour rule as .ico - solid brand blue with a white glyph on
    a white card, inverted to solid white with a blue glyph on a blue card. */
@@ -188,12 +188,14 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .wave{display:flex;align-items:flex-end;gap:4px;height:92px;padding:18px 28px}
 .wave i{flex:1;height:var(--h);border-radius:3px;transform-origin:bottom}
 
+/* ---- data table: moved to src/components/table (its css lives with the component) */
+
 /* ---- working / progress theater */
 .wrow{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:14px}
 .spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(127,127,127,.2);
  border-top-color:currentColor}
 .wrow[data-state=done] .spin{display:none}
-.chk{width:30px;height:30px;margin-left:auto;opacity:0}
+.chk{width:30px;height:30px;margin-left:auto}
 .chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
@@ -207,11 +209,30 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
    pointer.svg is the dark arrow with a light outline, so it survives on both
    the blue and the white stage without a second asset. Sized large on purpose:
    at 34px it read as a speck on a 1920 frame. */
-/* 168px, not 96. On a 1920 frame a cursor is a focal object, not an ornament:
-   at 96 it still read as a UI speck rather than "someone is using this". */
-.cursor{position:absolute;z-index:75;width:168px;height:168px;pointer-events:none;
- background-repeat:no-repeat;background-position:top left;background-size:contain;
- background-image:url('assets/cursors/pointer.svg')}
+/* The cursor art is cropped to the arrow itself (viewBox 0 0 34 38) and drawn at
+   exactly 2x: 68x76 px, arrow tip at (10,10) inside the box. It used to be an
+   80x64 canvas with a 30px arrow in one corner, drawn at 168px - so the "large
+   cursor" was a 63px arrow floating in 100px of nothing, and its tip sat ~10px
+   off wherever it was aimed. Size and hotspot now mean what they say, and the
+   director (lkdirector.mjs) aims the TIP at a measured element.
+   left/top are pinned to 0 so a GSAP x/y is a stage coordinate, not an offset
+   from wherever a flex container decided an inset-less box should sit. */
+.cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:75;pointer-events:none}
+/* Three states stacked on one anchor, each offset so ITS hotspot sits on the anchor:
+     .cs-n  the arrow           viewBox 0 0 34 38   at 2.4x -> tip at (12,12)
+     .cs-h  the open hand       viewBox -6 -6 89 75 at 2x   -> middle fingertip (40,4)
+     .cs-c  the pointing hand   viewBox -6 -6 89 75 at 2x   -> fingertip (30,4)
+   The director switches them (arrow -> hand on hover -> pointing hand on the press ->
+   arrow). Only the active one has opacity 1. The cursor is the subject of every scene,
+   so it is drawn large: ~90px of arrow on a 1920 frame. */
+.cursor .cs{position:absolute;display:block;opacity:0;background-repeat:no-repeat;background-size:100% 100%} /* swap-ok: sprite swap */
+.cursor .cs-n{left:-12px;top:-12px;width:82px;height:91px;opacity:1;background-image:url('assets/cursors/pointer.svg')} /* swap-ok */
+.cursor .cs-h{left:-40px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/hover.svg')}
+.cursor .cs-c{left:-30px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/click.svg')}
+/* The click ripple. A ring, because it is a transient effect, never a surface. */
+.ripple{position:absolute;left:0;top:0;z-index:74;width:80px;height:80px;border-radius:50%;
+ pointer-events:none;border:4px solid #7FBAFF}
+.ripple.on-blue{border-color:#FFFFFF}
 
 /* ---- how a Twenty object is NAMED on screen.
    The camelCase API name was being set in the same weight and size as the
@@ -233,12 +254,62 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
 
+/* ---- extrusion (lkextrude.mjs): a host that is a slab, and its slices */
+/* A slab is OWNED by its host: the host is the slices' containing block (position:relative), so the extrusion
+   moves, scales and rotates with the element and can never be positioned off some other layer. Without this the
+   absolutely-positioned slices attach to the nearest positioned ancestor the moment the host's own transform
+   clears at rest: the "extruded off the layer the div is on" bug. */
+.x3d{transform-style:preserve-3d;position:relative}
+/* the chain of preserve-3d: a slab sitting under a flat wrapper is flattened into the plane, so everything inside
+   the stage keeps the 3D context (overflow:hidden leaves flatten themselves, which is fine: they have no slab) */
+.stagec,.stagec *:not(svg):not(svg *){transform-style:preserve-3d}
+.xl{position:absolute;pointer-events:none;border-radius:inherit;background:currentColor} /* the runtime replaces it with the derived lip */
+
+
+.pillc{display:flex;align-items:center;gap:20px;padding:0 28px 0 12px;font:900 34px/1 'Satoshi',sans-serif;white-space:nowrap}
+.pillc .ico{width:64px;height:64px}
+
+
+/* ---- components/table: header band, column heads, rows that each rise on their own.
+   Plain grid, no <table>: every cell animates. */
+.tcols,.trow{display:grid;align-items:center;gap:18px;padding:14px 30px}
+.tcols{padding-top:18px;padding-bottom:6px}
+.tch{display:flex;align-items:center;gap:12px;font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+.tbody{display:flex;flex-direction:column;gap:10px;padding:6px 18px 26px}
+.trow{border-radius:14px;font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:500;text-align:left}
+.trow .tc:first-child{font-weight:900}
+.tc{white-space:nowrap;overflow:hidden;text-overflow:clip}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+
 /* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
 .ovbox{z-index:3}
-.ovcard{position:absolute;left:50%;top:50%;margin:-52px 0 0 -260px;z-index:2;text-align:center}
+/* .ovorb is the orbiting anchor (GSAP positions it on an ellipse); .ovcard sits
+   centred on it and is what flies in. Two elements so the orbit and the entrance
+   never write the same transform. */
+.ovorb{position:absolute;left:50%;top:50%;width:0;height:0;z-index:2}
+.ovcard{position:absolute;left:0;top:0;text-align:left}
+.ovt{font-size:36px;font-weight:700;line-height:1.15;white-space:nowrap}
 
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
@@ -246,7 +317,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 /* The number's own line box is taller than its glyphs, so the eyebrow sitting
    directly above it sat INSIDE that box on the counted beats. Breathing room
    here is what keeps the kicker legible rather than relying on the gap alone. */
-.count{margin-top:22px}
+.count{margin-top:64px;margin-bottom:48px}
 
 /* record panel + note callout */
 .pan{z-index:2}
@@ -284,7 +355,8 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 
 /* the wipe sheet a section transition crosses the frame on. It sits above the
    stage and below nothing, so the beat it covers is fully hidden by it. */
-.wipesheet{position:absolute;inset:0;z-index:40;background:#2A8CFF;opacity:0;pointer-events:none}
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
   // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
 
 .fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
@@ -293,6 +365,23 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
 .fxtick{display:flex;align-items:center}
 
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
 </style>
   </head>
   <body>
@@ -300,47 +389,74 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
       <div class="stages" data-a="stages">
         <div class="stage white" data-s="0" style="opacity:0"></div>
         <div class="stage " data-s="1" style="opacity:0"></div>
-        <div class="stage white" data-s="2" style="opacity:0"></div>
-        <div class="stage " data-s="3" style="opacity:0"></div>
-        <div class="stage white" data-s="4" style="opacity:0"></div>
-        <div class="stage " data-s="5" style="opacity:0"></div>
-        <div class="stage white" data-s="6" style="opacity:0"></div>
-        <div class="stage " data-s="7" style="opacity:0"></div>
-        <div class="stage white" data-s="8" style="opacity:0"></div>
-        <div class="stage " data-s="9" style="opacity:0"></div>
-        <div class="stage white" data-s="10" style="opacity:0"></div>
+        <div class="stage " data-s="2" style="opacity:0"></div>
+        <div class="stage white" data-s="3" style="opacity:0"></div>
+        <div class="stage " data-s="4" style="opacity:0"></div>
+        <div class="stage white" data-s="5" style="opacity:0"></div>
+        <div class="stage " data-s="6" style="opacity:0"></div>
+        <div class="stage white" data-s="7" style="opacity:0"></div>
+        <div class="stage " data-s="8" style="opacity:0"></div>
+        <div class="stage white" data-s="9" style="opacity:0"></div>
+        <div class="stage " data-s="10" style="opacity:0"></div>
         <div class="stage " data-s="11" style="opacity:0"></div>
         <div class="stage white" data-s="12" style="opacity:0"></div>
         <div class="stage " data-s="13" style="opacity:0"></div>
-        <div class="stage white" data-s="14" style="opacity:0"></div>
-        <div class="stage " data-s="15" style="opacity:0"></div>
-        <div class="stage white" data-s="16" style="opacity:0"></div>
-        <div class="stage " data-s="17" style="opacity:0"></div>
+        <div class="stage " data-s="14" style="opacity:0"></div>
+        <div class="stage white" data-s="15" style="opacity:0"></div>
+        <div class="stage " data-s="16" style="opacity:0"></div>
+        <div class="stage white" data-s="17" style="opacity:0"></div>
         <div class="stage " data-s="18" style="opacity:0"></div>
+        <div class="stage white" data-s="19" style="opacity:0"></div>
+        <div class="stage " data-s="20" style="opacity:0"></div>
+        <div class="stage white" data-s="21" style="opacity:0"></div>
+        <div class="stage " data-s="22" style="opacity:0"></div>
+        <div class="stage white" data-s="23" style="opacity:0"></div>
+        <div class="stage " data-s="24" style="opacity:0"></div>
+        <div class="stage white" data-s="25" style="opacity:0"></div>
+        <div class="stage white" data-s="26" style="opacity:0"></div>
+        <div class="stage " data-s="27" style="opacity:0"></div>
+        <div class="stage white" data-s="28" style="opacity:0"></div>
+        <div class="stage " data-s="29" style="opacity:0"></div>
+        <div class="stage white" data-s="30" style="opacity:0"></div>
+        <div class="stage " data-s="31" style="opacity:0"></div>
       </div>
       <div id="dither"></div>
-      <div class="wipesheet"></div>
+      <div class="flash"></div>
       
 
-      <div class="clip beat" id="beat-0" data-b="0" data-composition-id="agency-calls-b0" data-composition-src="compositions/agency-calls/b0.html" data-start="0.8" data-duration="7" data-track-index="1"></div>
-      <div class="clip beat" id="beat-1" data-b="1" data-composition-id="agency-calls-b1" data-composition-src="compositions/agency-calls/b1.html" data-start="6.25" data-duration="15.5" data-track-index="2"></div>
-      <div class="clip beat" id="beat-2" data-b="2" data-composition-id="agency-calls-b2" data-composition-src="compositions/agency-calls/b2.html" data-start="20.75" data-duration="10.7" data-track-index="3"></div>
-      <div class="clip beat" id="beat-3" data-b="3" data-composition-id="agency-calls-b3" data-composition-src="compositions/agency-calls/b3.html" data-start="30.45" data-duration="8.8" data-track-index="4"></div>
-      <div class="clip beat" id="beat-4" data-b="4" data-composition-id="agency-calls-b4" data-composition-src="compositions/agency-calls/b4.html" data-start="38.25" data-duration="6" data-track-index="5"></div>
-      <div class="clip beat" id="beat-5" data-b="5" data-composition-id="agency-calls-b5" data-composition-src="compositions/agency-calls/b5.html" data-start="43.25" data-duration="8" data-track-index="6"></div>
-      <div class="clip beat" id="beat-6" data-b="6" data-composition-id="agency-calls-b6" data-composition-src="compositions/agency-calls/b6.html" data-start="50.25" data-duration="11.3" data-track-index="7"></div>
-      <div class="clip beat" id="beat-7" data-b="7" data-composition-id="agency-calls-b7" data-composition-src="compositions/agency-calls/b7.html" data-start="60.55" data-duration="10.1" data-track-index="8"></div>
-      <div class="clip beat" id="beat-8" data-b="8" data-composition-id="agency-calls-b8" data-composition-src="compositions/agency-calls/b8.html" data-start="69.65" data-duration="14.5" data-track-index="9"></div>
-      <div class="clip beat" id="beat-9" data-b="9" data-composition-id="agency-calls-b9" data-composition-src="compositions/agency-calls/b9.html" data-start="83.15" data-duration="7.2" data-track-index="10"></div>
-      <div class="clip beat" id="beat-10" data-b="10" data-composition-id="agency-calls-b10" data-composition-src="compositions/agency-calls/b10.html" data-start="89.35" data-duration="15.5" data-track-index="11"></div>
-      <div class="clip beat" id="beat-11" data-b="11" data-composition-id="agency-calls-b11" data-composition-src="compositions/agency-calls/b11.html" data-start="103.85" data-duration="13.6" data-track-index="12"></div>
-      <div class="clip beat" id="beat-12" data-b="12" data-composition-id="agency-calls-b12" data-composition-src="compositions/agency-calls/b12.html" data-start="116.45" data-duration="7.7" data-track-index="13"></div>
-      <div class="clip beat" id="beat-13" data-b="13" data-composition-id="agency-calls-b13" data-composition-src="compositions/agency-calls/b13.html" data-start="123.15" data-duration="15.8" data-track-index="14"></div>
-      <div class="clip beat" id="beat-14" data-b="14" data-composition-id="agency-calls-b14" data-composition-src="compositions/agency-calls/b14.html" data-start="137.95" data-duration="12.2" data-track-index="15"></div>
-      <div class="clip beat" id="beat-15" data-b="15" data-composition-id="agency-calls-b15" data-composition-src="compositions/agency-calls/b15.html" data-start="149.15" data-duration="16.9" data-track-index="16"></div>
-      <div class="clip beat" id="beat-16" data-b="16" data-composition-id="agency-calls-b16" data-composition-src="compositions/agency-calls/b16.html" data-start="165.05" data-duration="14.8" data-track-index="17"></div>
-      <div class="clip beat" id="beat-17" data-b="17" data-composition-id="agency-calls-b17" data-composition-src="compositions/agency-calls/b17.html" data-start="178.85" data-duration="15" data-track-index="18"></div>
-      <div class="clip beat" id="beat-18" data-b="18" data-composition-id="agency-calls-b18" data-composition-src="compositions/agency-calls/b18.html" data-start="192.85" data-duration="8.55" data-track-index="19"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-0" data-b="0" data-composition-id="agency-calls-b0" data-composition-src="compositions/agency-calls/b0.html" data-start="0.8" data-duration="5.5" data-track-index="1"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-1" data-b="1" data-composition-id="agency-calls-b1" data-composition-src="compositions/agency-calls/b1.html" data-start="4.55" data-duration="10.54" data-track-index="2"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-2" data-b="2" data-composition-id="agency-calls-b2" data-composition-src="compositions/agency-calls/b2.html" data-start="13.99" data-duration="8.15" data-track-index="3"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-3" data-b="3" data-composition-id="agency-calls-b3" data-composition-src="compositions/agency-calls/b3.html" data-start="21.04" data-duration="5.98" data-track-index="4"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-4" data-b="4" data-composition-id="agency-calls-b4" data-composition-src="compositions/agency-calls/b4.html" data-start="25.92" data-duration="5.83" data-track-index="5"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-5" data-b="5" data-composition-id="agency-calls-b5" data-composition-src="compositions/agency-calls/b5.html" data-start="30.65" data-duration="4.64" data-track-index="6"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-6" data-b="6" data-composition-id="agency-calls-b6" data-composition-src="compositions/agency-calls/b6.html" data-start="34.19" data-duration="5.26" data-track-index="7"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-7" data-b="7" data-composition-id="agency-calls-b7" data-composition-src="compositions/agency-calls/b7.html" data-start="38.35" data-duration="6.09" data-track-index="8"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-8" data-b="8" data-composition-id="agency-calls-b8" data-composition-src="compositions/agency-calls/b8.html" data-start="43.34" data-duration="8.01" data-track-index="9"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-9" data-b="9" data-composition-id="agency-calls-b9" data-composition-src="compositions/agency-calls/b9.html" data-start="50.25" data-duration="5.39" data-track-index="10"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-10" data-b="10" data-composition-id="agency-calls-b10" data-composition-src="compositions/agency-calls/b10.html" data-start="54.54" data-duration="7.31" data-track-index="11"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-11" data-b="11" data-composition-id="agency-calls-b11" data-composition-src="compositions/agency-calls/b11.html" data-start="60.75" data-duration="10.1" data-track-index="12"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-12" data-b="12" data-composition-id="agency-calls-b12" data-composition-src="compositions/agency-calls/b12.html" data-start="69.75" data-duration="7.36" data-track-index="13"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-13" data-b="13" data-composition-id="agency-calls-b13" data-composition-src="compositions/agency-calls/b13.html" data-start="76.01" data-duration="8.46" data-track-index="14"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-14" data-b="14" data-composition-id="agency-calls-b14" data-composition-src="compositions/agency-calls/b14.html" data-start="83.37" data-duration="7.22" data-track-index="15"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-15" data-b="15" data-composition-id="agency-calls-b15" data-composition-src="compositions/agency-calls/b15.html" data-start="89.49" data-duration="3.66" data-track-index="16"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-16" data-b="16" data-composition-id="agency-calls-b16" data-composition-src="compositions/agency-calls/b16.html" data-start="92.05" data-duration="9.62" data-track-index="17"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-17" data-b="17" data-composition-id="agency-calls-b17" data-composition-src="compositions/agency-calls/b17.html" data-start="100.57" data-duration="4.58" data-track-index="18"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-18" data-b="18" data-composition-id="agency-calls-b18" data-composition-src="compositions/agency-calls/b18.html" data-start="104.05" data-duration="4.9" data-track-index="19"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-19" data-b="19" data-composition-id="agency-calls-b19" data-composition-src="compositions/agency-calls/b19.html" data-start="107.85" data-duration="9.87" data-track-index="20"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-20" data-b="20" data-composition-id="agency-calls-b20" data-composition-src="compositions/agency-calls/b20.html" data-start="116.62" data-duration="7.82" data-track-index="21"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-21" data-b="21" data-composition-id="agency-calls-b21" data-composition-src="compositions/agency-calls/b21.html" data-start="123.34" data-duration="8.8" data-track-index="22"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-22" data-b="22" data-composition-id="agency-calls-b22" data-composition-src="compositions/agency-calls/b22.html" data-start="131.04" data-duration="8.21" data-track-index="23"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-23" data-b="23" data-composition-id="agency-calls-b23" data-composition-src="compositions/agency-calls/b23.html" data-start="138.15" data-duration="4.92" data-track-index="24"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-24" data-b="24" data-composition-id="agency-calls-b24" data-composition-src="compositions/agency-calls/b24.html" data-start="141.97" data-duration="8.38" data-track-index="25"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-25" data-b="25" data-composition-id="agency-calls-b25" data-composition-src="compositions/agency-calls/b25.html" data-start="149.25" data-duration="8.42" data-track-index="26"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-26" data-b="26" data-composition-id="agency-calls-b26" data-composition-src="compositions/agency-calls/b26.html" data-start="156.57" data-duration="10" data-track-index="27"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-27" data-b="27" data-composition-id="agency-calls-b27" data-composition-src="compositions/agency-calls/b27.html" data-start="165.47" data-duration="7.26" data-track-index="28"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-28" data-b="28" data-composition-id="agency-calls-b28" data-composition-src="compositions/agency-calls/b28.html" data-start="171.63" data-duration="8.54" data-track-index="29"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-29" data-b="29" data-composition-id="agency-calls-b29" data-composition-src="compositions/agency-calls/b29.html" data-start="179.07" data-duration="8.94" data-track-index="30"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-30" data-b="30" data-composition-id="agency-calls-b30" data-composition-src="compositions/agency-calls/b30.html" data-start="186.91" data-duration="6.94" data-track-index="31"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-31" data-b="31" data-composition-id="agency-calls-b31" data-composition-src="compositions/agency-calls/b31.html" data-start="192.75" data-duration="8.65" data-track-index="32"></div>
+
 
       <div class="clip cap" data-start="0.800" data-duration="2.960" data-track-index="90"><span>A call record is one outbound telephone call we</span></div>
       <div class="clip cap" data-start="3.760" data-duration="1.440" data-track-index="90"><span>placed through Telnyx.</span></div>
@@ -430,66 +546,139 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
       <div class="clip cap" data-start="189.565" data-duration="2.960" data-track-index="90"><span>records, the table stops being a log and starts</span></div>
       <div class="clip cap" data-start="192.525" data-duration="1.040" data-track-index="90"><span>being a training set.</span></div>
 
-      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i><i data-c="18"><b></b></i></div>
+      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i><i data-c="18"><b></b></i><i data-c="19"><b></b></i><i data-c="20"><b></b></i><i data-c="21"><b></b></i><i data-c="22"><b></b></i><i data-c="23"><b></b></i><i data-c="24"><b></b></i><i data-c="25"><b></b></i><i data-c="26"><b></b></i><i data-c="27"><b></b></i><i data-c="28"><b></b></i><i data-c="29"><b></b></i><i data-c="30"><b></b></i><i data-c="31"><b></b></i></div>
 
       <audio id="agency-calls-audio" src="assets/audio/agency-calls.mp3" data-start="0.8" data-duration="192.765" data-has-audio="true" data-volume="1"></audio>
     </div>
     <script>
+      const __spr = (function springModule() {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+
+  /** The step response of a damped spring: 0 at t <= 0, settles on 1. f in Hz, z the damping ratio. */
+  function S(t, f, z) {
+    if (t <= 0) return 0;
+    const w = TAU * f;
+    if (z >= 1) return 1 - Math.exp(-w * t) * (1 + w * t);
+    const wd = w * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t));
+  }
+
+  /** A pulse: 0, rises to exactly 1 at t = 1 / (2 pi f), then decays to 0. A hit that does not stay. */
+  function pulse(t, f) {
+    if (t <= 0) return 0;
+    const x = TAU * f * t;
+    return x * Math.exp(1 - x);
+  }
+
+  const SPR = {
+    // ---- ours (entrances and the camera)
+    pop: { f: 3.0, z: 0.62 },
+    snap: { f: 3.6, z: 0.5 },
+    soft: { f: 2.6, z: 0.72 },
+    row: { f: 2.8, z: 0.78 },
+    settle: { f: 3.2, z: 1 },
+    cam: { f: 0.9, z: 0.72 },
+    // ---- the gist's presets, for anything that needs them
+    shape: { f: 1.9, z: 0.82 },
+    enter: { f: 3.6, z: 1 },
+    exit: { f: 8, z: 1 },
+    cursor: { f: 2.3, z: 1 },
+    glide: { f: 0.95, z: 1 },
+    press: { f: 10, z: 1 },
+    lead: { f: 3.4, z: 0.78 },
+    trail: { f: 1.7, z: 0.92 },
+  };
+
+  const spec = (s) => (typeof s === "string" ? SPR[s] : s) || SPR.pop;
+
+  /**
+   * One value that changes target several times: keys = [[time, value, spring?], ...] sorted by time. Each key
+   * ADDS one spring (the change from the previous value) starting at its own time, so the motion is continuous
+   * at every change and a seek anywhere is exact. `def` is the spring a key uses when it names none.
+   */
+  function track(t, keys, def) {
+    const d = spec(def || "cam");
+    let v = keys[0][1];
+    for (let i = 1; i < keys.length; i++) {
+      const s = spec(keys[i][2] || d);
+      v += (keys[i][1] - keys[i - 1][1]) * S(t - keys[i][0], s.f, s.z);
+    }
+    return v;
+  }
+
+  /** A stretching indicator: the leading edge is stiffer than the trailing edge. stops = [[time, x], ...]. */
+  function indicator(t, stops, width = 0) {
+    const lead = track(t, stops, SPR.lead), trail = track(t, stops, SPR.trail);
+    return { left: Math.min(lead, trail), right: Math.max(lead, trail) + width };
+  }
+
+  /** A seamless loop: pin the last frame to the first. */
+  const loopT = (t, dur) => ((t % dur) + dur) % dur;
+
+  /** Time (s) at which the response first reaches its overshoot peak, or null if it does not overshoot. */
+  function peakTime(f, z) {
+    if (z >= 1) return null;
+    return Math.PI / (TAU * f * Math.sqrt(1 - z * z));
+  }
+  /** The overshoot as a fraction of the move (0.09 = 9 %), 0 for a critically damped spring. */
+  function overshoot(f, z) {
+    if (z >= 1) return 0;
+    return Math.exp((-Math.PI * z) / Math.sqrt(1 - z * z));
+  }
+  /** Time (s) until the response stays within `eps` of its target. */
+  function settleTime(f, z, eps = 0.005) {
+    let last = 0;
+    for (let t = 0; t < 6; t += 1 / 480) if (Math.abs(S(t, f, z) - 1) > eps) last = t;
+    return last + 1 / 480;
+  }
+
+  /**
+   * A GSAP ease: progress 0..1 -> the spring's response over its own settle time, so a tween of ANY duration
+   * plays the whole spring (accelerate, overshoot, settle) across that duration.
+   */
+  function ease(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : S(p * Ts, s.f, s.z));
+  }
+
+  /**
+   * The EXIT ease: a spring played in reverse. It dips first (a hair of anticipation, the mass gathering) and
+   * then accelerates into the end, so a scale 1 -> 0 leaves with the same mass an entrance arrives with.
+   */
+  function easeIn(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - S((1 - p) * Ts, s.f, s.z));
+  }
+
+  /** Fraction (0..1) of an entrance tween at which its mass is at the peak of the overshoot. */
+  const peakFrac = (name) => {
+    const s = spec(name), pk = peakTime(s.f, s.z);
+    return pk === null ? 1 : pk / settleTime(s.f, s.z);
+  };
+  /** Seconds after an entrance of duration `dur` starts that its mass is at the peak of its overshoot. */
+  const peakDelay = (name, dur) => +(peakFrac(name) * dur).toFixed(3);
+
+  const out = { S, pulse, SPR, track, indicator, loopT, peakTime, overshoot, settleTime, ease, peakFrac, peakDelay, clamp };
+  // ready-made GSAP eases by name: `__spr.pop` is a function, usable as `ease: __spr.pop`
+  for (const k of ["pop", "snap", "soft", "row", "settle", "cam"]) { out[k] = ease(k); out[k + "In"] = easeIn(k); }
+  out.easeIn = easeIn;
+  return out;
+})();
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-calls"] = tl;
 
-      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":7,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":null,"xf":null},{"i":1,"sel":".beat[data-b=\"1\"]","start":6.25,"dur":15.5,"tone":"blue","name":"overwhelm","blueprint":"overwhelm-surround","type":"pain_point","fx":null,"xf":"blur-crossfade"},{"i":2,"sel":".beat[data-b=\"2\"]","start":20.75,"dur":10.7,"tone":"white","name":"zoom-out","blueprint":"zoom-out-workspace-reveal","type":"benefit_highlight","fx":null,"xf":"zoom-through"},{"i":3,"sel":".beat[data-b=\"3\"]","start":30.45,"dur":8.8,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-through"},{"i":4,"sel":".beat[data-b=\"4\"]","start":38.25,"dur":6,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"scramble-resolve","xf":"push-slide"},{"i":5,"sel":".beat[data-b=\"5\"]","start":43.25,"dur":8,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"blur-crossfade"},{"i":6,"sel":".beat[data-b=\"6\"]","start":50.25,"dur":11.3,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase","fx":null,"xf":"zoom-through"},{"i":7,"sel":".beat[data-b=\"7\"]","start":60.55,"dur":10.1,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"zoom-through"},{"i":8,"sel":".beat[data-b=\"8\"]","start":69.65,"dur":14.5,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight","fx":null,"xf":"zoom-through"},{"i":9,"sel":".beat[data-b=\"9\"]","start":83.15,"dur":7.2,"tone":"blue","name":"sentiment","blueprint":"stat-bars-and-fills","type":"benefit_highlight","fx":null,"xf":"push-slide"},{"i":10,"sel":".beat[data-b=\"10\"]","start":89.35,"dur":15.5,"tone":"white","name":"converge","blueprint":"center-outward-expansion","type":"social_proof","fx":null,"xf":"blur-crossfade"},{"i":11,"sel":".beat[data-b=\"11\"]","start":103.85,"dur":13.6,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-through"},{"i":12,"sel":".beat[data-b=\"12\"]","start":116.45,"dur":7.7,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"zoom-through"},{"i":13,"sel":".beat[data-b=\"13\"]","start":123.15,"dur":15.8,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-slide"},{"i":14,"sel":".beat[data-b=\"14\"]","start":137.95,"dur":12.2,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"zoom-through"},{"i":15,"sel":".beat[data-b=\"15\"]","start":149.15,"dur":16.9,"tone":"blue","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"zoom-through"},{"i":16,"sel":".beat[data-b=\"16\"]","start":165.05,"dur":14.8,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase","fx":null,"xf":"zoom-through"},{"i":17,"sel":".beat[data-b=\"17\"]","start":178.85,"dur":15,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"zoom-through"},{"i":18,"sel":".beat[data-b=\"18\"]","start":192.85,"dur":8.55,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":null}];
-      // The named transitions, serialised the same way scene animations are:
-      // a transition is a function of (timeline, time, element), nothing else.
-      const XFN = {
-        "zoom-through": function (tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, scale: 1.14 }, { opacity: 1, scale: 1, duration: h.dur, ease: "power2.inOut" }, at);
-    },
-        "blur-crossfade": function (tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, filter: "blur(22px)" }, { opacity: 1, filter: "blur(0px)", duration: h.dur, ease: "power2.inOut" }, at);
-    },
-        "push-slide": function (tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: h.dur, ease: "power3.out" }, at);
-    },
-        "wipe": function (tl, at, h) {
-      const sheet = h.sheet;
-      if (!sheet) return;
-      const dir = h.dir || "left";
-      const prop = dir === "right" ? "xPercent" : dir === "up" ? "yPercent" : "xPercent";
-      const sign = dir === "right" || dir === "up" ? 100 : -100;
-      tl.set(sheet, { opacity: 1 }, at - h.dur * 0.5);
-      tl.fromTo(sheet, { [prop]: sign }, { [prop]: 0, duration: h.dur * 0.5, ease: "power2.in" }, at - h.dur * 0.5);
-      tl.to(sheet, { [prop]: -sign, duration: h.dur * 0.5, ease: "power2.out" }, at);
-      tl.set(sheet, { opacity: 0 }, at + h.dur * 0.5);
-    },
-        "shared-axis-y": function (tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: h.dur, ease: "power2.out" }, at);
-    },
-        "iris": function (tl, at, h) {
-      const el = h.el;
-      tl.fromTo(
-        el,
-        { opacity: 0, clipPath: "inset(50% 50% 50% 50% round 24px)" },
-        { opacity: 1, clipPath: "inset(0% 0% 0% 0% round 0px)", duration: h.dur, ease: "power3.inOut" },
-        at,
-      );
-    }
-};
+      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":5.5,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":null,"xf":null,"shots":2},{"i":1,"sel":".beat[data-b=\"1\"]","start":4.55,"dur":10.54,"tone":"blue","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-left","shots":8},{"i":2,"sel":".beat[data-b=\"2\"]","start":13.99,"dur":8.15,"tone":"blue","name":"overwhelm","blueprint":"overwhelm-surround","type":"pain_point","fx":null,"xf":"zoom-in","shots":4},{"i":3,"sel":".beat[data-b=\"3\"]","start":21.04,"dur":5.98,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":4},{"i":4,"sel":".beat[data-b=\"4\"]","start":25.92,"dur":5.83,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"push-right","shots":2},{"i":5,"sel":".beat[data-b=\"5\"]","start":30.65,"dur":4.64,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":2},{"i":6,"sel":".beat[data-b=\"6\"]","start":34.19,"dur":5.26,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":2},{"i":7,"sel":".beat[data-b=\"7\"]","start":38.35,"dur":6.09,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":"scramble-resolve","xf":"push-left","shots":4},{"i":8,"sel":".beat[data-b=\"8\"]","start":43.34,"dur":8.01,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":6},{"i":9,"sel":".beat[data-b=\"9\"]","start":50.25,"dur":5.39,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase","fx":null,"xf":"push-up","shots":2},{"i":10,"sel":".beat[data-b=\"10\"]","start":54.54,"dur":7.31,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-right","shots":4},{"i":11,"sel":".beat[data-b=\"11\"]","start":60.75,"dur":10.1,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"zoom-out","shots":6},{"i":12,"sel":".beat[data-b=\"12\"]","start":69.75,"dur":7.36,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight","fx":null,"xf":"push-down","shots":4},{"i":13,"sel":".beat[data-b=\"13\"]","start":76.01,"dur":8.46,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":6},{"i":14,"sel":".beat[data-b=\"14\"]","start":83.37,"dur":7.22,"tone":"blue","name":"sentiment","blueprint":"stat-bars-and-fills","type":"benefit_highlight","fx":null,"xf":"zoom-in","shots":4},{"i":15,"sel":".beat[data-b=\"15\"]","start":89.49,"dur":3.66,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase","fx":null,"xf":"push-up","shots":2},{"i":16,"sel":".beat[data-b=\"16\"]","start":92.05,"dur":9.62,"tone":"blue","name":"converge","blueprint":"center-outward-expansion","type":"social_proof","fx":null,"xf":"push-right","shots":6},{"i":17,"sel":".beat[data-b=\"17\"]","start":100.57,"dur":4.58,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"zoom-out","shots":2},{"i":18,"sel":".beat[data-b=\"18\"]","start":104.05,"dur":4.9,"tone":"blue","name":"zoom-out","blueprint":"zoom-out-workspace-reveal","type":"benefit_highlight","fx":null,"xf":"push-down","shots":2},{"i":19,"sel":".beat[data-b=\"19\"]","start":107.85,"dur":9.87,"tone":"white","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-left","shots":6},{"i":20,"sel":".beat[data-b=\"20\"]","start":116.62,"dur":7.82,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"zoom-in","shots":6},{"i":21,"sel":".beat[data-b=\"21\"]","start":123.34,"dur":8.8,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-up","shots":6},{"i":22,"sel":".beat[data-b=\"22\"]","start":131.04,"dur":8.21,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"push-right","shots":4},{"i":23,"sel":".beat[data-b=\"23\"]","start":138.15,"dur":4.92,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":2},{"i":24,"sel":".beat[data-b=\"24\"]","start":141.97,"dur":8.38,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-down","shots":6},{"i":25,"sel":".beat[data-b=\"25\"]","start":149.25,"dur":8.42,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":"comparison-wipe","xf":"push-left","shots":6},{"i":26,"sel":".beat[data-b=\"26\"]","start":156.57,"dur":10,"tone":"white","name":"transcript","blueprint":"transcript-scroll-artifact-reveal","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":6},{"i":27,"sel":".beat[data-b=\"27\"]","start":165.47,"dur":7.26,"tone":"blue","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":"comparison-wipe","xf":"push-up","shots":2},{"i":28,"sel":".beat[data-b=\"28\"]","start":171.63,"dur":8.54,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"push-right","shots":6},{"i":29,"sel":".beat[data-b=\"29\"]","start":179.07,"dur":8.94,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":6},{"i":30,"sel":".beat[data-b=\"30\"]","start":186.91,"dur":6.94,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"push-down","shots":4},{"i":31,"sel":".beat[data-b=\"31\"]","start":192.75,"dur":8.65,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":"push-left","shots":0}];
+      // The seams are DATA (lkmotion.mjs SEAMS): a clip shape for the stage-colour
+      // reveal, and where the outgoing and incoming scenes travel. One generic
+      // builder below turns any of them into tweens.
+      const SEAMS = {"push-left":{"from":["page-slide","whip-pan-cut"],"exit":"start"},"push-right":{"from":["page-slide","whip-pan-cut"],"exit":"end"},"push-up":{"from":["shared-axis-y","push-in"],"exit":"center"},"push-down":{"from":["shared-axis-y"],"exit":"edges"},"zoom-in":{"from":["zoom-through-transition"],"exit":"center"},"zoom-out":{"from":["zoom-through-transition","iris-reveal"],"exit":"edges"},"blur":{"from":["fade-through"],"exit":"center"}};
       const XF = 0.45;
-      const LEAD = 0.55;
+      const LEAD = 0.65;
       const TOTAL = 201.400;
       const OUTRO_END = TOTAL - 2.4;
 const root = document.getElementById("root");
-      // Declared HERE, after root. A const read above its declaration is a
-      // temporal-dead-zone ReferenceError, and it kills the whole root script:
-      // every stage, caption and transition stops running while the file still
-      // lints clean and renders a plausible-looking frame.
-      const sheetEl = root.querySelector(".wipesheet");
 
       tl.to({}, { duration: TOTAL }, 0);
 
@@ -498,17 +687,28 @@ const root = document.getElementById("root");
 
       function toneAt(i) { return PLAN[i].tone; }
 
-      // Stage colour, caption ink, dither palette and the chapter rail. The scene
-      // bodies live in their own sub-compositions and time themselves; this is the
-      // frame around them.
+      // Stage colour, dither palette, chapter rail - and the SEAM between beats.
+      //
+      // NOTHING FADES (DESIGN_SYSTEM 4). Elements enter by scale 0 -> 1 with overshoot and leave by
+      // scale 1 -> 0; no element, scene or beat is ever tweened in opacity. A seam is:
+      //   S-0.3..S   the OUTGOING scene removes every element: each scales DOWN to 0 (staggered, in the
+      //              order its seam names), inside that beat's own timeline (lkdirector.mjs exit)
+      //   S..C       the stage is empty. An exposure flare (a light overlay, not a fade of content)
+      //              rises on a cosine to hide the stage-colour swap
+      //   C          the peak: stage colour, dither and tone swap here, unseen
+      //   ENTER..    the INCOMING scene's elements scale UP from 0 with overshoot, into the falling flare
+      const FLASH_UP = 0.3;
+      const FLASH_DOWN = 0.55;
+      const flashEl = root.querySelector(".flash");
       PLAN.forEach((b, i) => {
         const st = stages[b.i];
         const tone = toneAt(i);
+        const C = b.start + FLASH_UP;
         if (st) {
           if (i === 0) tl.set(st, { opacity: 1 }, 0);
           else {
-            tl.fromTo(st, { opacity: 0 }, { opacity: 1, duration: XF, ease: "power1.inOut" }, b.start);
-            tl.to(stages[i - 1], { opacity: 0, duration: XF, ease: "power1.inOut" }, b.start);
+            tl.set(st, { opacity: 1 }, C);
+            tl.set(stages[i - 1], { opacity: 0 }, C);
           }
         }
         if (i > 0) {
@@ -516,44 +716,32 @@ const root = document.getElementById("root");
             root.classList.toggle("tone-white", tone === "white");
             const dth = document.getElementById("dither");
             if (dth) dth.classList.toggle("on-white", tone === "white");
-          }, null, b.start);
+          }, null, C);
+          if (flashEl) {
+            // flare-ok: the exposure flare is a LIGHT OVERLAY (it hides the stage-colour swap), not a fade of content
+            tl.fromTo(flashEl, { opacity: 0 }, { opacity: 1, duration: FLASH_UP, ease: "sine.inOut" }, b.start);
+            tl.to(flashEl, { opacity: 0, duration: FLASH_DOWN, ease: "sine.out" }, C);
+          }
         }
         const chip = chips[i];
         if (chip) {
           tl.set(chip, { scaleX: 0 }, b.start);
           tl.to(chip, { scaleX: 1, duration: b.dur, ease: "none" }, b.start);
         }
+        // The beat element itself is never animated: it holds the scene, and the scene's own elements
+        // scale in and out inside their own timelines.
       });
 
-      // Crossfade the beats themselves. Scenes only animate IN, so without this
-      // the XF overlap window shows the outgoing and incoming scene at full
-      // opacity at the same time - two visual treatments stacked in one frame.
-      Array.from(root.querySelectorAll(".beat")).forEach((el) => {
-        const s = parseFloat(el.dataset.start);
-        const d = parseFloat(el.dataset.duration);
-        const i = parseInt(el.dataset.b, 10);
-        const xf = PLAN[i] && PLAN[i].xf;
-        // The OUTGOING treatment always crossfades at this beat's own tail. A
-        // named transition is layered on top at this beat's start; it never
-        // replaces this, because a beat that skipped its own fade-out would sit
-        // at full opacity underneath the next beat for the rest of the film.
-        tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: XF, ease: "power1.inOut" }, s + d - XF);
-        if (i > 0 && xf && XFN[xf]) {
-          // XF and LEAD are untouched, so the beat still lands exactly where
-          // the narration puts it - the transition changes how the cut looks,
-          // never when it happens.
-          XFN[xf](tl, s, { el, dur: XF, sheet: sheetEl });
-        }
-      });
-
+      // The subtitles are NORMAL bottom captions, in the root, outside the 3D world.
       Array.from(root.querySelectorAll(".cap")).forEach((c) => {
         const at = parseFloat(c.dataset.start);
         const sp = c.querySelector("span");
         if (sp) tl.fromTo(sp, { y: 16, scale: 0.97 }, { y: 0, scale: 1, duration: 0.22, ease: "power2.out" }, at);
       });
 
-      tl.to(".cap", { opacity: 0, duration: 0.4 }, OUTRO_END - 0.1);
-      tl.to(".chapter", { opacity: 0, duration: 0.4 }, OUTRO_END - 0.1);
+      // the subtitle pill and the chapter rail leave by scale too
+      tl.to(".cap span", { scale: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
+      tl.to(".chapter", { scaleY: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
 
       tl.seek(0);
     </script>

@@ -159,13 +159,13 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:${stageBg}}
 .ic{display:block;flex:none;overflow:visible}
 .ico{display:flex;flex:none;align-items:center;justify-content:center;
  width:72px;height:72px;border-radius:${R.sm}px;
- background:${C.blue};color:${C.white}}
+ background:${C.blue};color:${C.white};box-shadow:0 0 0 3px ${C.outline}}
 .ico.on-white{background:${C.tint};color:${C.blue}}
 /* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
    a blue glyph. A blue tile on a blue card is the icon disappearing, which is
    the exact failure the white-stage cards had. */
 .ico.on-bluecard{background:${C.white};color:${C.blue}}
-.ico.plain{background:none;width:auto;height:auto;color:inherit}
+.ico.plain{background:none;width:auto;height:auto;color:inherit;box-shadow:none}
 /* Compact tile for a chip / inline row, where the 72px panel tile would make the
    label wrap. Same colour rule as .ico - solid brand blue with a white glyph on
    a white card, inverted to solid white with a blue glyph on a blue card. */
@@ -212,12 +212,14 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:${stageBg}}
 .wave{display:flex;align-items:flex-end;gap:4px;height:92px;padding:18px 28px}
 .wave i{flex:1;height:var(--h);border-radius:3px;transform-origin:bottom}
 
+/* ---- data table: moved to src/components/table (its css lives with the component) */
+
 /* ---- working / progress theater */
 .wrow{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:${R.lg}px}
 .spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(127,127,127,.2);
  border-top-color:currentColor}
 .wrow[data-state=done] .spin{display:none}
-.chk{width:30px;height:30px;margin-left:auto;opacity:0}
+.chk{width:30px;height:30px;margin-left:auto}
 .chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
 /* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
@@ -231,11 +233,30 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:${stageBg}}
    pointer.svg is the dark arrow with a light outline, so it survives on both
    the blue and the white stage without a second asset. Sized large on purpose:
    at 34px it read as a speck on a 1920 frame. */
-/* 168px, not 96. On a 1920 frame a cursor is a focal object, not an ornament:
-   at 96 it still read as a UI speck rather than "someone is using this". */
-.cursor{position:absolute;z-index:75;width:168px;height:168px;pointer-events:none;
- background-repeat:no-repeat;background-position:top left;background-size:contain;
- background-image:url('assets/cursors/pointer.svg')}
+/* The cursor art is cropped to the arrow itself (viewBox 0 0 34 38) and drawn at
+   exactly 2x: 68x76 px, arrow tip at (10,10) inside the box. It used to be an
+   80x64 canvas with a 30px arrow in one corner, drawn at 168px - so the "large
+   cursor" was a 63px arrow floating in 100px of nothing, and its tip sat ~10px
+   off wherever it was aimed. Size and hotspot now mean what they say, and the
+   director (lkdirector.mjs) aims the TIP at a measured element.
+   left/top are pinned to 0 so a GSAP x/y is a stage coordinate, not an offset
+   from wherever a flex container decided an inset-less box should sit. */
+.cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:75;pointer-events:none}
+/* Three states stacked on one anchor, each offset so ITS hotspot sits on the anchor:
+     .cs-n  the arrow           viewBox 0 0 34 38   at 2.4x -> tip at (12,12)
+     .cs-h  the open hand       viewBox -6 -6 89 75 at 2x   -> middle fingertip (40,4)
+     .cs-c  the pointing hand   viewBox -6 -6 89 75 at 2x   -> fingertip (30,4)
+   The director switches them (arrow -> hand on hover -> pointing hand on the press ->
+   arrow). Only the active one has opacity 1. The cursor is the subject of every scene,
+   so it is drawn large: ~90px of arrow on a 1920 frame. */
+.cursor .cs{position:absolute;display:block;opacity:0;background-repeat:no-repeat;background-size:100% 100%} /* swap-ok: sprite swap */
+.cursor .cs-n{left:-12px;top:-12px;width:82px;height:91px;opacity:1;background-image:url('assets/cursors/pointer.svg')} /* swap-ok */
+.cursor .cs-h{left:-40px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/hover.svg')}
+.cursor .cs-c{left:-30px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/click.svg')}
+/* The click ripple. A ring, because it is a transient effect, never a surface. */
+.ripple{position:absolute;left:0;top:0;z-index:74;width:80px;height:80px;border-radius:50%;
+ pointer-events:none;border:4px solid ${C.blueEdge}}
+.ripple.on-blue{border-color:${C.white}}
 
 /* ---- how a Twenty object is NAMED on screen.
    The camelCase API name was being set in the same weight and size as the

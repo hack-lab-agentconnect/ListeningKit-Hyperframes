@@ -21,7 +21,10 @@ src/         build + design-system modules (the only place source lives)
   lkchrome.mjs     shared stylesheet: stage, dither, captions, icons, cursor
   lkicons.mjs      Heroicons 24 outline, read from the product's own package
   scenes.mjs       the scene library — one factory per beat type
-  lkmotion.mjs     the treatment library — how a beat is animated (see COMPONENT_LIBRARY.md)
+  lkmotion.mjs     the treatment library + the seams - how a beat is animated (see COMPONENT_LIBRARY.md)
+  lkdirector.mjs   the pacing layer: narration cues, pointer, 3D camera, anatomy (MOTION_CRITERIA.md)
+  lksatellites.mjs the depth set: components from the beat's own family, at depth
+  lkclock.mjs      INTRO / XF / LEAD / ENTER / OUTRO - shared by the build, the director and the lint
   storyboards.mjs  per-object beat plans, timed against Deepgram word timings
   cues.mjs         narration beat cues
   build-beats.mjs  emits compositions/<slug>.html + one sub-composition per beat
@@ -33,9 +36,12 @@ scripts/     tooling, run by hand or by lefthook
   lint-design.mjs  design-system lint (line scanner)
   lint-repo.mjs    repo hygiene lint (git index)
   review-frames.mjs  captures review frames OUTSIDE the repo
+  lint-pacing.mjs  pacing lint: dead air, scene length, pointer, stage alternation (MOTION_CRITERIA.md)
+  refs.mjs         the curated reference set: list / pull / search / read via the GitHub API
+  narration-times.mjs  where each sentence and phrase of a narration starts (for placing beats)
   render-all.ps1   batch render
   legacy/          superseded generator, kept for reference, not on any path
-docs/        this file and anything else written down
+docs/        this file, MOTION_CRITERIA.md, SCENE_GRAMMAR.md, COMPONENT_LIBRARY.md, references/ (manifest + vendored)
 assets/      input assets: timing/, cursors/ (SVG — source, never ignored)
 narrations/  narration scripts (JSON)
 compositions/  GENERATED, and committed on purpose — see §5
@@ -80,7 +86,7 @@ without them.
 ## 3. Order of operations for a change
 
 ```bash
-npm run lint          # design-system + repo hygiene
+npm run lint          # design-system + pacing + repo hygiene
 npm run build         # regenerate compositions/ and index.html
 npm run review -- --at <t> --no-end --label <what>   # look at it
 npm run check         # hyperframes check (lint + runtime + layout + motion + contrast)
@@ -100,13 +106,19 @@ git add -A && git commit -m "..."
 of these has caught a real bug, and two of them (`diff-check` as it was, and the
 Windows path bug in the lint) were themselves bugs that had to be fixed first.
 
-### Known pre-existing `check` failure
+### `check` and its known findings
 
-`npm run check` reports one error, `audio_src_not_found` for
-`assets/audio/agency-prospects.mp3`. That is correct and expected: media is
-gitignored by design, so **a fresh clone renders silent** until you run
-`npm run audio` (`src/fetch-audio.mjs`, needs `DEEPGRAM_API_KEY`). It is written in
-`.gitignore` as a stated consequence rather than left to be discovered.
+`npm run check` needs `assets/audio/<slug>.mp3` (gitignored by design; run `npm run audio`, needs
+`DEEPGRAM_API_KEY`). **Without the audio, the lint reports `audio_src_not_found` as an error, and a
+lint error switches the layout and contrast audits OFF** - `check` then reports `0 sample(s)` and
+`0/0 text checks`, which reads like a clean file and means nothing ran. A clean worktree of `main`
+shows exactly that. With audio present, the layout audit runs, and on `main` before the 2026-10-03
+motion pass it already reported 8 `content_overlap` errors and 26 warnings (converge chips overlapping
+each other, mostly); this file used to say "one known audio error only", which was true only because
+the audits were off.
+
+Contrast warnings on the 3D-world content are expected where components sit at depth under a tilted
+camera (the sampler reads transformed boxes); judge those from frames, not from the number.
 
 ---
 
@@ -121,6 +133,14 @@ matt's, not mine.
    and white-on-white bugs shipped.
 2. `npm run lint && npm run check` — one known audio error only.
 3. Merge to `main`, push, confirm `git rev-parse HEAD` on `main` equals local.
+
+## 4b. The reference set
+
+`docs/references/MANIFEST.json` is the curated list of published work this repo borrows from, and why.
+`npm run refs -- list | pull | search | read | tree` query it through the GitHub API (`gh api`), and
+`pull` vendors the small files into `docs/references/vendor/` with provenance (source, commit, licence).
+Vendored files are reading material - nothing in `src/` imports them. An agent asked to "study the
+viral videos" starts at `npm run refs -- list`, not at a web search.
 
 ## 5. Then: render every video
 
@@ -150,3 +170,17 @@ Rendered mp4s go to `renders/`, which is gitignored — the repo ships the
 - **Tone is an input to a scene factory, never an override applied after.**
 - **A card whose fill matches its stage needs `C.blueEdge`.** A border set to the
   fill's own colour is a decorative no-op.
+
+## Transitions and 3D items
+
+A cut between compositions is a named transition from `src/transitions/` (an adjustment layer over two
+compositions, a pixel-wipe *mask*, the pointer on top); every 3D item is an extruded slab; a click is three
+2 px rings. The method is `docs/TRANSITION_FX.md`. `npm run lint:transitions` regenerates each transition's
+sample and enforces it (rules T1-T10); it runs in `npm run lint`, on pre-commit and, as part of the full
+`npm run lint`, on pre-push. `npm run lab:transition [id]` then `npm run render` shows a sample.
+
+## Motion with mass
+
+Every entrance, exit and the camera's zoom is a closed-form spring (`src/lkspring.mjs`), and the pointer and camera wait
+for an element's overshoot peak before they tween in close. The method is `docs/ANIMATION.md`. `npm run test:spring`,
+the design-lint rule `no-cheap-ease` and the pacing rule M14 enforce it, in `npm run lint`, pre-commit and pre-push.

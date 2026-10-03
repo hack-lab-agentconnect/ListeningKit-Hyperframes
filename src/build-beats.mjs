@@ -14,27 +14,34 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { beats as B } from "./scenes.mjs";
+import { componentRuntimeJS } from "./components/anatomy.mjs";
+import { springRuntimeJS } from "./lkspring.mjs";
+import { colorRuntimeJS } from "./lkcolor.mjs";
+import { componentsCSS } from "./components/index.mjs";
+import { extrudeCSS, applySlabs } from "./lkextrude.mjs";
 import { ARCS } from "./storyboards.mjs";
 import { css } from "./lkchrome.mjs";
 import { C } from "./lkdesign.mjs";
 import {
   TREATMENTS,
-  TRANSITIONS,
-  FLAG_TO_XF,
+  SEAMS,
+  FLAG_TO_SEAM,
+  XF_TO_SEAM,
+  SEAM_ROTATION,
   motionCSS,
   motionRuntimeJS,
   withMotionClass,
 } from "./lkmotion.mjs";
+import { planFor, directorRuntimeJS } from "./lkdirector.mjs";
+import { CLOCK } from "./lkclock.mjs";
+import { satellitesFor, satelliteCSS as SATCSS } from "./lksatellites.mjs";
 
 // Resolve from THIS file, never from the CWD. These modules now live in src/,
 // and a script that only works when invoked from the repo root is one npm-script
 // rename away from silently writing compositions to the wrong place.
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, "compositions");
-const INTRO = 0.8; // beat 0 must be on screen at t=0
-const XF = 0.45; // transition overlap
-const LEAD = 0.55; // J-cut: visuals land this long before the line is spoken
-const OUTRO = 8.0;
+const { INTRO, XF, LEAD, ENTER, OUTRO } = CLOCK; // see src/lkclock.mjs
 
 // Deepgram Nova-3 mishears these. Caption text is corrected; the word timing is
 // untouched. A listen-back of the synthesised audio should confirm the VO itself.
@@ -70,18 +77,17 @@ const ALL_KEYS = [
 const treatmentOf = (b) => (b.fx ? TREATMENTS[b.fx] : null);
 
 /**
- * Which transition this beat's seam uses.
- *
- * The storyboard's existing flags (zx / blur / slide) still mean exactly what
- * they always meant Ã¢â‚¬â€ they now resolve to a NAMED transition in lkmotion.mjs
- * instead of an inline crossfade. `xf: "<name>"` selects one directly. Anything
- * unnamed keeps the plain crossfade, so a beat with no transition intent is
- * unaffected.
+ * Which seam this beat arrives on. The storyboard's flags still mean what they
+ * always meant (zx -> zoom-in, slide -> push-left, blur -> blur), `xf: "<name>"`
+ * picks one directly (a new seam name, or one of the old transition names), and a
+ * beat with no intent takes the next seam in SEAM_ROTATION - so there is no such
+ * thing as an unnamed cut (M6). Beat 0 has no seam.
  */
-const transitionOf = (b) => {
-  if (b.xf) return TRANSITIONS[b.xf] ? b.xf : null;
-  for (const [flag, name] of Object.entries(FLAG_TO_XF)) if (b[flag]) return name;
-  return null;
+const seamOf = (b, i) => {
+  if (i === 0) return null;
+  if (b.xf) return SEAMS[b.xf] ? b.xf : XF_TO_SEAM[b.xf] || SEAM_ROTATION[(i - 1) % SEAM_ROTATION.length];
+  for (const [flag, name] of Object.entries(FLAG_TO_SEAM)) if (b[flag]) return name;
+  return SEAM_ROTATION[(i - 1) % SEAM_ROTATION.length];
 };
 
 /** Serialise a treatment + the beat's own animation into ONE standalone body. */
@@ -113,13 +119,19 @@ function sceneCSS() {
  justify-content:center;gap:34px;padding:110px 120px 150px;z-index:20;text-align:center}
 .stagec .row{text-align:left}
 .stagec .bar{text-align:left}
+${extrudeCSS}${componentsCSS}
 
 /* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
    GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
    element would be overwritten the moment it scales. */
 .ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
 .ovbox{z-index:3}
-.ovcard{position:absolute;left:50%;top:50%;margin:-52px 0 0 -260px;z-index:2;text-align:center}
+/* .ovorb is the orbiting anchor (GSAP positions it on an ellipse); .ovcard sits
+   centred on it and is what flies in. Two elements so the orbit and the entrance
+   never write the same transform. */
+.ovorb{position:absolute;left:50%;top:50%;width:0;height:0;z-index:2}
+.ovcard{position:absolute;left:0;top:0;text-align:left}
+.ovt{font-size:36px;font-weight:700;line-height:1.15;white-space:nowrap}
 
 /* zoom-out reveal */
 .zw{display:flex;flex-direction:column;align-items:center;gap:40px}
@@ -127,7 +139,7 @@ function sceneCSS() {
 /* The number's own line box is taller than its glyphs, so the eyebrow sitting
    directly above it sat INSIDE that box on the counted beats. Breathing room
    here is what keeps the kicker legible rather than relying on the gap alone. */
-.count{margin-top:22px}
+.count{margin-top:64px;margin-bottom:48px}
 
 /* record panel + note callout */
 .pan{z-index:2}
@@ -165,9 +177,11 @@ function sceneCSS() {
 
 /* the wipe sheet a section transition crosses the frame on. It sits above the
    stage and below nothing, so the beat it covers is fully hidden by it. */
-.wipesheet{position:absolute;inset:0;z-index:40;background:${C.blue};opacity:0;pointer-events:none}
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,${C.blueEdge} 100%)}
   // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
 ${motionCSS}
+${SATCSS}
 `;
 }
 
@@ -216,6 +230,9 @@ function buildOne(slug) {
   const TOTAL = INTRO + seq[seq.length - 1].t + OUTRO;
 
   const plan = [];
+  // Where the previous beat's pointer ended up: the next beat's pointer starts there,
+  // so across cuts it reads as ONE mouse, not a new one per scene.
+  let prevCursor = null;
   const mounts = [];
   const animSrc = [];
 
@@ -256,7 +273,24 @@ const built = B[b.kind]({ tone: b.tone, ...b.a });
     // The `fx` class goes on only when a treatment runs. It gates the
     // treatment-only CSS (per-word/char spans are inline-block, and the marker
     // underline), so an untreated beat's DOM is byte-identical to before.
-    const sceneHTML = treated ? withMotionClass(built.html) : built.html;
+    // Injected as the last children of the stage wrapper so they ride the camera:
+    //   - the depth set: components from the beat's own family, placed at different
+    //     depths around the content (lksatellites.mjs). No text blocks: subtitles stay
+    //     in the root's caption pill, outside the 3D world.
+    //   - for beats that depict an interface, a cursor and its click ripple.
+    let tail = "";
+    const sats = b.silent ? null : satellitesFor(slug, b, i);
+    if (sats) tail += sats.html;
+    if (!b.silent) {
+      // The one pointer of the beat: three states stacked (arrow / open hand / pointing
+      // hand), switched by the director, plus the press ripple. See lkdirector.mjs.
+      const ink = b.tone === "blue" ? " on-blue" : "";
+      tail += `<div class="ripple${ink}" data-a="rip" data-layout-allow-overlap></div><div class="cursor" data-a="cur" data-layout-allow-overlap><i class="cs cs-n"></i><i class="cs cs-h"></i><i class="cs cs-c"></i></div>`;
+    }
+    let sceneHTML = treated ? withMotionClass(built.html) : built.html;
+    if (tail) sceneHTML = sceneHTML.replace(/<\/div>\s*$/, tail + "</div>");
+    // the one ownership pass: every marked card becomes a slab that owns its slices (lkextrude.applySlabs)
+    sceneHTML = applySlabs(sceneHTML);
     const subId = `${slug}-b${i}`;
     // The anim bodies close over nothing but their own params, so they serialise
     // straight into the page as source. Function.prototype.toString() yields
@@ -268,7 +302,13 @@ animSrc.push(composeAnimSrc(b, built));
 
     const start = +(INTRO + b.t - (i === 0 ? 0 : LEAD)).toFixed(3);
     const nextT = i + 1 < seq.length ? seq[i + 1].t : seq[i].t + OUTRO;
+    // The pacing plan: clause cues from the real word timings, entrance slots, camera
+    // shots and cursor stops (lkdirector.mjs). The silent outro has no narration to
+    // pace against and keeps its own end-card animation.
+    const nextSeam = i + 1 < seq.length ? seamOf(seq[i + 1], i + 1) : null;
+    const dirPlan = b.silent ? null : planFor(b, words, nextT, { lead: LEAD, enter: ENTER, index: i, sats, prevCursor, exitFrom: nextSeam && SEAMS[nextSeam] ? SEAMS[nextSeam].exit : null });
     const dur = +(nextT - b.t + LEAD + (i + 1 < seq.length ? XF : 0)).toFixed(3);
+    if (dirPlan && dirPlan.cursor) prevCursor = dirPlan.cursor.endPos;
     plan.push({
       i,
       sel: `.beat[data-b="${i}"]`,
@@ -279,7 +319,8 @@ tone: built.tone,
       blueprint: built.blueprint,
       type: built.type,
       fx: b.fx || null,
-      xf: transitionOf(b),
+      xf: seamOf(b, i),
+      shots: dirPlan ? dirPlan.camera.shots.length : 0,
     });
 
     fs.writeFileSync(
@@ -297,15 +338,24 @@ tone: built.tone,
 ${sceneHTML.replace(/(src=")assets\//g, `$1${subAssets}/`)}
     </div>
     <script>${treated ? motionRuntimeJS : ""}
+      ${directorRuntimeJS}
+      ${componentRuntimeJS}
+      ${colorRuntimeJS}
+      const CMP = ${JSON.stringify(built.cmp || {})}; // the scene's components, as data (src/components)
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["${subId}"] = tl;
       const ANIM = ${animSrc[animSrc.length - 1]};
       const root = document.getElementById("root");
-      ANIM(tl, 0, {
+      ANIM(tl, ${ENTER}, {
         q: (s) => root.querySelector(s),
         qq: (s) => Array.from(root.querySelectorAll(s)),
       });
+      // The pacing layer runs AFTER the scene has built its own timeline: it retimes
+      // item entrances to the narration, then adds the camera and the cursor.
+      __dir.run(tl, root, ${JSON.stringify(dirPlan)});
+      // THE LIP: derived at render time from each slab host's own computed colour, in OKLCH (lkcolor.mjs)
+      __lip.apply(root);
       tl.seek(0);
     </script>
   </body>
@@ -315,7 +365,7 @@ ${sceneHTML.replace(/(src=")assets\//g, `$1${subAssets}/`)}
     );
 
     mounts.push(
-      `      <div class="clip beat" id="beat-${i}" data-b="${i}" data-composition-id="${slug}-b${i}" data-composition-src="${subSrc}${i}.html" data-start="${start}" data-duration="${dur}" data-track-index="${i + 1}"></div>`,
+      `      <div class="clip beat" data-layout-allow-overlap id="beat-${i}" data-b="${i}" data-composition-id="${slug}-b${i}" data-composition-src="${subSrc}${i}.html" data-start="${start}" data-duration="${dur}" data-track-index="${i + 1}"></div>`,
     );
   });
 
@@ -341,10 +391,11 @@ ${plan
   .join("\n")}
       </div>
       <div id="dither"></div>
-      <div class="wipesheet"></div>
+      <div class="flash"></div>
       
 
 ${mounts.join("\n")}
+
 
 ${captions(caps)}
 
@@ -353,31 +404,21 @@ ${captions(caps)}
       <audio id="${slug}-audio" src="assets/audio/${slug}.mp3" data-start="${INTRO}" data-duration="${audioDur.toFixed(3)}" data-has-audio="true" data-volume="1"></audio>
     </div>
     <script>
+      ${springRuntimeJS}
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["${slug}"] = tl;
 
       const PLAN = ${JSON.stringify(plan)};
-      // The named transitions, serialised the same way scene animations are:
-      // a transition is a function of (timeline, time, element), nothing else.
-      const XFN = {
-${Object.entries(TRANSITIONS)
-  .map(
-    ([n, t]) =>
-      `        ${JSON.stringify(n)}: ${t.anim.toString().replace(/^\s*\w+\s*\(/, "function (")}`,
-  )
-  .join(",\n")}
-};
+      // The seams are DATA (lkmotion.mjs SEAMS): a clip shape for the stage-colour
+      // reveal, and where the outgoing and incoming scenes travel. One generic
+      // builder below turns any of them into tweens.
+      const SEAMS = ${JSON.stringify(SEAMS)};
       const XF = ${XF};
       const LEAD = ${LEAD};
       const TOTAL = ${TOTAL.toFixed(3)};
       const OUTRO_END = TOTAL - 2.4;
 const root = document.getElementById("root");
-      // Declared HERE, after root. A const read above its declaration is a
-      // temporal-dead-zone ReferenceError, and it kills the whole root script:
-      // every stage, caption and transition stops running while the file still
-      // lints clean and renders a plausible-looking frame.
-      const sheetEl = root.querySelector(".wipesheet");
 
       tl.to({}, { duration: TOTAL }, 0);
 
@@ -386,17 +427,28 @@ const root = document.getElementById("root");
 
       function toneAt(i) { return PLAN[i].tone; }
 
-      // Stage colour, caption ink, dither palette and the chapter rail. The scene
-      // bodies live in their own sub-compositions and time themselves; this is the
-      // frame around them.
+      // Stage colour, dither palette, chapter rail - and the SEAM between beats.
+      //
+      // NOTHING FADES (DESIGN_SYSTEM 4). Elements enter by scale 0 -> 1 with overshoot and leave by
+      // scale 1 -> 0; no element, scene or beat is ever tweened in opacity. A seam is:
+      //   S-0.3..S   the OUTGOING scene removes every element: each scales DOWN to 0 (staggered, in the
+      //              order its seam names), inside that beat's own timeline (lkdirector.mjs exit)
+      //   S..C       the stage is empty. An exposure flare (a light overlay, not a fade of content)
+      //              rises on a cosine to hide the stage-colour swap
+      //   C          the peak: stage colour, dither and tone swap here, unseen
+      //   ENTER..    the INCOMING scene's elements scale UP from 0 with overshoot, into the falling flare
+      const FLASH_UP = 0.3;
+      const FLASH_DOWN = 0.55;
+      const flashEl = root.querySelector(".flash");
       PLAN.forEach((b, i) => {
         const st = stages[b.i];
         const tone = toneAt(i);
+        const C = b.start + FLASH_UP;
         if (st) {
           if (i === 0) tl.set(st, { opacity: 1 }, 0);
           else {
-            tl.fromTo(st, { opacity: 0 }, { opacity: 1, duration: XF, ease: "power1.inOut" }, b.start);
-            tl.to(stages[i - 1], { opacity: 0, duration: XF, ease: "power1.inOut" }, b.start);
+            tl.set(st, { opacity: 1 }, C);
+            tl.set(stages[i - 1], { opacity: 0 }, C);
           }
         }
         if (i > 0) {
@@ -404,44 +456,32 @@ const root = document.getElementById("root");
             root.classList.toggle("tone-white", tone === "white");
             const dth = document.getElementById("dither");
             if (dth) dth.classList.toggle("on-white", tone === "white");
-          }, null, b.start);
+          }, null, C);
+          if (flashEl) {
+            // flare-ok: the exposure flare is a LIGHT OVERLAY (it hides the stage-colour swap), not a fade of content
+            tl.fromTo(flashEl, { opacity: 0 }, { opacity: 1, duration: FLASH_UP, ease: "sine.inOut" }, b.start);
+            tl.to(flashEl, { opacity: 0, duration: FLASH_DOWN, ease: "sine.out" }, C);
+          }
         }
         const chip = chips[i];
         if (chip) {
           tl.set(chip, { scaleX: 0 }, b.start);
           tl.to(chip, { scaleX: 1, duration: b.dur, ease: "none" }, b.start);
         }
+        // The beat element itself is never animated: it holds the scene, and the scene's own elements
+        // scale in and out inside their own timelines.
       });
 
-      // Crossfade the beats themselves. Scenes only animate IN, so without this
-      // the XF overlap window shows the outgoing and incoming scene at full
-      // opacity at the same time - two visual treatments stacked in one frame.
-      Array.from(root.querySelectorAll(".beat")).forEach((el) => {
-        const s = parseFloat(el.dataset.start);
-        const d = parseFloat(el.dataset.duration);
-        const i = parseInt(el.dataset.b, 10);
-        const xf = PLAN[i] && PLAN[i].xf;
-        // The OUTGOING treatment always crossfades at this beat's own tail. A
-        // named transition is layered on top at this beat's start; it never
-        // replaces this, because a beat that skipped its own fade-out would sit
-        // at full opacity underneath the next beat for the rest of the film.
-        tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: XF, ease: "power1.inOut" }, s + d - XF);
-        if (i > 0 && xf && XFN[xf]) {
-          // XF and LEAD are untouched, so the beat still lands exactly where
-          // the narration puts it - the transition changes how the cut looks,
-          // never when it happens.
-          XFN[xf](tl, s, { el, dur: XF, sheet: sheetEl });
-        }
-      });
-
+      // The subtitles are NORMAL bottom captions, in the root, outside the 3D world.
       Array.from(root.querySelectorAll(".cap")).forEach((c) => {
         const at = parseFloat(c.dataset.start);
         const sp = c.querySelector("span");
         if (sp) tl.fromTo(sp, { y: 16, scale: 0.97 }, { y: 0, scale: 1, duration: 0.22, ease: "power2.out" }, at);
       });
 
-      tl.to(".cap", { opacity: 0, duration: 0.4 }, OUTRO_END - 0.1);
-      tl.to(".chapter", { opacity: 0, duration: 0.4 }, OUTRO_END - 0.1);
+      // the subtitle pill and the chapter rail leave by scale too
+      tl.to(".cap span", { scale: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
+      tl.to(".chapter", { scaleY: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
 
       tl.seek(0);
     </script>

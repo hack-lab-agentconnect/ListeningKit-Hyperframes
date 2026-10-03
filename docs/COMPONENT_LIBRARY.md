@@ -62,24 +62,46 @@ the intent is lost.
 | `scramble-reveal`, `matrix-decode` | `scramble-resolve` | `record`, `converge`, `countup` | the element's existing text; `fx.steps`, `fx.frame`, `fx.at`, `fx.glyphs` | character-by-character settle, fixed-seed LCG (no `Math.random` — a render must be identical every run) | untouched | none | a value that reads as looked up rather than typed |
 | `logo-brand-close`, `titlecard-lockup`, `logo-sting`, `store-badge-lockup` | `wordmark-lockup` | `endcard` | nothing — the beat's `word`/`cta`/`url` and `assets/logo.svg` | scale + fade only; **never** animate `letterSpacing` | brand blue stage | none | the logo is placed, not rebuilt. Restructuring a wordmark is a brand bug |
 
-### Transitions
+### Seams (replaced the old transition set, 2026-10-03)
 
-Transitions run on the **root** timeline, because a transition belongs to the cut rather than
-to either scene. `XF` (0.45s) and `LEAD` (0.55s) are untouched, so a richer transition can
-never move a beat relative to its narration.
+The previous transitions were opacity fades on the incoming beat while the outgoing beat stayed
+fully opaque for another half second over a stage that had already changed colour: every cut was
+~1 s of old-stage content on the new stage. A first rewrite pushed the scenes toward the camera and
+faded them. **Nothing fades now** (DESIGN_SYSTEM 4, M13): a seam is a scale-out then a scale-in. The
+outgoing scene removes every element (each scales to 0, staggered), the stage is empty for a beat
+while the **exposure flare** (a light overlay) hides the stage colour / dither / tone swap at its
+peak, and the incoming scene's elements scale up from 0 with overshoot.
 
-| Storyboard flag / key | Transition | Catalog source | Behaviour |
-|---|---|---|---|
-| `zx: true` | `zoom-through` | `zoom-through-transition` | incoming beat pushes through from 1.14 scale |
-| `blur: true` | `blur-crossfade` | `fade-through`, `blur-in` | defocus crossfade, for clashing backgrounds |
-| `slide: true` | `push-slide` | `page-slide`, `shared-axis-y`, `whip-pan-cut` | a run of feature beats pushes as one plane |
-| `xf: "wipe"` | `wipe` | `directional-wipe`, `before-after-wipe`, `iris-reveal` | a brand-blue sheet crosses and clears the frame |
-| `xf: "shared-axis-y"` | `shared-axis-y` | `shared-axis-y`, `push-in` | content arrives from below — the cheapest of the set |
-| `xf: "iris"` | `iris` | `iris-reveal`, `camera-scan-gate` | an iris opening on the subject. Section openers only |
+`SEAMS` in `src/lkmotion.mjs` is data: the only thing a seam chooses is the **order** the outgoing
+elements leave in (`exit`: `start`, `end`, `center`, `edges`). `src/lkdirector.mjs exit()` performs
+it; `src/build-beats.mjs` runs the stage swap and the flare. Six moves rotate so no two neighbours
+repeat.
 
-The outgoing beat **always** crossfades at its own tail, on top of whatever named transition
-the incoming beat declares. A beat that skipped its own fade-out would sit at full opacity
-underneath the next beat for the rest of the film.
+| Storyboard flag / key | Seam | Catalog source |
+|---|---|---|
+| (none) | next in rotation: `push-left`, `zoom-in`, `push-up`, `push-right`, `zoom-out`, `push-down` | `page-slide`, `whip-pan-cut`, `shared-axis-y`, `zoom-through-transition` |
+| `zx: true` | `zoom-in` | `zoom-through-transition` |
+| `slide: true` | `push-left` | `page-slide`, `whip-pan-cut` |
+| `blur: true` | `blur` - **a straight push-in; blur itself is banned** | `fade-through` |
+| `xf: "<name>"` | that seam (or an old name: `wipe`→`push-left`, `iris`→`zoom-out`, `shared-axis-y`→`push-up`) | — |
+
+The flare is `editorial-flash-overlay` / `beat-accent` in spirit: finite, seek-safe, the colour swap hidden at the peak. It is the one opacity animation that remains, because it is light over an empty stage, not a fade of content; if it should go, the replacement is an iris: a disc of the new stage colour that scales from 0.
+
+## The motion director (2026-10-03)
+
+Treatments (above) say how a *scene* animates itself. Everything that applies to **every** scene,
+whatever its kind, is the director - `src/lkdirector.mjs` - so a new scene gets it for free:
+
+| What | Where | Catalog / reference source |
+|---|---|---|
+| items enter on the words that name them | `retime`, `wordSlots` | `notification-stack` (cue-driven entrances) |
+| tile → icon → text anatomy, with overshoot | `anatomy` | `spring-pop` |
+| the pointer: arrow / hand / pointing hand, bezier + mass + z | `cursor` | `spotlight-card`, awesome-claude-video "a visible cursor causes every click" |
+| the 3D camera that follows the pointer | `camera`, `pose`, `bez` | `caption-camera-follow` (fit to measured boxes, bezier), `yt-camera-move`, `tilt-card` |
+| the depth set (`src/lksatellites.mjs`) | `satellites` | `camera-rig-depth-stack`, `camera-3d-captions` (depth groups) |
+| the active component lifts toward the camera | `lift` | — |
+
+These live beside the treatments, not inside them, because a treatment is *optional per beat* and these are not.
 
 ## Rejected, and why
 
@@ -89,8 +111,12 @@ Satoshi-only explainer. Rejected as a class:
 - **Captions (16 entries)** — `caption-neon-glow`, `caption-glitch-rgb`, `caption-matrix-decode`,
   `caption-particle-burst` and the rest. Captions here are set by `build-beats.mjs` from the
   Deepgram word timings and must stay legible over both stages. A caption *style* is not a beat.
-- **3D / camera (10)** — `camera-rig-depth-stack`, `parallax-zoom`, `yt-camera-move`. The stage
-  is a flat plane by design (DESIGN_SYSTEM 1.1); depth staging contradicts it.
+- **3D / camera (10)** — *reversed 2026-10-03.* The scenes now live in a real 3D world (perspective
+  on a stable parent, `preserve-3d`, a camera that tilts, zooms and follows the pointer), built from
+  DOM 3D rather than WebGL so Satoshi stays real, crisp text. `camera-rig-depth-stack`, `tilt-card`,
+  `yt-camera-move` and `camera-3d-captions` are in the reference set. What stays rejected: **text in
+  3D** (`caption-camera-follow`'s word layout, `camera-3d-captions`' ring and hero words) - subtitles
+  are normal bottom captions - and `camera-shake`, which would read as a different product.
 - **Grain, halftone, chromatic aberration, ASCII, aurora, mesh gradients** — the texture layer
   is the product's own Bayer dither from `lkchrome.mjs`. A second texture system is a fight, not
   a look.
@@ -99,8 +125,9 @@ Satoshi-only explainer. Rejected as a class:
   app. Our subject is a data model, not a UI.
 - **Testimonial / social-proof / logo-wall / trust-strip cards** — we have no customers, no
   logos and no ratings to show. Rendering an empty one would be inventing content (rule 9).
-- **Glitch, confetti, shake, rubber-band, elastic** — wrong register for an explainer about a
-  CRM schema. `camera-shake` and `confetti` would read as a different product.
+- **Glitch, confetti, shake, rubber-band** — wrong register for an explainer about a CRM schema.
+  `camera-shake` and `confetti` would read as a different product. (*Overshoot* is no longer in this
+  list: it is the series' deliberate register - M5 - used on every component's entrance.)
 
 Kept-but-unused, available if a beat ever needs them: `spring-pop`, `outline-draw`,
 `stop-motion-cadence`, `variable-font-flex`, `swipe-rail`, `skeleton-reveal`,

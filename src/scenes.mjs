@@ -18,156 +18,14 @@
 
 import { C, R, SHADOW, hardDrop } from "./lkdesign.mjs";
 import { icon, iconRow, fieldIcon } from "./lkicons.mjs";
+import { cardFor, apiChip, glass, frost, surface, blueCard, surfaceOnWhite, pill, numChip } from "./components/card/index.mjs";
+import { OBJECT_ICON } from "./lkicons.mjs";
+import * as TABLE from "./components/table/index.mjs";
+export { cardFor, apiChip, glass, frost, surface, blueCard, surfaceOnWhite, pill, numChip, OBJECT_ICON };
 
-/* ------------------------------------------------------------------ helpers */
-
-/**
- * A FIXED-SIZE box. Plain border-radius now - no clip-path.
- *
- * The squircle version applied an SVG clip-path, which carries the shape but
- * does not size the box, so these had to be hard-coded and any mismatch between
- * the path geometry and the real box cropped the fill. Plain radius has no such
- * failure mode.
- */
-function sq(w, h, r, fill, stroke, strokeW = 1.5, extra = "", ownShadow = false) {
-  // ownShadow: the caller passes its own box-shadow in `extra`, so emit none
-  // here. Two declarations meant the later one silently won.
-  return `width:${w}px;height:${h}px;background:${fill};border-radius:${r}px;` +
-    (ownShadow ? "" : `box-shadow:0 ${SHADOW.y}px 0 0 ${SHADOW.grey}`) +
-    `${strokeW ? `,inset 0 0 0 ${strokeW}px ${stroke}` : ""};${extra}`;
-}
-
-/**
- * A CONTENT-SIZED card. rounded-md / rounded-lg + a hard, zero-blur grey
- * shadow straight down, so the card sits on the stage.
- */
-function card(maxW, r, fill, stroke, extra = "") {
-  return `max-width:${maxW}px;background:${fill};border-radius:${r}px;` +
-    `box-shadow:${hardDrop(SHADOW.y, SHADOW.grey)}` +
-    (stroke ? `,inset 0 0 0 1.5px ${stroke}` : "") +
-    (extra ? `;${extra}` : "");
-}
-
-/** The onboarding glass card: border-white/30 bg-white/10 + a grey hard drop. */
-export function glass(maxW, r = R.card, extra = "") {
-  return card(maxW, r, "rgba(255,255,255,0.10)", "rgba(255,255,255,0.30)", extra).replace(
-    hardDrop(SHADOW.y, SHADOW.grey),
-    `0 ${SHADOW.y}px 0 0 ${SHADOW.greyGlass}`,
-  );
-}
-
-/**
- * A translucent card for the WHITE stage — the counterpart to glass().
- *
- * Every decorative card on a white beat was an opaque near-white fill (#FFFFFF,
- * #EFF6FF, #F8FAFC). On a white stage an opaque white card has no edge, so the
- * frame read as a flat wash with floating grey text, and the stacked cards in
- * the journey beat disappeared into it entirely. Translucent fills plus the
- * hairline stroke keep every layer legible against the stage behind it.
- *
- * The reconstructed record panel stays opaque: that one is standing in for a real
- * product surface, and a see-through CRM panel would misrepresent the product.
- */
-export function frost(maxW, r = R.card, extra = "") {
-  return card(
-    maxW,
-    r,
-    "rgba(255,255,255,0.72)",
-    "rgba(42,140,255,0.18)",
-    `backdrop-filter:blur(6px);${extra}`,
-  );
-}
-
-/** White surface on blue - rounded-2xl bg-white text-slate-900. */
-export function surface(maxW, r = R.panel, extra = "") {
-  return card(maxW, r, C.white, null, `color:${C.slate900};${extra}`);
-}
-
-/**
- * THE CARD INVERSION RULE. A card is WHITE on the blue stage and BRAND BLUE on
- * the white stage. Never white-on-white, never white-on-white-with-a-hairline.
- *
- * Both earlier attempts at the white stage were the same mistake wearing
- * different clothes: an opaque near-white fill, and then an opaque white fill
- * with a 1.5px blue hairline pretending to be an edge. Neither is a card - they
- * are the stage, redrawn. The stage already alternates, so the card has to
- * alternate against it or it has no job.
- *
- * The drop is the brand's own darker blue (button.tsx:22 #1f6fe6), not grey:
- * a grey shadow under a blue card reads as dirt, a blue one reads as depth.
- */
-export function blueCard(maxW, r = R.card, extra = "") {
-  return card(maxW, r, C.blue, null, `color:${C.white};${extra}`).replace(
-    hardDrop(SHADOW.y, SHADOW.grey),
-    hardDrop(SHADOW.y, C.blueHover),
-  );
-}
-
-/**
- * Pick the card for the stage it will actually sit on.
- *
- * This is the only place the inversion is decided. A scene that hand-picks
- * `surface()` vs `frost()` per tone is how the record panel ended up with
- * literally identical branches on both tones (`onBlue ? surface(...) :
- * surface(...)`) and shipped white-on-white.
- */
-export function cardFor(tone, maxW, r = R.card, extra = "") {
-  return tone === "blue" ? surface(maxW, r, extra) : blueCard(maxW, r, extra);
-}
-
-/**
- * A white card that has to be visible ON A WHITE STAGE.
- *
- * Solid white on solid white has no edge — the hard drop alone was not enough to
- * separate three cards from each other. The fix is a hairline, not an alpha:
- * the fill stays fully solid (DESIGN_SYSTEM 1.1) and the stroke does the work the
- * translucency was faking.
- */
-export function surfaceOnWhite(maxW, r = R.panel, extra = "") {
-  return card(maxW, r, C.white, C.hairline, `color:${C.slate900};${extra}`);
-}
-
-/** White pill on blue - the h-14 rounded-xl font-bold CTA (OnboardingSteps:340). */
-export function pill(w, h, extra = "") {
-  return sq(
-    w,
-    h,
-    R.md,
-    C.white,
-    null,
-    0,
-    `color:${C.slate900};box-shadow:inset 0 -2px 0 0 #117eff, inset 0 1px 0 0 #ffffff, 0 ${SHADOW.y}px 0 0 ${SHADOW.greyGlass};${extra}`,
-    true,
-  );
-}
-
-/** Numbered chip - rounded-full size-5/6 font-bold (OnboardingSteps:421). */
-export function numChip(n, onBlue) {
-  return sq(
-    44,
-    44,
-    22,
-    onBlue ? C.white : C.chip,
-    null,
-    0,
-    `display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:${
-      onBlue ? C.blue : C.slate900
-    }`,
-  );
-}
-
-/**
- * How a Twenty object is named on screen.
- *
- * `agencyProspects` was being set in `.kv` — same size class as the human title
- * beside it, different case pattern, at 0.55 opacity — so a record header carried
- * three competing shapes of type for one idea and read as an accident. The API
- * name is still shown, because a worker opening Twenty has to recognise it, but
- * it is now a small translucent chip that is visibly subordinate to the title.
- */
-export function apiChip(api, onBlue = false) {
-  return `<span class="apichip${onBlue ? " on-blue" : ""}">${api}</span>`;
-}
+/* ------------------------------------------------------------------ helpers
+ * card / glass / frost / surface / blueCard / cardFor / surfaceOnWhite / pill / numChip / apiChip live in
+ * src/components/card/ now (re-exported above, so every scene call is unchanged). */
 
 /**
  * A record's field rows. A row is [key, value] or [iconName, key, value] - the
@@ -220,28 +78,6 @@ const ell = (cx, cy, rx, ry, stroke, sw = 3, extra = "") =>
 
 /* ------------------------------------------------------------------- scenes */
 
-/** Twenty object -> heroicon, used on every record panel header. */
-export const OBJECT_ICON = {
-  agencyProspects: "building-storefront",
-  agencyCalls: "phone",
-  agencyLeads: "users",
-  agencyPhones: "phone",
-  agencyMessages: "chat-bubble-left-right",
-  agencyConversations: "chat-bubble-left-ellipsis",
-  agencyCampaigns: "megaphone",
-  agencyOffers: "tag",
-  agencyListings: "building-office",
-  agencyCompetitors: "trophy",
-  agencyContents: "document-text",
-  agencyScripts: "document",
-  agencyTasks: "check-circle",
-  agencyCareerApplications: "briefcase",
-  agencyCareers: "briefcase",
-  agencyOpportunities: "chart-bar",
-  agencyServiceVerticals: "squares-plus",
-  agencyModels: "cpu-chip",
-};
-
 /** Journey step badge -> heroicon. */
 const STEP_ICON = {
   niche: "tag",
@@ -249,6 +85,26 @@ const STEP_ICON = {
   queued: "bars-3",
   out: "phone",
 };
+
+/**
+ * Blocker text -> heroicon. A card in this series always carries a tile; this keeps
+ * the choice in one place instead of in each storyboard. A storyboard can still
+ * override per entry with ["text", "icon-name"].
+ */
+const BLOCKER_ICON = [
+  [/person|people/i, "user"],
+  [/conversation|chat|message/i, "chat-bubble-left-right"],
+  [/deal|quote|price|offer/i, "banknotes"],
+  [/task|todo/i, "check-circle"],
+  [/transcript/i, "document-text"],
+  [/record/i, "microphone"],
+  [/sentiment|mood/i, "face-smile"],
+  [/check|verify|proof/i, "magnifying-glass"],
+  [/rung|rang|call|dial|phone/i, "phone"],
+  [/shop|company|business|prospect/i, "building-storefront"],
+  [/lead/i, "users"],
+];
+export const blockerIcon = (text) => (BLOCKER_ICON.find(([re]) => re.test(text)) || [null, "no-symbol"])[1];
 
 export const beats = {
   /* --- 0. HOOK â€” white stage, the number itself is the motion --------------- */
@@ -259,17 +115,17 @@ export const beats = {
       blueprint: "dataviz-countup",
       type: "hook",
       html: `<div class="stagec">
-        <div class="eyebrow blue" data-a="label" style="opacity:0">${label}</div>
-        <div class="count" data-a="count"><span class="n blue" style="opacity:0">0</span></div>
-        <div class="body blue dim" data-a="sub" style="opacity:0">${sub}</div>
+        <div class="eyebrow blue" data-a="label">${label}</div>
+        <div class="count" data-a="count"><span class="n blue">0</span></div>
+        <div class="body blue dim" data-a="sub">${sub}</div>
       </div>`,
       anim(tl, t0, { q, qq }) {
         const n = q('[data-a="count"] .n');
-        tl.fromTo(q('[data-a="label"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(n, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
+        tl.fromTo(q('[data-a="label"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        tl.fromTo(n, { scale: 0 }, { scale: 1, duration: 0.5, ease: __spr.soft }, t0 + 0.15);
         const c = { v: 0 };
         tl.to(c, { v: count, duration: 2.1, ease: "power2.out", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 0.3);
-        tl.fromTo(q('[data-a="sub"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.1);
+        tl.fromTo(q('[data-a="sub"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 2.1);
         // constant motion: the number keeps a slow breathe so the frame never dies
         tl.to(n, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3);
       },
@@ -277,6 +133,19 @@ export const beats = {
   },
 
   /* --- 1. PAIN â€” blue stage, the black box gets buried ---------------------- */
+  /**
+   * Cards orbit the subject. Three things this scene got wrong before, each now a
+   * rule in docs/MOTION_CRITERIA.md (M5):
+   *   - the cards had no padding, so their text touched the edge and the white
+   *     read as a hollow outline round a word;
+   *   - they carried no icon at all - every other card in the series has a tile;
+   *   - they sat on a fixed ring and floated 9px, so a 15s beat was one frame.
+   * Now each is a content-sized white card (the card rule on a blue stage) with
+   * a `.ico.xs` BLUE tile and WHITE glyph (DESIGN_SYSTEM 1.5), orbiting the box
+   * on an ellipse, and the box takes a hit each time one lands.
+   *
+   * `blockers` entries are "text" or ["text", "heroicon-name"].
+   */
   overwhelm({ blockers, label = "COLD CALLING" }) {
     return {
       name: "overwhelm",
@@ -284,32 +153,48 @@ export const beats = {
       blueprint: "overwhelm-surround",
       type: "pain_point",
       html: `<div class="stagec">
-        <div class="ovwrap"><div class="ovbox" data-a="box" style="opacity:0;${pill(560, 120, "display:flex;align-items:center;justify-content:center;")}"><span class="h3" style="color:${C.slate900}">${label}</span></div></div>
+        <div class="ovwrap"><div class="ovbox" data-a="box" style="${pill(620, 132, "display:flex;align-items:center;justify-content:center;")}"><span class="h2" style="color:${C.slate900}">${label}</span></div></div>
         ${blockers
-          .map(
-            (b, i) =>
-              `<div class="ovcard" data-i="${i}" style="${cardFor(
-          "blue",
-          520,
-          R.card,
-        )};display:flex;align-items:center;justify-content:center"><span class="body" style="color:${C.slate900}">${b}</span></div>`,
-          )
+          .map((b, i) => {
+            const [text, ic] = Array.isArray(b) ? b : [b, blockerIcon(b)];
+            return `<div class="ovorb" data-i="${i}"><div class="ovcard" data-i="${i}" style="${cardFor(
+              "blue",
+              760,
+              R.lg,
+            )};display:flex;align-items:center;gap:18px;padding:14px 30px 14px 14px"><span class="ico xs">${icon(
+              ic,
+              26,
+            )}</span><span class="ovt" style="color:${C.slate900}">${text}</span><i class="ovhit" data-fade-ok data-i="${i}" style="position:absolute;width:0;height:0;opacity:0"></i></div></div>`;
+          })
           .join("")}
       </div>`,
       anim(tl, t0, { q, qq }) {
         const box = q('[data-a="box"]');
-        tl.fromTo(box, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, t0);
-        const els = qq(".ovcard");
-        els.forEach((el, i) => {
-          const a = (i / els.length) * Math.PI * 2 - Math.PI / 2;
-          // land on a ring AROUND the pill â€” never on top of its label
-          const rx = Math.cos(a) * 660, ry = Math.sin(a) * 300;
-          tl.fromTo(el, { opacity: 0, x: rx * 1.8, y: ry * 1.8, scale: 0.72 }, { opacity: 1, x: rx, y: ry, scale: 1, duration: 0.55, ease: "power3.out" }, t0 + 0.6 + i * 0.4);
-          // constant motion: each card keeps drifting
-          tl.to(el, { y: ry + (i % 2 ? 9 : -9), duration: 1.6 + i * 0.13, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.4 + i * 0.4);
+        tl.fromTo(box, { scale: 0 }, { scale: 1, duration: 0.45, ease: __spr.pop }, t0);
+        const orbs = qq(".ovorb");
+        const N = orbs.length;
+        const RX = 600, RY = 270, OMEGA = 0.3; // rad/s: a slow, constant orbit
+        const place = (i, t) => {
+          const a = (i / N) * Math.PI * 2 - Math.PI / 2 + OMEGA * t;
+          return { x: Math.cos(a) * RX, y: Math.sin(a) * RY };
+        };
+        // One clock drives every orbit position, so the ring is a pure function of
+        // time: seek anywhere and every card is where it should be.
+        const clock = { t: 0 };
+        tl.to(clock, { t: 60, duration: 60, ease: "none", onUpdate() { orbs.forEach((o, i) => { const p = place(i, clock.t); gsap.set(o, { x: p.x, y: p.y }); }); } }, t0);
+        qq(".ovcard").forEach((el, i) => {
+          const p = place(i, 0);
+          const len = Math.hypot(p.x, p.y) || 1;
+          const out = { x: (p.x / len) * 620, y: (p.y / len) * 380 };
+          tl.fromTo(el, { x: out.x, y: out.y, scale: 0, rotation: i % 2 ? 6 : -6, xPercent: -50, yPercent: -50 },
+            { x: 0, y: 0, scale: 1, rotation: 0, xPercent: -50, yPercent: -50, duration: 0.5, ease: __spr.pop }, t0 + 0.6 + i * 0.4);
+          // the hit: when a card lands the box takes it. A zero-size marker inside the
+          // card carries the timing, so the retime in lkdirector.mjs moves the hit with
+          // the card it belongs to (a tween on the box itself would stay behind).
+          const hit = el.querySelector(".ovhit");
+          if (hit) tl.fromTo(hit, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "none", // timing-carrier-ok: zero-size, never visible
+            onUpdate() { const k = this.progress(); gsap.set(box, { x: Math.sin(k * Math.PI * 4) * 16 * (1 - k), rotation: Math.sin(k * Math.PI * 4) * 1.6 * (1 - k) }); } }, t0 + 1.0 + i * 0.4);
         });
-        const end = t0 + 0.6 + els.length * 0.4;
-        tl.to(box, { scale: 1.1, duration: 0.5, yoyo: true, repeat: 3, ease: "power2.inOut" }, end);
       },
     };
   },
@@ -328,16 +213,16 @@ export const beats = {
             300,
             "border-radius:64px",
           )};display:flex;align-items:center;justify-content:center"><span class="count" style="color:${C.slate900}"><span class="n" style="font-size:170px">${mystery}</span></span></div>
-          <div class="rvf" data-a="r" style="opacity:0;text-align:center">
+          <div class="rvf" data-a="r" style="text-align:center">
             <div class="hero white">${big}</div>
             <div class="body white dim" style="margin-top:22px;max-width:940px">${sub}</div>
           </div>
         </div>
       </div>`,
       anim(tl, t0, { q }) {
-        tl.fromTo(q('[data-a="m"]'), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, t0);
+        tl.fromTo(q('[data-a="m"]'), { scale: 0 }, { scale: 1, duration: 0.5, ease: __spr.pop }, t0);
         tl.to(q('[data-a="zw"]'), { scale: 0.34, duration: 1.5, ease: "power3.inOut" }, t0 + 2.2);
-        tl.fromTo(q('[data-a="r"]'), { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.55, ease: "power2.out" }, t0 + 2.9);
+        tl.fromTo(q('[data-a="r"]'), { scale: 0 }, { scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 2.9);
         // constant motion without touching letterSpacing: text reflow snaps to
         // integer pixels under the frame-by-frame capture engine (lint:
         // gsap_non_transform_motion), so the hero breathes on a transform.
@@ -347,7 +232,7 @@ export const beats = {
   },
 
   /* --- 3/4. THE RECORD â€” a real surface, one field lit at a time ------------ */
-  record({ kicker, title, api, r, focus, note, cursor = false, tone = "white" }) {
+  record({ kicker, title, api, r, focus, note, tone = "white" }) {
     const onBlue = tone === "blue";
     // The card inverts against the stage, so everything INSIDE it has to invert
     // with it. `cardIsBlue` is the single flag both the surface and the inner
@@ -373,42 +258,33 @@ export const beats = {
       blueprint: "asr-keyword-glow",
       type: "feature_showcase",
       html: `<div class="stagec">
-        ${kicker ? `<div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>` : ""}
+        ${kicker ? `<div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k">${kicker}</div>` : ""}
         <div class="recrow">
         <div class="pan" data-a="p" style="${cardFor(tone, 1000, R.panel)};overflow:hidden">${head}${body}</div>
-        <div class="note inrow" data-a="n" style="${cardFor(tone, 600, R.card)};padding:26px 28px;opacity:0;color:${
+        <div class="note inrow" data-a="n" style="${cardFor(tone, 600, R.card)};padding:26px 28px;color:${
           cardIsBlue ? C.white : C.slate900
         }">
           <div class="label" style="color:${cardIsBlue ? C.white : C.blue}">${focus}</div>
           <div class="body" style="font-weight:500;margin-top:10px">${note}</div>
         </div>
         </div>
-        ${
-          cursor
-            ? `<div class="cursor" data-a="cur"></div>`
-            : ""
-        }
       </div>`,
       anim(tl, t0, { q, qq }) {
-        if (kicker) tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(q('[data-a="p"]'), { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, t0 + 0.1);
+        if (kicker) tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        tl.fromTo(q('[data-a="p"]'), { y: 70, scale: 0 }, { y: 0, scale: 1, duration: 0.6, ease: __spr.pop }, t0 + 0.1);
         const all = qq(".pan .row");
         const target = q(`.pan [data-row="${focus}"]`);
         all.forEach((el, i) => {
           const isT = el === target;
           const at = t0 + 0.4 + i * (isT ? 0.85 : 0.26);
           el.style.background = el.dataset.fill || "";
-          tl.to(el, { opacity: 1, duration: 0.3, ease: "power2.out" }, at);
+          tl.fromTo(el, { scale: 0 }, { scale: 1, duration: 0.4, ease: __spr.pop }, at);
           if (isT) {
             // the named field lifts and stays lit â€” this is the "motion carries
             // the explanation" beat: the row the narration is saying lights up.
             tl.to(el, { background: el.dataset.focusfill || "", scale: 1.02, duration: 0.4, ease: "power2.out" }, at + 0.3);
             tl.to(el, { scale: 1.0, duration: 0.9, yoyo: true, repeat: -1, ease: "sine.inOut" }, at + 0.9);
-            tl.fromTo(q('[data-a="n"]'), { opacity: 0, x: 70 }, { opacity: 1, x: 0, duration: 0.45, ease: "power3.out" }, at + 0.45);
-            if (cursor) {
-              tl.fromTo(q('[data-a="cur"]'), { x: 250, y: 380, opacity: 0 }, { x: 700, y: 470, opacity: 1, duration: 0.7, ease: "power2.inOut" }, at);
-              tl.to(q('[data-a="cur"]'), { x: 712, y: 456, duration: 0.6, yoyo: true, repeat: -1, ease: "sine.inOut" }, at + 0.8);
-            }
+            tl.fromTo(q('[data-a="n"]'), { scale: 0, x: 70 }, { scale: 1, x: 0, duration: 0.45, ease: __spr.pop }, at + 0.45);
           }
         });
       },
@@ -416,43 +292,51 @@ export const beats = {
   },
 
   /* --- 5. RELATIONS â€” connectors draw out of the record --------------------- */
-  relations({ r, links, title = "Call", api = "agencyCalls" }) {
+  relations({ r, links, title = "Call", api = "agencyCalls", tone = "blue" }) {
     const panelH = 120 + r.length * 74;
+    // The card inverts with the stage (DESIGN_SYSTEM 1.1a); everything inside it
+    // derives from the same flag, never from the stage independently.
+    const onBlue = tone === "blue";
+    const cardIsBlue = !onBlue;
+    const ink = cardIsBlue ? C.white : C.slate900;
+    const sub = cardIsBlue ? "rgba(255,255,255,0.8)" : C.slate600;
+    const rowFill = cardIsBlue ? "rgba(255,255,255,0.10)" : "rgba(42,140,255,0.06)";
     const nodes = links
       .map(
         (l, i) =>
-          `<div class="node relnode" data-node="${i}" style="${surface(
+          `<div class="node relnode" data-node="${i}" style="${cardFor(
+            tone,
             430,
             R.card,
-          )};position:absolute;left:1330px;top:${400 + i * 240}px;opacity:0"><span class="nk" style="color:${C.slate900}">${l[0]}</span><span class="nv" style="color:${C.slate600}">${l[1]}</span></div>`,
+          )};position:absolute;left:1330px;top:${330 + i * 200}px;color:${ink}"><span class="nk" style="color:${ink}">${l[0]}</span><span class="nv" style="color:${sub}">${l[1]}</span></div>`,
       )
       .join("");
     const paths = links
-      .map((_, i) => `<path class="connector" data-p="${i}" d="${curve(1000, 620 + i * 40, 1330, 464 + i * 240, 0.12)}"/>`)
+      .map((_, i) => `<path class="connector${cardIsBlue ? " blue" : ""}" data-p="${i}" d="${curve(1000, 500 + i * 40, 1330, 394 + i * 200, 0.12)}"/>`)
       .join("");
     return {
       name: "relations",
-      tone: "blue",
+      tone,
       blueprint: "constellation-hub",
       type: "feature_showcase",
       html: `<div class="stagec">
-        <div class="pan" style="${surface(1180, R.panel,
-        )};position:absolute;left:300px;top:${720 - panelH / 2}px;overflow:hidden">
-          <div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid ${C.slate200}"><span class="h3" style="font-weight:900">${title}</span>${apiChip(api)}</div>
-          <div style="padding:26px 30px 30px">${rowsHTML(r)}</div>
+        <div class="pan" style="${cardFor(tone, 1180, R.panel,
+        )};position:absolute;left:300px;top:${590 - panelH / 2}px;overflow:hidden;color:${ink}">
+          <div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid ${cardIsBlue ? "rgba(255,255,255,0.22)" : C.slate200}"><span class="h3" style="font-weight:900;color:${ink}">${title}</span>${apiChip(api, cardIsBlue)}</div>
+          <div style="padding:26px 30px 30px">${rowsHTML(r, rowFill)}</div>
         </div>
         <svg class="relsvg" viewBox="0 0 1920 1080" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">${paths}</svg>
         ${nodes}
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q(".pan"), { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, t0);
+        tl.fromTo(q(".pan"), { scale: 0 }, { scale: 1, duration: 0.5, ease: __spr.pop }, t0);
         qq(".relsvg path").forEach((p, i) => {
           const len = p.getTotalLength();
           tl.set(p, { strokeDasharray: len, strokeDashoffset: len }, t0);
           tl.to(p, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, t0 + 0.9 + i * 0.6);
           const node = qq(".relnode")[i];
           if (node) {
-            tl.fromTo(node, { opacity: 0, x: 60, scale: 0.8 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 1.5 + i * 0.6);
+            tl.fromTo(node, { x: 60, scale: 0 }, { x: 0, scale: 1, duration: 0.5, ease: __spr.soft }, t0 + 1.5 + i * 0.6);
             tl.to(node, { y: i ? 12 : -12, duration: 1.7 + i * 0.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2.2 + i * 0.6);
           }
           if (node) tl.to(p, { strokeOpacity: 0.45, duration: 1.3, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2.6 + i * 0.6);
@@ -469,7 +353,7 @@ export const beats = {
       blueprint: "transcript-scroll-artifact-reveal",
       type: "feature_showcase",
       html: `<div class="stagec">
-        <div class="eyebrow blue" data-a="k" style="opacity:0">${kicker}</div>
+        <div class="eyebrow blue" data-a="k">${kicker}</div>
         <div class="tw" style="${cardFor("white", 1300, R.panel)}">
           <div class="thead"><span class="kv" style="color:${C.white}">transcript</span><span class="kv" data-a="len" style="color:${C.white};opacity:.62">0:00</span></div>
           <div class="tscroll"><div class="tinner" data-a="inner">${lines
@@ -484,15 +368,15 @@ export const beats = {
         </div>
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(q(".tw"), { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, t0 + 0.1);
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        tl.fromTo(q(".tw"), { y: 70, scale: 0 }, { y: 0, scale: 1, duration: 0.6, ease: __spr.pop }, t0 + 0.1);
         const inner = q('[data-a="inner"]');
         if (inner) {
           const travel = Math.max(0, inner.scrollHeight - 340);
           tl.fromTo(inner, { y: 0 }, { y: -travel, duration: dur, ease: "none" }, t0 + 0.9);
         }
         // waveform sweeps left continuously â€” the playhead is always moving
-        tl.fromTo(qq(".wave i"), { scaleY: 0.25, opacity: 0.4 }, { scaleY: 1, opacity: 1, duration: 0.22, stagger: { each: 0.03 }, ease: "power2.out" }, t0 + 0.9);
+        tl.fromTo(qq(".wave i"), { scaleY: 0.25, }, { scaleY: 1, duration: 0.22, stagger: { each: 0.03 }, ease: __spr.pop }, t0 + 0.9);
         tl.to(q(".wave"), { backgroundPositionX: "-120px", duration: 3, repeat: -1, ease: "none" }, t0);
         const secs = { v: 0 };
         const len = q('[data-a="len"]');
@@ -522,13 +406,13 @@ export const beats = {
         </div>
       </div>`,
       anim(tl, t0, { qq }) {
-        tl.fromTo(qq(".wk")[0], { opacity: 0, scale: 0.93 }, { opacity: 1, scale: 1, duration: 0.55, ease: "power3.out" }, t0);
+        tl.fromTo(qq(".wk")[0], { scale: 0 }, { scale: 1, duration: 0.55, ease: __spr.pop }, t0);
         qq(".wrow").forEach((r, i) => {
           const at = t0 + 0.8 + i * 1.1;
           tl.set(r, { attr: { "data-state": "active" } }, at);
           tl.fromTo(r.querySelector(".spin"), { rotation: 0 }, { rotation: 360, duration: 1.1, ease: "none", repeat: -1 }, at);
           tl.set(r, { attr: { "data-state": "done" } }, at + 1.1);
-          tl.fromTo(r.querySelector(".chk"), { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, at + 1.1);
+          tl.fromTo(r.querySelector(".chk"), { scale: 0 }, { scale: 1, duration: 0.3, ease: __spr.snap }, at + 1.1);
         });
       },
     };
@@ -542,18 +426,18 @@ export const beats = {
       blueprint: "dataviz-countup",
       type: "benefit_highlight",
       html: `<div class="stagec">
-        <div class="eyebrow blue" data-a="l" style="opacity:0">${label}</div>
-        <div class="count" data-a="c"><span class="n blue" style="opacity:0">${from}</span><span class="u blue" data-a="u" style="opacity:0">${unit}</span></div>
-        <div class="body blue dim" data-a="s" style="opacity:0">${sub}</div>
+        <div class="eyebrow blue" data-a="l">${label}</div>
+        <div class="count" data-a="c"><span class="n blue">${from}</span><span class="u blue" data-a="u">${unit}</span></div>
+        <div class="body blue dim" data-a="s">${sub}</div>
       </div>`,
       anim(tl, t0, { q }) {
         const n = q('[data-a="c"] .n');
-        tl.fromTo(n, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, t0);
-        tl.fromTo(q('[data-a="l"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(q('[data-a="u"]'), { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4 }, t0 + 1.6);
+        tl.fromTo(n, { scale: 0 }, { scale: 1, duration: 0.4, ease: __spr.soft }, t0);
+        tl.fromTo(q('[data-a="l"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        tl.fromTo(q('[data-a="u"]'), { scale: 0, x: -24 }, { scale: 1, x: 0, duration: 0.4, ease: __spr.pop }, t0 + 1.6);
         const c = { v: from };
         tl.to(c, { v: to, duration: 2.3, ease: "power2.inOut", onUpdate() { if (n) n.textContent = String(Math.round(c.v)); } }, t0 + 1.7);
-        tl.fromTo(q('[data-a="s"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0 + 2.2);
+        tl.fromTo(q('[data-a="s"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 2.2);
         tl.to(q('[data-a="c"]'), { scale: 1.02, duration: 1.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 4.2);
       },
     };
@@ -567,7 +451,7 @@ export const beats = {
       blueprint: "stat-bars-and-fills",
       type: "benefit_highlight",
       html: `<div class="stagec">
-        <div class="eyebrow white" data-a="k" style="opacity:0">${kicker}</div>
+        <div class="eyebrow white" data-a="k">${kicker}</div>
         <div class="sb" style="${cardFor("blue", 1120, R.panel)};padding:24px 30px;color:${C.slate900}">
           ${bars
             .map(
@@ -575,16 +459,16 @@ export const beats = {
             )
             .join("")}
         </div>
-        <div class="note" data-a="n" style="${cardFor("blue", 700, R.card)};padding:24px 28px;opacity:0;color:${C.slate900}"><div class="label" style="color:${C.blue}">aiSentiment</div><div class="body" style="font-weight:500;margin-top:8px">${note}</div></div>
+        <div class="note" data-a="n" style="${cardFor("blue", 700, R.card)};padding:24px 28px;color:${C.slate900}"><div class="label" style="color:${C.blue}">aiSentiment</div><div class="body" style="font-weight:500;margin-top:8px">${note}</div></div>
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
-        tl.fromTo(q(".sb"), { opacity: 0, y: 60, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, t0 + 0.1);
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        tl.fromTo(q(".sb"), { y: 60, scale: 0 }, { y: 0, scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.1);
         qq(".bf").forEach((f, i) => {
           tl.fromTo(f, { width: "0%" }, { width: f.dataset.w, duration: 0.85, ease: "power3.out" }, t0 + 0.7 + i * 0.42);
-          tl.to(f.parentElement, { opacity: 0.82, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2 + i * 0.42);
+          tl.to(f.parentElement, { scaleY: 1.12, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2 + i * 0.42);
         });
-        tl.fromTo(q('[data-a="n"]'), { opacity: 0, y: 46 }, { opacity: 1, y: 0, duration: 0.45 }, t0 + 3);
+        tl.fromTo(q('[data-a="n"]'), { scale: 0, y: 46 }, { scale: 1, y: 0, duration: 0.45, ease: __spr.pop }, t0 + 3);
       },
     };
   },
@@ -635,7 +519,7 @@ export const beats = {
       return `<div class="chip cvchip" style="position:absolute;display:flex;align-items:center;gap:14px;
  padding:11px 20px;border-radius:${R.lg}px;
  background:${chipFill};border:${chipBorder};
- color:${chipInk};white-space:nowrap;box-shadow:0 ${SHADOW.y}px 0 0 ${onBlue ? SHADOW.grey : C.blueHover}"
+ color:${chipInk};white-space:nowrap;box-shadow:inset 0 0 0 3px ${onBlue ? C.blueEdge : C.white},${hardDrop(SHADOW.y)}"
  data-cx="${cx.toFixed(0)}" data-cy="${cy.toFixed(0)}"><span class="${tileCls}">${icon(icn, 26)}</span><span>${text}</span></div>`;
     }).join("");
     return {
@@ -644,27 +528,27 @@ export const beats = {
       blueprint: "center-outward-expansion",
       type: "social_proof",
       html: `<div class="stagec">
-        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>
+        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k">${kicker}</div>
         <div class="cvf" style="position:relative;width:1300px;height:560px">${chips}
           <div class="cvcore" data-a="core" style="position:absolute;left:330px;top:185px;
  max-width:640px;padding:40px 44px;border-radius:${R.panel}px;
  background:${C.blue};border:${coreBorder};
- box-shadow:0 ${SHADOW.yLg}px 0 0 ${SHADOW.grey};text-align:center;opacity:0">
+ box-shadow:inset 0 0 0 3px ${C.white},${hardDrop(SHADOW.yLg)};text-align:center">
             <div class="label" style="color:${C.white};opacity:.78">one signal</div>
             <div class="h2" style="color:${C.white};margin-top:10px">${verdict}</div>
           </div>
         </div>
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
         qq(".cvchip").forEach((el, i) => {
           // numeric offsets only: GSAP cannot resolve calc() in a transform,
           // which silently collapses every chip back to dead centre.
           const cx = parseFloat(el.dataset.cx), cy = parseFloat(el.dataset.cy);
-          tl.fromTo(el, { opacity: 0, x: cx * 1.6, y: cy * 1.6, scale: 0.7 }, { opacity: 1, x: cx * 0.95, y: cy * 0.95, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.5 + i * 0.18);
+          tl.fromTo(el, { x: cx * 1.6, y: cy * 1.6, scale: 0 }, { x: cx * 0.95, y: cy * 0.95, scale: 1, duration: 0.5, ease: __spr.soft }, t0 + 0.5 + i * 0.18);
           tl.to(el, { scale: 1.06, duration: 1.4 + i * 0.07, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3 + i * 0.18);
         });
-        tl.fromTo(q('[data-a="core"]'), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.7)" }, t0 + 0.5 + n * 0.18 + 0.4);
+        tl.fromTo(q('[data-a="core"]'), { scale: 0 }, { scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.5 + n * 0.18 + 0.4);
         tl.to(q('[data-a="core"]'), { y: -8, duration: 1.5, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + n * 0.18 + 1.6);
       },
     };
@@ -693,7 +577,7 @@ export const beats = {
       blueprint: "grid-card-assemble",
       type: "key_feature",
       html: `<div class="stagec">
-        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>
+        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k">${kicker}</div>
         <div class="jr" style="display:flex;gap:22px">
           ${steps
             .map(
@@ -701,7 +585,7 @@ export const beats = {
                 tone,
                 400,
                 R.card,
-              )};padding:30px 28px;opacity:0;color:${ink}">
+              )};padding:30px 28px;color:${ink}">
               <div class="irow" style="gap:18px"><span class="ico ${
                 cardIsBlue ? "on-bluecard" : "on-blue"
               }">${icon(STEP_ICON[s[2]] || "arrow-right-circle", 40)}</span><span class="cm" style="margin-top:0;color:${
@@ -714,15 +598,15 @@ export const beats = {
             )
             .join("")}
         </div>
-        <div class="body ${onBlue ? "white dim" : "blue dim"}" data-a="n" style="opacity:0;margin-top:34px;text-align:center;max-width:1200px">${note}</div>
+        <div class="body ${onBlue ? "white dim" : "blue dim"}" data-a="n" style="margin-top:34px;text-align:center;max-width:1200px">${note}</div>
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
         qq(".jcard").forEach((el, i) => {
-          tl.fromTo(el, { opacity: 0, y: 90, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, t0 + 0.4 + i * 0.42);
+          tl.fromTo(el, { y: 90, scale: 0 }, { y: 0, scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.4 + i * 0.42);
           tl.to(el, { y: i % 2 ? -12 : 12, duration: 1.8 + i * 0.15, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6 + i * 0.42);
         });
-        tl.fromTo(q('[data-a="n"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 0.4 + qq(".jcard").length * 0.42 + 0.4);
+        tl.fromTo(q('[data-a="n"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 0.4 + qq(".jcard").length * 0.42 + 0.4);
       },
     };
   },
@@ -736,7 +620,7 @@ export const beats = {
       blueprint: "typewriter-reveal",
       type: "feature_showcase",
       html: `<div class="stagec">
-        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>
+        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k">${kicker}</div>
         <div class="twl" style="display:flex;flex-direction:column;gap:20px;align-items:center">
           ${lines
             .map(
@@ -745,20 +629,20 @@ export const beats = {
             )
             .join("")}
         </div>
-        <div class="body ${onBlue ? "white dim" : "blue dim"}" data-a="h" style="opacity:0;margin-top:36px;text-align:center;max-width:1180px">${hold}</div>
+        <div class="body ${onBlue ? "white dim" : "blue dim"}" data-a="h" style="margin-top:36px;text-align:center;max-width:1180px">${hold}</div>
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
         const lines = qq(".twl-line");
         lines.forEach((el, li) => {
           const target = el.querySelector(".t");
           const text = lines[li].dataset.text || "";
           const o = { n: 0 };
           tl.to(o, { n: text.length, duration: Math.max(0.5, text.length * 0.035), ease: "none", onUpdate() { target.textContent = text.slice(0, Math.round(o.n)); } }, t0 + 0.5 + li * 1.5);
-          tl.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35 }, t0 + 0.5 + li * 1.5);
+          tl.fromTo(el, { scale: 0, y: 30 }, { scale: 1, y: 0, duration: 0.35, ease: __spr.pop }, t0 + 0.5 + li * 1.5);
         });
-        qq(".caret").forEach((c, i) => tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i));
-        tl.fromTo(q('[data-a="h"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 0.5 + lines.length * 1.5 + 0.5);
+        qq(".caret").forEach((c, i) => tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i)); // blink-ok: an instant on/off, not a fade
+        tl.fromTo(q('[data-a="h"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 0.5 + lines.length * 1.5 + 0.5);
       },
     };
   },
@@ -781,18 +665,67 @@ export const beats = {
       blueprint: "comparison-split",
       type: "benefit_highlight",
       html: `<div class="stagec">
-        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k" style="opacity:0">${kicker}</div>
-        <div style="display:flex;gap:28px;align-items:stretch">${side(left[0], left[1], left[2])}<div class="spdiv" data-a="d" style="width:2px;background:rgba(127,127,127,.2);opacity:0"></div>${side(right[0], right[1], right[2])}</div>
-        <div class="body ${onBlue ? "white dim" : "blue dim"}" data-a="f" style="opacity:0;margin-top:36px;text-align:center;max-width:1200px">${foot}</div>
+        <div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k">${kicker}</div>
+        <div style="display:flex;gap:28px;align-items:stretch">${side(left[0], left[1], left[2])}<div class="spdiv" data-a="d" style="width:2px;background:rgba(127,127,127,.2)"></div>${side(right[0], right[1], right[2])}</div>
+        <div class="body ${onBlue ? "white dim" : "blue dim"}" data-a="f" style="margin-top:36px;text-align:center;max-width:1200px">${foot}</div>
       </div>`,
       anim(tl, t0, { q, qq }) {
-        tl.fromTo(q('[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
         const s = qq(".sp");
-        tl.fromTo(s[0], { opacity: 0, x: -90, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.55, ease: "power3.out" }, t0 + 0.3);
-        tl.fromTo(q('[data-a="d"]'), { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.5, ease: "power2.out" }, t0 + 0.9);
-        tl.fromTo(s[1], { opacity: 0, x: 90, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.55, ease: "power3.out" }, t0 + 0.6);
+        tl.fromTo(s[0], { x: -90, scale: 0 }, { x: 0, scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.3);
+        tl.fromTo(q('[data-a="d"]'), { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: __spr.pop }, t0 + 0.9);
+        tl.fromTo(s[1], { x: 90, scale: 0 }, { x: 0, scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.6);
         s.forEach((el, i) => tl.to(el, { y: i ? 10 : -10, duration: 1.9 + i * 0.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6));
-        tl.fromTo(q('[data-a="f"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 2.2);
+        tl.fromTo(q('[data-a="f"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 2.2);
+      },
+    };
+  },
+
+  /* --- TABLE - a real table: header band, column heads, rows that rise --------
+   *
+   * The object's rows as the product shows them (table.tsx), not a card pretending
+   * to be one. Each ROW rises on its own (and its cells resolve after it), so the
+   * table builds as a sequence the narration can walk down. `focus` (a row index)
+   * and `focusCol` (a column key) are the cell the beat is about: its row lifts
+   * toward the camera and its column head lights.
+   *
+   *   cols  [key, ...]          column keys; each gets its field icon
+   *   rows  [[cell, ...], ...]  one array per row, same order as cols
+   */
+  table({ kicker, title, api, cols, rows, focus = 0, focusCol, count, note, tone = "white" }) {
+    // The table itself is components/table: markup, entrance and pointer targets live THERE. This
+    // factory only places it on the stage and adds the kicker and the note.
+    const onBlue = tone === "blue";
+    const ink = onBlue ? C.slate900 : C.white;
+    const props = { tone, title, api, cols, rows, focus, focusCol, count, extrude: true };
+    return {
+      name: "table",
+      tone,
+      blueprint: "data-table-rise",
+      type: "feature_showcase",
+      // the component's entrance, as data: build-beats injects it as CMP and __cmp plays it
+      cmp: { steps: TABLE.steps(props), lastAt: TABLE.lastAt(props), focus: TABLE.targets(props).focus, focusCol: !!focusCol, liftZ: TABLE.LIFT_Z },
+      html: `<div class="stagec">
+        ${kicker ? `<div class="eyebrow ${onBlue ? "white" : "blue"}" data-a="k">${kicker}</div>` : ""}
+        ${TABLE.html(props)}
+        ${
+          note
+            ? `<div class="note" data-a="n" style="${cardFor(tone, 1100, R.card)};position:static;transform:none;width:auto;padding:22px 30px;color:${ink};text-align:left"><div class="body" style="font-weight:500">${note}</div></div>`
+            : ""
+        }
+      </div>`,
+      anim(tl, t0, { q, qq }) {
+        if (q('[data-a="k"]')) tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        // the table's own entrance: the card rises, the column heads, then every row and its cells
+        __cmp.play(tl, qq, CMP.steps, t0);
+        const hit = qq(CMP.focus)[0];
+        const lastAt = t0 + CMP.lastAt;
+        if (hit) {
+          hit.style.background = hit.dataset.fill;
+          __cmp.lift(tl, qq, CMP.focus, lastAt + 0.3, 1.015, CMP.liftZ); // the ACTIVATED row lifts (its slab shows)
+        }
+        if (CMP.focusCol) __cmp.lift(tl, qq, ".tch.on, .tc.on", lastAt + 0.4, 1.04, 0);
+        if (q('[data-a="n"]')) tl.fromTo(q('[data-a="n"]'), { scale: 0, y: 46 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.soft }, lastAt + 0.6);
       },
     };
   },
@@ -805,21 +738,21 @@ export const beats = {
       blueprint: "logo-assemble-lockup",
       type: "cta",
       html: `<div class="stagec">
-        <div class="ecmark" data-a="m" style="opacity:0"><img src="assets/logo.svg" alt="ListeningKit"/></div>
-        <div class="wordmark" data-a="w" style="opacity:0">${word}</div>
-        <div class="body white" data-a="c" style="opacity:0;margin-top:26px">${cta}</div>
-        <div class="kv white" data-a="u" style="opacity:0;margin-top:26px;padding:14px 26px;border-radius:${R.lg}px;background:rgba(255,255,255,.14)">${url}</div>
+        <div class="ecmark" data-a="m"><img src="assets/logo.svg" alt="ListeningKit"/></div>
+        <div class="wordmark" data-a="w">${word}</div>
+        <div class="body white" data-a="c" style="margin-top:26px">${cta}</div>
+        <div class="kv white" data-a="u" style="margin-top:26px;padding:14px 26px;border-radius:${R.lg}px;background:rgba(255,255,255,.14)">${url}</div>
       </div>`,
       anim(tl, t0, { q }) {
-        tl.fromTo(q('[data-a="m"]'), { opacity: 0, scale: 0.5, rotate: -12 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.6, ease: "back.out(1.8)" }, t0);
+        tl.fromTo(q('[data-a="m"]'), { scale: 0, rotate: -12 }, { scale: 1, rotate: 0, duration: 0.6, ease: __spr.pop }, t0);
         // Tracking is held static AND zero: letterSpacing reflows text and snaps
         // glyph positions under frame-by-frame capture, and a tracked-out
         // wordmark is not the wordmark. See `.wordmark` in lkchrome.mjs.
-        tl.fromTo(q('[data-a="w"]'), { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, t0 + 0.35);
-        tl.fromTo(q('[data-a="c"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 0.9);
-        tl.fromTo(q('[data-a="u"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 1.3);
+        tl.fromTo(q('[data-a="w"]'), { scale: 0, y: 40 }, { scale: 1, y: 0, duration: 0.7, ease: __spr.pop }, t0 + 0.35);
+        tl.fromTo(q('[data-a="c"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 0.9);
+        tl.fromTo(q('[data-a="u"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 1.3);
         tl.to(q('[data-a="m"]'), { y: -10, duration: 1.8, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
-        tl.to(q('[data-a="w"]'), { opacity: 0.88, duration: 1.8, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
+        tl.to(q('[data-a="w"]'), { scale: 1.025, duration: 1.8, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
       },
     };
   },

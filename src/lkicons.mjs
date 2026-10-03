@@ -136,3 +136,25 @@ const kebab = (s) => {
 };
 
 const pascal = (s) => s.split("-").map((p) => p[0].toUpperCase() + p.slice(1)).join("");
+
+/** Twenty object -> heroicon, used on every record panel header and by components/table. */
+export const OBJECT_ICON = {
+  agencyProspects: "building-storefront",
+  agencyCalls: "phone",
+  agencyLeads: "users",
+  agencyPhones: "phone",
+  agencyMessages: "chat-bubble-left-right",
+  agencyConversations: "chat-bubble-left-ellipsis",
+  agencyCampaigns: "megaphone",
+  agencyOffers: "tag",
+  agencyListings: "building-office",
+  agencyCompetitors: "trophy",
+  agencyContents: "document-text",
+  agencyScripts: "document",
+  agencyTasks: "check-circle",
+  agencyCareerApplications: "briefcase",
+  agencyCareers: "briefcase",
+  agencyOpportunities: "chart-bar",
+  agencyServiceVerticals: "squares-plus",
+  agencyModels: "cpu-chip",
+};

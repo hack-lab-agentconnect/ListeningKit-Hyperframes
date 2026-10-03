@@ -12,10 +12,22 @@
     "render": "node scripts/entry.mjs && npx --yes hyperframes@0.8.112 render",
     "snapshot": "node scripts/entry.mjs && npx --yes hyperframes@0.8.112 snapshot",
     "review": "node scripts/review-frames.mjs",
-    "lint": "npm run lint:design && npm run lint:repo",
+    "lint": "npm run lint:design && npm run lint:pacing && npm run test:spring && npm run test:color && npm run test:pointer && npm run test:fx && npm run lint:components && npm run lint:transitions && npm run lint:repo",
     "lint:design": "node scripts/lint-design.mjs",
+    "lint:pacing": "node scripts/lint-pacing.mjs",
+    "test:spring": "node scripts/test-spring.mjs",
+    "test:color": "node scripts/test-color.mjs",
+    "test:pointer": "node scripts/test-pointer.mjs",
+    "lab:pointer": "node src/build-lab.mjs && node scripts/entry.mjs pointer-lab",
+    "lab:transition": "node src/build-demo.mjs --entry",
+    "lint:transitions": "node scripts/lint-transitions.mjs",
+    "lint:components": "node scripts/lint-components.mjs",
+    "lab:components": "node src/build-components-lab.mjs --entry",
+    "test:fx": "node scripts/test-fx.mjs",
     "lint:repo": "node scripts/lint-repo.mjs",
-    "audio": "node src/fetch-audio.mjs"
+    "audio": "node src/fetch-audio.mjs",
+    "refs": "node scripts/refs.mjs",
+    "times": "node scripts/narration-times.mjs"
   },
   "devDependencies": {
     "lefthook": "^1.7.0"

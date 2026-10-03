@@ -130,8 +130,8 @@ export const TREATMENTS = {
         __fx.words(el).forEach((w, i) => {
           tl.fromTo(
             w,
-            { opacity: 0, y: rise },
-            { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" },
+            { scale: 0, y: rise },
+            { scale: 1, y: 0, duration: 0.42, ease: __spr.pop },
             t0 + start + ei * 0.1 + i * stagger,
           );
         });
@@ -162,8 +162,8 @@ export const TREATMENTS = {
         __fx.chars(el).forEach((c, i) => {
           tl.fromTo(
             c,
-            { opacity: 0, y: drop, scaleY: 0.86 },
-            { opacity: 1, y: 0, scaleY: 1, duration: 0.3, ease: "back.out(2)" },
+            { y: drop, scaleY: 0.86 },
+            { y: 0, scaleY: 1, duration: 0.3, ease: __spr.snap },
             t0 + start + ei * 0.1 + i * stagger,
           );
         });
@@ -195,8 +195,8 @@ export const TREATMENTS = {
       const lines = h.qq(".twl-line");
       tl.fromTo(
         __fx.sel(h, '[data-a="k"]'),
-        { opacity: 0, y: 26 },
-        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+        { scale: 0, y: 26 },
+        { scale: 1, y: 0, duration: 0.5, ease: __spr.pop },
         t0,
       );
       let cursor = 0.5;
@@ -206,7 +206,7 @@ export const TREATMENTS = {
         if (!target) return;
         const dur = Math.max(0.45, text.length / cps);
         const state = { n: 0 };
-        tl.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35 }, t0 + cursor);
+        tl.fromTo(el, { scale: 0, y: 30 }, { scale: 1, y: 0, duration: 0.35, ease: __spr.pop }, t0 + cursor);
         tl.to(
           state,
           {
@@ -227,15 +227,15 @@ export const TREATMENTS = {
             c.style.width = "18px";
             c.style.borderRadius = "3px";
           }
-          tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i * 0.2);
+          tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i * 0.2); // blink-ok: an instant on/off, not a fade
         });
       } else {
         h.qq(".caret").forEach((c) => c.remove());
       }
       tl.fromTo(
         __fx.sel(h, '[data-a="h"]'),
-        { opacity: 0, y: 26 },
-        { opacity: 1, y: 0, duration: 0.5 },
+        { scale: 0, y: 26 },
+        { scale: 1, y: 0, duration: 0.5, ease: __spr.pop },
         t0 + cursor + 0.3,
       );
     },
@@ -264,17 +264,17 @@ export const TREATMENTS = {
       const step = fx.step ?? 0.34;
       const start = fx.start ?? 0.35;
       const rows = h.qq(".row");
-      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
       rows.forEach((row, i) => {
         const at = t0 + start + i * step;
-        tl.fromTo(row, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, at);
+        tl.fromTo(row, { scale: 0, y: 18 }, { scale: 1, y: 0, duration: 0.4, ease: __spr.pop }, at);
         const k = row.querySelector(".rk");
         const v = row.querySelector(".rv");
-        if (k) tl.fromTo(k, { opacity: 0.35, x: -8 }, { opacity: 1, x: 0, duration: 0.32 }, at);
+        if (k) tl.fromTo(k, { scale: 0, x: -8 }, { scale: 1, x: 0, duration: 0.32, ease: __spr.pop }, at);
         // The value resolves AFTER its label, never with it: the label is the
         // question, the value is the answer, and the beat exists to make that
         // order legible.
-        if (v) tl.fromTo(v, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, at + 0.16);
+        if (v) tl.fromTo(v, { scale: 0, y: 10 }, { scale: 1, y: 0, duration: 0.42, ease: __spr.pop }, at + 0.16);
       });
 const edge = rows.length * step;
       // The named field still lights up. `field-resolve` replaces the ORDER the
@@ -289,7 +289,7 @@ const edge = rows.length * step;
       }
       const note = __fx.sel(h, ".note")[0];
       if (note) {
-        tl.fromTo(note, { opacity: 0, x: 24 }, { opacity: 1, x: 0, duration: 0.5 }, t0 + start + (lit ? edge + 0.45 : edge + 0.2));
+        tl.fromTo(note, { scale: 0, x: 24 }, { scale: 1, x: 0, duration: 0.5, ease: __spr.pop }, t0 + start + (lit ? edge + 0.45 : edge + 0.2));
       }
     },
   },
@@ -306,7 +306,7 @@ const edge = rows.length * step;
   "focus-blur-resolve": {
     from: ["focus-blur-resolve", "focus-rack", "spotlight-card"],
     beats: ["record", "relations", "converge"],
-    needs: "fx.focus (key, else the beat's `focus`), fx.dim (opacity), fx.blur (px)",
+    needs: "fx.focus (key, else the beat's `focus`)",
     mode: "after",
     anim(tl, t0, h) {
       const A = h.A || {};
@@ -316,25 +316,12 @@ const edge = rows.length * step;
       const rows = h.qq(".row");
       const hit = rows.find((r) => r.dataset.row === focus);
       if (!hit) return;
-      const dim = fx.dim ?? 0.4;
-      const blur = fx.blur ?? 2;
-      rows.forEach((r) => {
-        if (r === hit) return;
-        tl.to(r, { opacity: dim, filter: `blur(${blur}px)`, duration: 0.5, ease: "power2.out" }, t0 + 0.6);
-      });
-      tl.fromTo(
-        hit,
-        { opacity: 1, scale: 1 },
-        { scale: 1.02, duration: 0.5, ease: "power2.out" },
-        t0 + 0.6,
-      );
-      tl.to(
-        hit,
-        { scale: 1, duration: 1.6, yoyo: true, repeat: -1, ease: "sine.inOut" },
-        t0 + 1.1,
-      );
+      // The subject LIFTS (scale, and the director raises it toward the camera). The other rows are
+      // left alone: dimming them was a second way of faking depth, and the decision is edge + scale.
+      tl.to(hit, { scale: 1.02, duration: 0.5, ease: __spr.pop }, t0 + 0.6);
+      tl.to(hit, { scale: 1, duration: 1.6, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.1);
       const v = hit.querySelector(".rv");
-      if (v) tl.fromTo(v, { opacity: 0.4 }, { opacity: 1, duration: 0.6 }, t0 + 0.6);
+      if (v) tl.fromTo(v, { scale: 0, }, { scale: 1, duration: 0.6, ease: __spr.pop }, t0 + 0.6);
     },
   },
 
@@ -363,7 +350,7 @@ const edge = rows.length * step;
         const at = t0 + 0.6 + i * step;
         const dot = row.querySelector(".rdot");
         if (dot) {
-          tl.fromTo(dot, { scale: 0.2, opacity: 0.3 }, { scale: 1, opacity: 1, duration: 0.32, ease: "back.out(2.4)" }, at);
+          tl.fromTo(dot, { scale: 0, }, { scale: 1, duration: 0.32, ease: __spr.snap }, at);
         }
         if (fx.tick !== "dot") {
           const mark = document.createElement("span");
@@ -372,10 +359,10 @@ const edge = rows.length * step;
 // Brand blue on either stage: the tick sits on the CARD, and the card
           // is what inverts, not the stage.
           mark.style.cssText =
-            "position:absolute;right:22px;top:50%;margin-top:-13px;opacity:0;color:" +
+            "position:absolute;right:22px;top:50%;margin-top:-13px;color:" +
             ((h.A && h.A.tone) === "blue" ? __fx.blue : __fx.blueText);
           row.appendChild(mark);
-          tl.fromTo(mark, { opacity: 0, scale: 0.4, rotate: -25 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.4, ease: "back.out(2.2)" }, at + 0.12);
+          tl.fromTo(mark, { scale: 0, rotate: -25 }, { scale: 1, rotate: 0, duration: 0.4, ease: __spr.snap }, at + 0.12);
         }
       });
     },
@@ -403,21 +390,21 @@ const edge = rows.length * step;
       const chipStep = fx.chip ?? 0.18;
       const pull = fx.pull ?? 0.95;
       const n = h.qq(".cvchip").length || A.n || 0;
-      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
       h.qq(".cvchip").forEach((el, i) => {
         const cx = parseFloat(el.dataset.cx) || 0;
         const cy = parseFloat(el.dataset.cy) || 0;
         tl.fromTo(
           el,
-          { opacity: 0, x: cx * 1.7, y: cy * 1.7, scale: 0.72, rotate: -4 },
-          { opacity: 1, x: cx * pull, y: cy * pull, scale: 1, rotate: 0, duration: 0.55, ease: "back.out(1.5)" },
+          { x: cx * 1.7, y: cy * 1.7, scale: 0, rotate: -4 },
+          { x: cx * pull, y: cy * pull, scale: 1, rotate: 0, duration: 0.55, ease: __spr.soft },
           t0 + 0.5 + i * chipStep,
         );
       });
       const coreAt = t0 + 0.5 + n * chipStep + (fx.coreIn ?? 0.4);
       const core = __fx.sel(h, '[data-a="core"]')[0];
       if (core) {
-        tl.fromTo(core, { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" }, coreAt);
+        tl.fromTo(core, { scale: 0 }, { scale: 1, duration: 0.6, ease: __spr.pop }, coreAt);
         // The core lands ON the last chip, not after a beat of silence: the
         // chain has to feel like it resolves, not like it pauses.
         tl.to(core, { scale: 1.04, duration: 0.28, yoyo: true, repeat: 3, ease: "sine.inOut" }, coreAt + 0.6);
@@ -478,23 +465,23 @@ const edge = rows.length * step;
       const step = fx.step ?? 0.34;
       const from = fx.from || "up";
       const start = fx.start ?? 0.4;
-      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
       const cards = h.qq(".jcard");
       cards.forEach((el, i) => {
         const at = t0 + start + i * step;
         const entry =
           from === "left"
-            ? { opacity: 0, x: -70, scale: 0.96 }
+            ? { x: -70, scale: 0 }
             : from === "right"
-              ? { opacity: 0, x: 70, scale: 0.96 }
+              ? { x: 70, scale: 0 }
               : from === "scale"
-                ? { opacity: 0, scale: 0.86 }
-                : { opacity: 0, y: 74, scale: 0.96 };
-        tl.fromTo(el, entry, { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.55, ease: "power3.out" }, at);
+                ? { scale: 0 }
+                : { y: 74, scale: 0 };
+        tl.fromTo(el, entry, { x: 0, y: 0, scale: 1, duration: 0.55, ease: __spr.pop }, at);
       });
       const last = cards.length ? start + cards.length * step : start;
       const note = __fx.sel(h, '[data-a="n"]')[0];
-      if (note) tl.fromTo(note, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + last + 0.35);
+      if (note) tl.fromTo(note, { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + last + 0.35);
     },
   },
 
@@ -516,7 +503,7 @@ const edge = rows.length * step;
       const edgeDur = fx.edge ?? 0.7;
       const from = fx.from || "left";
       const start = fx.start ?? 0.3;
-      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+      tl.fromTo(__fx.sel(h, '[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
       const sides = h.qq(".sp");
       if (!sides.length) return;
       const clip = (v) => ({ clipPath: `inset(0 ${v}% 0 0)` });
@@ -524,11 +511,11 @@ const edge = rows.length * step;
         const lead = i === 0 ? 0 : edgeDur;
         const entry =
           from === "right"
-            ? { opacity: 0, x: 90, scale: 0.95 }
+            ? { x: 90, scale: 0 }
             : from === "centre"
-              ? { opacity: 0, scale: 0.9 }
-              : { opacity: 0, x: -90, scale: 0.95 };
-        tl.fromTo(s, entry, { opacity: 1, x: 0, scale: 1, duration: 0.6, ease: "power3.out" }, t0 + start + lead);
+              ? { scale: 0 }
+              : { x: -90, scale: 0 };
+        tl.fromTo(s, entry, { x: 0, scale: 1, duration: 0.6, ease: __spr.pop }, t0 + start + lead);
         // The travelling edge: the card's own leading boundary crosses the frame
         // rather than the card sliding. Same destination, different reading.
         tl.fromTo(
@@ -539,9 +526,9 @@ const edge = rows.length * step;
         );
       });
       const div = __fx.sel(h, '[data-a="d"]')[0];
-      if (div) tl.fromTo(div, { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: 0.45, ease: "power2.out" }, t0 + start + edgeDur * 0.5);
+      if (div) tl.fromTo(div, { scaleY: 0 }, { scaleY: 1, duration: 0.45, ease: __spr.pop }, t0 + start + edgeDur * 0.5);
       const foot = __fx.sel(h, '[data-a="f"]')[0];
-      if (foot) tl.fromTo(foot, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + start + edgeDur + 0.7);
+      if (foot) tl.fromTo(foot, { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + start + edgeDur + 0.7);
       sides.forEach((s, i) => tl.to(s, { y: i ? 10 : -10, duration: 1.9 + i * 0.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + start + edgeDur + 0.8));
     },
   },
@@ -571,17 +558,17 @@ const edge = rows.length * step;
       const num = __fx.sel(h, fx.number || '[data-a="count"] .n, [data-a="c"] .n')[0];
       const unit = __fx.sel(h, '[data-a="u"]')[0];
       const sub = __fx.sel(h, '[data-a="sub"], [data-a="s"]')[0];
-      if (label) tl.fromTo(label, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, t0);
+      if (label) tl.fromTo(label, { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
       const from = A.from ?? 0;
       const to = A.count ?? A.to ?? 0;
       if (num) {
         const state = { n: from };
         const decimals = String(to).includes(".") ? String(to).split(".")[1].length : 0;
-        // The number ships in the markup at opacity:0, so the treatment has to
+        // The number ships in the markup hidden (scale 0 from its fromTo), so the treatment has to
         // bring it in itself. Not optional: a treatment that REPLACES the beat's
         // own animation inherits the duty to reveal everything that animation
         // revealed. Missing this produced an empty frame on every counted beat.
-        tl.fromTo(num, { opacity: 0, scale: 0.82 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t0 + 0.15);
+        tl.fromTo(num, { scale: 0 }, { scale: 1, duration: 0.5, ease: __spr.soft }, t0 + 0.15);
         tl.to(
           state,
           {
@@ -596,14 +583,14 @@ const edge = rows.length * step;
           },
           t0 + 0.5,
         );
-        tl.fromTo(num, { scale: 0.94 }, { scale: 1, duration: 0.45, ease: `back.out(${fx.settle ?? 1.9})` }, t0 + 0.5 + dur);
+        tl.fromTo(num, { scale: 0.94 }, { scale: 1, duration: 0.45, ease: (fx.settle ?? 1.9) <= 1.5 ? __spr.soft : (fx.settle ?? 1.9) < 1.95 ? __spr.pop : __spr.snap }, t0 + 0.5 + dur);
         // Every beat animates continuously, so the number keeps a slow breathe.
         // A transform only: letterSpacing or y reflow snaps glyphs under
         // frame-by-frame capture.
         tl.to(num, { scale: 1.015, duration: 1.1, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 0.5 + dur + 0.4);
       }
-      if (unit) tl.fromTo(unit, { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.4 }, t0 + 0.5 + dur * 0.6);
-      if (sub) tl.fromTo(sub, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5 }, t0 + 0.5 + dur + 0.6);
+      if (unit) tl.fromTo(unit, { scale: 0, x: -24 }, { scale: 1, x: 0, duration: 0.4, ease: __spr.pop }, t0 + 0.5 + dur * 0.6);
+      if (sub) tl.fromTo(sub, { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 0.5 + dur + 0.6);
     },
   },
 
@@ -720,104 +707,63 @@ const edge = rows.length * step;
       if (mark) {
         // scale + fade only. No rotate, no skew, no drawn-in rebuild: the
         // asset IS the wordmark's lockup.
-        tl.fromTo(mark, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out" }, t0);
+        tl.fromTo(mark, { scale: 0 }, { scale: 1, duration: 0.9, ease: __spr.pop }, t0);
       }
       if (word) {
-        tl.fromTo(word, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" }, t0 + 0.45);
+        tl.fromTo(word, { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.75, ease: __spr.pop }, t0 + 0.45);
         // letterSpacing is never animated. It reflows the glyphs on every frame
         // and a tracked-out wordmark is not the wordmark.
-        tl.to(word, { opacity: 0.9, duration: 2.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
+        tl.to(word, { scale: 1.02, duration: 2.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
       }
-      if (cta) tl.fromTo(cta, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.6 }, t0 + 1.0);
-      if (url) tl.fromTo(url, { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.6 }, t0 + 1.35);
+      if (cta) tl.fromTo(cta, { scale: 0, y: 22 }, { scale: 1, y: 0, duration: 0.6, ease: __spr.pop }, t0 + 1.0);
+      if (url) tl.fromTo(url, { scale: 0, y: 22 }, { scale: 1, y: 0, duration: 0.6, ease: __spr.pop }, t0 + 1.35);
     },
   },
 };
 
-/* ------------------------------------------------------------- transitions */
+/* ------------------------------------------------------------------- seams */
 
 /**
- * TRANSITIONS â€” the seam between two beats.
+ * SEAMS - the cut between two beats (criteria M6).
  *
- * These run on the ROOT timeline (build-beats.mjs), not inside a beat, because a
- * transition is a property of the cut, not of either scene. They never change
- * the timing model: XF and LEAD stay exactly as they are, so adding a richer
- * transition cannot move a beat relative to its narration.
+ * NOTHING FADES. A cut is a scale-out then a scale-in: the outgoing scene removes every element
+ * (each scales DOWN to 0, staggered), the stage is empty for a moment (an exposure flare, a light
+ * overlay, hides the stage-colour swap), then the incoming scene's elements scale UP from 0 with
+ * overshoot. The only thing a seam chooses is the ORDER the outgoing elements leave in:
  *
- * from: zoom-through-transition, fade-through, shared-axis-y, iris-reveal,
- *       push-in, match-cut.
+ *   exit  "start"   first element first      "end"    last element first
+ *         "center"  the middle first         "edges"  the outer ones first
+ *
+ * That is the seam's whole character, so six seams still rotate and no two neighbours repeat.
+ * XF, LEAD and ENTER are untouched by the choice: a seam changes how the cut looks, never when it
+ * happens relative to the narration.
  */
-export const TRANSITIONS = {
-  /** Existing `zx` flag: push through the cut. */
-  "zoom-through": {
-    from: ["zoom-through-transition"],
-    dir: "in",
-    anim(tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, scale: 1.14 }, { opacity: 1, scale: 1, duration: h.dur, ease: "power2.inOut" }, at);
-    },
-  },
-  /** Existing `blur` flag: crossfade through a defocus, for clashing backgrounds. */
-  "blur-crossfade": {
-    from: ["fade-through", "blur-in"],
-    dir: "in",
-    anim(tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, filter: "blur(22px)" }, { opacity: 1, filter: "blur(0px)", duration: h.dur, ease: "power2.inOut" }, at);
-    },
-  },
-  /** Existing `slide` flag: a run of feature beats pushes as one plane. */
-  "push-slide": {
-    from: ["page-slide", "shared-axis-y", "whip-pan-cut"],
-    dir: "in",
-    anim(tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: h.dur, ease: "power3.out" }, at);
-    },
-  },
-  /** A wipe boundary for a new section: a brand-blue sheet crosses and clears. */
-  wipe: {
-    from: ["directional-wipe", "before-after-wipe", "iris-reveal"],
-    dir: "both",
-    anim(tl, at, h) {
-      const sheet = h.sheet;
-      if (!sheet) return;
-      const dir = h.dir || "left";
-      const prop = dir === "right" ? "xPercent" : dir === "up" ? "yPercent" : "xPercent";
-      const sign = dir === "right" || dir === "up" ? 100 : -100;
-      tl.set(sheet, { opacity: 1 }, at - h.dur * 0.5);
-      tl.fromTo(sheet, { [prop]: sign }, { [prop]: 0, duration: h.dur * 0.5, ease: "power2.in" }, at - h.dur * 0.5);
-      tl.to(sheet, { [prop]: -sign, duration: h.dur * 0.5, ease: "power2.out" }, at);
-      tl.set(sheet, { opacity: 0 }, at + h.dur * 0.5);
-    },
-  },
-  /** A shared-axis lift: content leaves up, arrives from up. Cheapest of the set. */
-  "shared-axis-y": {
-    from: ["shared-axis-y", "push-in"],
-    dir: "in",
-    anim(tl, at, h) {
-      const el = h.el;
-      tl.fromTo(el, { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: h.dur, ease: "power2.out" }, at);
-    },
-  },
-  /** An iris opening on the subject. Section openers only â€” it is a full stop. */
-  iris: {
-    from: ["iris-reveal", "camera-scan-gate"],
-    dir: "both",
-    anim(tl, at, h) {
-      const el = h.el;
-      tl.fromTo(
-        el,
-        { opacity: 0, clipPath: "inset(50% 50% 50% 50% round 24px)" },
-        { opacity: 1, clipPath: "inset(0% 0% 0% 0% round 0px)", duration: h.dur, ease: "power3.inOut" },
-        at,
-      );
-    },
-  },
+export const SEAMS = {
+  "push-left": { from: ["page-slide", "whip-pan-cut"], exit: "start" },
+  "push-right": { from: ["page-slide", "whip-pan-cut"], exit: "end" },
+  "push-up": { from: ["shared-axis-y", "push-in"], exit: "center" },
+  "push-down": { from: ["shared-axis-y"], exit: "edges" },
+  "zoom-in": { from: ["zoom-through-transition"], exit: "center" },
+  "zoom-out": { from: ["zoom-through-transition", "iris-reveal"], exit: "edges" },
+  /** Was a defocus. Blur is banned and so is a fade; this is a plain centre-out removal. */
+  blur: { from: ["fade-through"], exit: "center" },
 };
 
-/** Map a beat's existing transition flag onto a named transition. */
-export const FLAG_TO_XF = { zx: "zoom-through", blur: "blur-crossfade", slide: "push-slide" };
+/** The order un-flagged cuts take, so no two neighbouring seams repeat. */
+export const SEAM_ROTATION = ["push-left", "zoom-in", "push-up", "push-right", "zoom-out", "push-down"];
+
+/** Storyboard flags (unchanged meaning) -> seam. */
+export const FLAG_TO_SEAM = { zx: "zoom-in", blur: "blur", slide: "push-left" };
+
+/** The previous `xf: "<name>"` vocabulary -> seam, so no storyboard breaks. */
+export const XF_TO_SEAM = {
+  "zoom-through": "zoom-in",
+  "blur-crossfade": "blur",
+  "push-slide": "push-left",
+  wipe: "push-left",
+  "shared-axis-y": "push-up",
+  iris: "zoom-out",
+};
 
 /* ------------------------------------------------------------------- styles */
 

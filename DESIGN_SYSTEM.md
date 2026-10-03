@@ -85,6 +85,28 @@ leaves the tile looking borderless.
 the journey or split beats. If you reach for it, you are probably about to
 reintroduce this bug.
 
+### 1.8 The outer stroke
+
+**Every element — card, pill, chip, tile, icon tile — carries two strokes: an inner ring in
+the stage's other colour, and outside it a black one (`C.outline`, #0A0F1A).**
+
+This is the system's answer to "how does the foreground separate from the background?", and
+the answer is deliberately *not* blur, dimming or a tinted shadow. A card is a hard shape with
+a hard edge on any backdrop, and it sits on the stage with a flat black drop.
+
+- Cards, pills, chips, the converge core: `hardDrop()` in `src/lkdesign.mjs` emits the outer
+  stroke (`0 0 0 4px` + the same ring dropped by `y`). `card()` adds the inner ring
+  (`inset 0 0 0 3px`): `C.blueEdge` on a white card, white on a blue card.
+- Icon tiles (`.ico`, except `.plain`): a 3px black ring.
+- Never hand-write `box-shadow:0 ${SHADOW…}` on a surface; `lint:design` rule `no-bare-drop`
+  fails it. Never `blur()` or `backdrop-filter`; rule `no-blur`.
+- **One exemption: the logo** (1.7). It is a brand asset with its own treatment: a hard drop
+  and nothing else.
+
+Decided with matt, 2026-10-03. It supersedes the earlier coloured drops (`SHADOW.grey` under a
+white card, `C.blueHover` under a blue one): under a black stroke a coloured drop is a third
+treatment. The single edge colour rule (1.1a) still holds for the *inner* ring.
+
 ### 1.2 No monospace, ever
 
 `tailwind.config.js:63-71` aliases `mono` to `sans` **on purpose**. There is one
@@ -226,9 +248,24 @@ per beat so the edit keeps cutting between white-on-blue and blue-on-white.
   `src/build-beats.mjs` passes `tone` in; it must never do `built.tone = x`
   afterwards. That bug rendered blue-tone content on a white stage — white type,
   white cards, invisible.
-- **J-cuts**: each beat's animation starts `LEAD` (0.55s) before its narration
-  names it. You see the next idea land before it is spoken.
-- **Every scene animates continuously.** A held frame is a failure, not a rest.
+- **J-cuts**: each beat starts `LEAD` (0.65s, `src/lkclock.mjs`) before its narration
+  names it, and each *item* inside a beat enters 0.4s before the word that names it. You see
+  the idea land before it is spoken.
+- **Every scene animates continuously.** A held frame is a failure, not a rest - and it is
+  now a build failure: `docs/MOTION_CRITERIA.md` (M1, M2) is enforced by `npm run lint:pacing`.
+- **Nothing fades.** Elements ENTER by scale 0 -> 1 with overshoot (a spring: `__spr.pop`) and LEAVE by scale
+  1 -> 0 (the reversed spring: `__spr.popIn`). Motion has mass (docs/ANIMATION.md): no fixed-curve `back.*` ease anywhere (`no-cheap-ease`). Never opacity 0 -> 1: no entrance, exit, scene or beat is ever tweened in
+  opacity, and nothing is hidden with `opacity:0` first. Decided with matt, 2026-10-03.
+  `npm run lint:design` rule `no-fade` fails it. Four honest exceptions, each marked on its own line:
+  an instant `steps(1)` caret blink, the arrow/hand sprite swap, a zero-size timing marker, and the
+  exposure flare (a light overlay over an empty stage; it hides the stage-colour swap and is not a
+  fade of content).
+- **Cuts are one move** (M6): the outgoing scene removes every element (each scales to 0), the
+  stage is empty for a beat under the exposure flare, the colour swaps at its peak, and the incoming
+  scene scales up from 0 with overshoot. Never an opacity fade through, and never blur.
+- **The pointer is the through-line** (M4): one cursor, in every scene, arrow / hand / pointing
+  hand, with mass and a swaying z. The camera follows it in and out.
+- **Subtitles are normal subtitles**: the bottom caption pill, outside the 3D world.
 - **Cut on meaning, not on sections.** HyperFrames' kinetic-type reference
   segments copy into 3–7 word scenes tagged Hook → Build → Punch → Resolve, with
   emphasis words getting `glow`/`scale_pulse` on the beat.
