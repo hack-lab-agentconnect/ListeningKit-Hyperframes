@@ -1,5 +1,7 @@
 # components/
 
+Per-primitive pages: [docs/components/](../../docs/components/README.md) (one page per primitive, mirrors this directory).
+
 The shared UI the films are built from: one directory per component, called by name, each declaring its
 markup, its entrance, its pointer targets and its thickness. A scene composes these instead of
 re-implementing them, so every card, tile, pill and table enters the same way and exposes the same

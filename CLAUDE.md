@@ -117,5 +117,10 @@ the cursor or the camera, load the project skill **`/lk-motion-grammar`** and re
 - `DESIGN_SYSTEM.md` — what a frame may *look* like (card inversion, tiles, the outer stroke, no blur)
 - `docs/WORKFLOW.md` — build, review, commit; `npm run refs -- list` for the curated reference set
 
+- `docs/README.md` and `docs/naming-conventions.md` — the documentation map: `docs/{domain}/{primitive}.md` mirrors the source
+  (layers, camera, pointer, motion, components, extrusion, transitions, tooling). A new camera move, component or transition
+  needs its page, and `npm run lint:docs` fails without it. Start at `docs/layers/README.md` for what is above what (the
+  adjustment layer, the rings, the pointer) and `docs/camera/README.md` for the camera moves.
+
 Order of operations for a change: `npm run lint` → `npm run build` → `npm run review` (read the
 frames) → `npm run check` → commit. Generated `compositions/**` is committed with every source change.

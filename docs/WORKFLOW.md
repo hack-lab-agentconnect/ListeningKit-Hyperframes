@@ -184,3 +184,10 @@ sample and enforces it (rules T1-T10); it runs in `npm run lint`, on pre-commit 
 Every entrance, exit and the camera's zoom is a closed-form spring (`src/lkspring.mjs`), and the pointer and camera wait
 for an element's overshoot peak before they tween in close. The method is `docs/ANIMATION.md`. `npm run test:spring`,
 the design-lint rule `no-cheap-ease` and the pacing rule M14 enforce it, in `npm run lint`, pre-commit and pre-push.
+
+## Documentation
+
+Every primitive has a page at `docs/{domain}/{primitive}.md`, mirroring the source (`docs/naming-conventions.md`). Adding a
+camera move, component or transition means adding its page in the same commit; `npm run lint:docs` (pre-commit) fails without
+it, and checks the seven sections, the `Lives in:` paths, the domain index and every relative link. The gates themselves are
+listed in `docs/tooling/gates.md`.

@@ -86,3 +86,9 @@ Read `docs/ANIMATION.md` before writing any entrance, exit, camera move or point
 `__spr.pop / snap / soft` (`__spr.popIn` to leave; `"spr:pop"` in component steps). The pointer and camera wait for
 an item's overshoot peak (`peakOfItem`, rule M14). A value that changes target gets one spring per change (`track`),
 never a restart. Gates: `npm run test:spring`, `no-cheap-ease`, `lint:pacing M14`, `lint:components C4`.
+
+## Where the primitives are documented
+
+`docs/{domain}/{primitive}.md`, indexed by `docs/README.md`. Layers (the adjustment layer, rings, pointer): `docs/layers/`.
+Camera moves and the director that plans them: `docs/camera/`. Add a page with every new camera move, component or
+transition; `npm run lint:docs` enforces it.

@@ -61,12 +61,13 @@ export function plan(spec) {
   const D = spec.duration, side = spec.side ?? (spec.index % 2 ? -1 : 1);
   const events = (spec.events || []).slice().sort((a, b) => a.t - b.t);
   const clicks = events.filter((e) => e.kind === "click");
-  const style = spec.style || styleFor(spec.index || 0, D, spec.prev);
+  // a beat too short for an edge shot, a body and an edge shot (each at least minShot) just breathes
+  const style = D < 3 * LIMITS.minShot ? "breathe" : (spec.style || styleFor(spec.index || 0, D, spec.prev));
   const notBefore = (e) => (e && e.notBefore != null ? e.notBefore : 0);
   const raw = [];
   const add = (move, t0, t1, extra = {}) => raw.push({ move, t0, t1, side, ...extra });
   const first = clicks[0], second = clicks[1], last = clicks[clicks.length - 1];
-  const edge = Math.min(1.3, D * 0.22);
+  const edge = LIMITS.minShot; // the opening and closing breath: never shorter than a shot may be
 
   if (style === "breathe") {
     add("breathe", 0, D);

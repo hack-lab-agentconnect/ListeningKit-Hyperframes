@@ -26,6 +26,15 @@ pre-commit:
       glob: "{src/lkspring.mjs,src/lkpointer.mjs,src/lkdirector.mjs,scripts/test-spring.mjs,scripts/test-pointer.mjs,docs/ANIMATION.md}"
       run: node scripts/test-spring.mjs && node scripts/test-pointer.mjs
 
+    camera:
+      glob: "{src/camera/**,scripts/test-camera.mjs}"
+      run: node scripts/test-camera.mjs
+
+    docs:
+      # docs/{domain}/{primitive}.md mirrors the source (docs/naming-conventions.md)
+      glob: "{docs/**,src/camera/**,src/components/**,src/transitions/**,scripts/lint-docs.mjs}"
+      run: node scripts/lint-docs.mjs
+
     colour:
       # The OKLCH lip: derived from each element's own colour at render time (lightness down, hue and chroma kept).
       glob: "{src/lkcolor.mjs,src/lkextrude.mjs,scripts/test-color.mjs}"

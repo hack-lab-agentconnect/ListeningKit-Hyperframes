@@ -1,5 +1,7 @@
 # transitions/
 
+Per-primitive pages: [docs/transitions/](../../docs/transitions/README.md) (one page per primitive, mirrors this directory).
+
 Cuts between two compositions, called by name. A transition is a small module with a fixed contract, so a
 storyboard can say `xf: "pixel-wipe"` without knowing how it is built, and a new one can be added without
 touching the films.
