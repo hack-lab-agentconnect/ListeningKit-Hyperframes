@@ -45,6 +45,7 @@ const ROOT_ALLOWLIST = new Set([
   // root-level HyperFrames command reads it (see README, trap #2)
   "lefthook.yml",
   "meta.json", // project metadata
+  "opencode.json", // registers .claude/skills so opencode loads the repo skills
   "package.json",
   "package-lock.json",
 ]);
