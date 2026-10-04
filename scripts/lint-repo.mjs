@@ -34,6 +34,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 /** Everything legal at the repo root. Anything else is a decision to make on purpose. */
 const ROOT_ALLOWLIST = new Set([
+  ".git", // a file, not a directory, inside a git worktree
   ".gitignore",
   "AGENTS.md", // agent instructions
   "CLAUDE.md",

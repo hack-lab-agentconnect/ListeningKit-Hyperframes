@@ -108,6 +108,11 @@ Fix all errors before presenting the result. Warnings should be reviewed before 
 
 ## The ListeningKit series (this repo's own rules)
 
+**Making or reviewing a film? Read `docs/FILM_STANDARD.md` and load `/lk-film-review` first.** They hold the owner's rulings
+(flat frame, no cursor, no zoom, the pixel wipe is a mask, every asset present, length matches the narration) and the
+build-look-critique loop that needs frames as evidence. They override the camera and pointer pages below. Background and
+history: `docs/HANDOFF.md`.
+
 This project is the ListeningKit object-explainer series, generated from `src/` (storyboards +
 scene library + a motion director) into `compositions/`. Before touching a scene, a beat, a seam,
 the cursor or the camera, load the project skill **`/lk-motion-grammar`** and read:

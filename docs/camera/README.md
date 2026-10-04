@@ -1,5 +1,7 @@
 # camera
 
+> **Status 2026-10-04.** Published films use a flat frame with no camera movement and no cursor (see [FILM_STANDARD](../FILM_STANDARD.md)). This domain documents what the generator can do, used in the labs; do not use it in a film unless the owner asks.
+
 Where the frame is, and how it varies. The camera is a **vocabulary of named moves**, planned by a director, blended into one
 camera. Variety is how a close shot gets to mean "this one": a film that zooms on every stop has no hierarchy left.
 

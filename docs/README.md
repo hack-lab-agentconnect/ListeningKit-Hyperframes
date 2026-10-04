@@ -30,6 +30,10 @@ mirroring the source, enforced by `npm run lint:docs`.
    rings and the pointer sit above it and persist through the cut.
 ```
 
+## The film standard
+
+[FILM_STANDARD.md](./FILM_STANDARD.md) is the owner's ruling on what a finished film looks like (flat frame, no cursor, pixel wipe as a mask) and the checks that prove it; [HANDOFF.md](./HANDOFF.md) is how the series got here. Both override the camera and pointer domains for published films. The procedure is the `/lk-film-review` skill.
+
 ## Long-form method documents
 
 These are the *why* and the research behind the primitives; the primitive pages link into them.

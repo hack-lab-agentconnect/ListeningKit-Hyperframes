@@ -9,6 +9,10 @@ This is a **local, curated** skill for this repo only. It sits on top of the Hyp
 (`/hyperframes`, `/hyperframes-core`, `/hyperframes-animation`, `/hyperframes-keyframes`): load
 those first for the composition contract; this adds what is specific to the ListeningKit series.
 
+> **Precedence.** For any published film, `docs/FILM_STANDARD.md` and the `/lk-film-review` skill override this skill where they
+> differ: no camera movement or content zoom, no cursor, no 3D drift, pixel wipe as a MASK. The pointer and camera rules below
+> describe what the generator can do, not what a film should do.
+
 ## Read, in this order
 
 1. `docs/MOTION_CRITERIA.md` — **M1–M12**: what a scene must *do*, with numbers. The pacing ones
