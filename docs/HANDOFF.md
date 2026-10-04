@@ -1,10 +1,25 @@
 # Handoff: how the film series got here
 
-Written 2026-10-04 by matt-claude, reconstructed from the #general history, the #Hyper Frames thread and the repo at `98d703c`. The worker agent was asked for its own account and did not give one (it was confused about its identity), so **this is a reconstruction, not the worker's memory**. Items from the worker's own messages are marked *(worker)*. Read [FILM_STANDARD.md](./FILM_STANDARD.md) for the rules; this file is the story and the state.
+Written 2026-10-04 by matt-claude, reconstructed from the #general history (2026-10-02 17:57 UTC onward; all times below are the relay's UTC timestamps, not the owner's local clock), the #Hyper Frames thread and the repo at `98d703c`. The worker agent was asked for its own account and did not give one (it was confused about its identity), so **this is a reconstruction, not the worker's memory**. Items from the worker's own messages are marked *(worker)*. Read [FILM_STANDARD.md](./FILM_STANDARD.md) for the rules; this file is the story and the state.
 
 ## What the work is
 
 A series of narrated explainer videos, one per Twenty CRM object, built in HyperFrames and posted into the Services & Offers / Resources forums so the team can see what we sell and how. Four arcs are in scope: `agency-prospects`, `agency-calls`, `agency-leads`, `agency-overview` (18 beats, b0-b17). Narration is generated with Deepgram (`narrations/*.json` -> `assets/audio/*.mp3` + `assets/timing/*.json`). Project: `REPOS/ListeningKit-Hyperframes`, pushed to github.com/matthewdonsemail-lab/ListeningKit-Hyperframes on `main`.
+
+## Before 2026-10-04: how the series started (UTC)
+
+| time | what happened |
+| --- | --- |
+| 10-02 17:57-18:16 | Owner asked the worker to generate explainer videos. TTS keys tested; Deepgram (`aura-2-thalia-en` for speech, `nova-3` for word timings) worked, AssemblyAI TTS did not. HyperFrames chosen as the renderer; first render `agency-prospects.mp4` (78 s, white on blue) |
+| 10-02 18:24-18:53 | Owner wanted ~3-minute videos for every object; then asked for research only. Worker produced `RESEARCH/EXPLAINER_SERIES_ADOPTION_DOSSIER.md` (best source: HyperFrames `product-launch-video/references/story-design.md`) |
+| 10-02 18:57-19:22 | Brief: highly energetic, on-brand explainers for every ListeningKit Resources object, using logo.svg, Satoshi and the brand colours from the ui-kit. 16 narrations/compositions already existed in `listeningkit-object-videos` |
+| 10-02 19:25-19:27 | Owner: the videos "look like ass". Worker agreed: four-card template, one layout held 35-40 s. Render loop killed |
+| 10-02 20:42-20:43 | New 3m21s version posted; owner rejected it: remove the gradient, use the onboarding design language, constant motion, J-cuts, transcript-driven edit, diagrams that reinforce the speech, consistent dither |
+| 10-02 22:28-22:38 | Squircle clip-path removed (it smeared); typography research saved to `RESEARCH/HYPERFRAMES_TYPOGRAPHY_REFERENCE.md`; Satoshi fonts found not loading in snapshots (later corrected: snapshots read the project root, renders read `compositions/`) |
+| 10-02 23:29-10-03 00:00 | Owner: "much better", but some cards were opaque or faint and tiles fully rounded. Work moved into the public repo `ListeningKit-Hyperframes` with `lefthook.yml` (forbids opaque colours) and `DESIGN_SYSTEM.md` |
+| 10-03 00:49 | Card-inversion and heroicon chip work (`985aa64`); later commits added the motion treatment library, per-object arcs and camera director (`98d703c`'s parents) |
+
+Note: I could only page back to 2026-10-02 17:57 UTC (200 messages per request). Anything earlier, and the 10-03 midday to 10-04 02:38 stretch, was only skimmed by keyword and may hold further decisions.
 
 ## Timeline (2026-10-04, UTC)
 

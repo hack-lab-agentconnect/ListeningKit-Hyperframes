@@ -2,11 +2,11 @@
 
 What a finished ListeningKit explainer film must look like, who decided it, and how to prove a render meets it. Written 2026-10-04 from the owner's corrections in #general and the worker's fixes. **Where this document and an older page disagree, this document wins**; the older pages (camera, pointer, MOTION_CRITERIA) describe what the generator *can* do, not what a published film *should* do.
 
-Provenance: the owner's rulings are paraphrased from #general (2026-10-04, 04:00-09:14 UTC) and the worker's replies in the same channel. The reference render named below was deleted before this was written, so every "looks like" statement is the owner's words plus the worker's account, not something re-checked on the render. Items marked **(unverified)** need a frame check before anyone relies on them.
+Provenance: the owner's rulings are paraphrased from #general (2026-10-02 17:57 UTC to 2026-10-04 09:14 UTC; all times in this document are the relay's UTC timestamps, not the owner's local clock) and the worker's replies in the same channel. The reference render named below was deleted before this was written, so every "looks like" statement is the owner's words plus the worker's account, not something re-checked on the render. Items marked **(unverified)** need a frame check before anyone relies on them.
 
 ## 1. Why the films exist
 
-The team sells services to small businesses (see the Services & Offers forum). A short video per object (agency prospects, calls, leads, overview) explains *what we sell, what it does and how we deliver it*, so a teammate or prospect can watch instead of read. They are posted into the matching forum thread. Owner's brief: not heavily edited, slower beats than the first pass, built with the existing rules, templates and transitions in `ListeningKit-Hyperframes`.
+The series began on 2026-10-02 as one explainer per Twenty CRM object in the *ListeningKit Resources* forum, aimed at a new worker with zero context: after one video they should know what the object is, what belongs in it, what its records mean and how it connects to the others. On 2026-10-04 the scope widened to the Services & Offers forum: what we sell, what it does and how we deliver it. Each film is posted into its matching forum thread as an attached video. Owner's brief: not heavily edited, slower beats than the first pass, built with the existing rules, templates and transitions in `ListeningKit-Hyperframes`.
 
 ## 2. The rulings (newest last; later overrides earlier)
 
@@ -23,6 +23,17 @@ The team sells services to small businesses (see the Services & Offers forum). A
 | R9 | 08:51 | `ListeningKit-Hyperframes` is the single project; fold Services-Video into it and push | one source of truth |
 
 Net effect today: **flat frame, no camera zoom or tilt, no cursor layer, depth set only as static layering, pixel wipe as a mask, all assets present, timing honest to the narration.** If R4's level push-in is wanted back it is the owner's call; do not add it unasked **(open: confirm with the owner)**.
+
+### Design rules inherited from the first pass (2026-10-02 to 10-03, still binding)
+
+These come from the owner's earlier corrections and are enforced by `npm run lint:design` and `lefthook.yml`; the full list is `DESIGN_SYSTEM.md`.
+
+- Brand blue `#2A8CFF`, flat stages, **no gradient**; the dither is used consistently so the series reads as one system.
+- Blue stage -> white cards with blue icon tiles and white glyphs; white stage -> blue cards. **Never opaque-looking or faint translucent cards**: a solid fill with a hairline edge.
+- No fully rounded shapes on tiles or bars (`rounded-md` / `rounded-lg`); Heroicons 24 outline; the real `logo.svg` from the ui-kit.
+- Satoshi, declared by `@font-face` (the renderer does not bundle it); extreme weight contrast (300 vs 900), not 400 vs 700. No eyebrow-plus-text parked top-left in every scene.
+- The transcript drives the edit: short scenes tied to the sentence being spoken, J-cuts, diagrams that reinforce what is said (not text-on-slide), constant motion in every scene (the first version was four slides held 35 s each and was rejected as "PowerPoint with a voiceover").
+- Listen back to the narration before rendering: Deepgram turned "Telnyx" into "Telmex" and it was baked into the timings.
 
 ## 3. What "correct" means, checkable
 
