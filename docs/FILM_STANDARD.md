@@ -50,7 +50,7 @@ Net effect today: **flat frame, no camera zoom or tilt, no cursor layer, depth s
 
 ## 5. Known repo hazards
 
-- **The generator cannot reproduce the overview arc.** `src/` has no `agency-overview` storyboard and no `flat` option; `compositions/agency-overview*` was committed (98d703c) without the generator changes that made it. Running `npm run build` may overwrite it with older behaviour **(unverified: do it in a throwaway worktree and diff before trusting)**.
+- **The generator cannot reproduce the overview arc.** `src/` has no `agency-overview` storyboard and no `flat` option; `compositions/agency-overview*` was committed (98d703c) without the generator changes that made it. `npm run build` (run by the pre-commit hook on 2026-10-04, tree stayed clean) regenerates only prospects, calls and leads, so it does not touch the overview arc today. It reports prospects at audio 161.4 s vs total 171.2 s, calls 192.8 s vs 201.4 s, leads 150.9 s vs 160.0 s: the beat clock still runs about 9-10 s past the audio, so section 3's length check currently **fails** for all three.
 - The three older arcs (`agency-prospects`, `agency-calls`, `agency-leads`) still carry the full camera and cursor in their committed compositions, so they do **not** meet this standard yet.
 - `src/world.mjs` (floor grid, drop-lines) and `scripts/lint-films.mjs` are untracked on `main`.
 - The reference render is gone. Re-render to create a new blessed reference and record its path and commit here.
