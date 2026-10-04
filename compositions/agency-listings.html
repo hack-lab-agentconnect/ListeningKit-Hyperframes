@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+/* ---- fonts: Satoshi only. tailwind.config.js aliases mono to sans on purpose. */
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Light.woff') format('woff');font-weight:300;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Regular.woff') format('woff');font-weight:400;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Medium.woff') format('woff');font-weight:500;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Bold.woff') format('woff');font-weight:700;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Black.woff') format('woff');font-weight:900;font-display:block}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;
+ font-family:'Satoshi',system-ui,sans-serif;font-synthesis:none;
+ -webkit-font-smoothing:antialiased}
+.clip{position:absolute;inset:0}
+.ringdefs{position:absolute;top:0;left:0;pointer-events:none}
+
+/* ---- stage. Flat colour, never a gradient: the app's shell is a flat
+   backgroundColor with a dither layer on top (OnboardingShell.tsx:65,70).
+   One .stage div per beat, so the background itself cuts between beats. */
+.stages{position:absolute;inset:0;z-index:0}
+.stage{position:absolute;inset:0;background:#2A8CFF}
+.stage.white{background:#FFFFFF}
+
+/* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
+   ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
+   to the left and right edges at opacity-55 (OnboardingShell.tsx:15,70).
+   Recreating that per-pixel in canvas JS produced a heavy overlay that both
+   looked wrong and counted against the capture layer's overlay budget, so the
+   visible surface here is the ordered-dither lattice itself: two 3px-period
+   repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
+   once quantised, plus the app's edge mask. It animates by sliding the lattice,
+   so the frame is never static. */
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
+ background-size:6px 6px,6px 6px;
+ mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%);-webkit-mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)}
+/* On a white stage the lattice is BLUE, but it keeps the app's edge mask.
+   Removing the mask here (as an earlier pass did) laid a full-frame blue wash
+   over every white beat: the stage stopped reading as white and white type on
+   it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
+   backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
+#dither.on-white{opacity:.55;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
+
+/* ---- the one persistent element is a moving chapter rail, not a stuck
+   eyebrow. It wipes, it moves, it changes - see .rail in build-beats. */
+.chapter{position:absolute;left:0;right:0;bottom:0;height:6px;z-index:70;
+ display:flex;gap:4px;padding:0 88px 0}
+.chapter i{flex:1;height:6px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+.stage.white .chapter i{background:rgba(42,140,255,.16)}
+.chapter i b{position:absolute;inset:0;transform-origin:left center;transform:scaleX(0);
+ background:#FFFFFF;display:block}
+.stage.white .chapter i b{background:#2A8CFF}
+
+/* ---- logo lockup: the onboarding hero treatment (OnboardingShell.tsx:43-45) */
+.lockup{position:absolute;z-index:70;display:flex;align-items:center;gap:18px}
+.lockup img{width:64px;height:64px;border-radius:18px;display:block}
+.lockup .word{font-size:30px;font-weight:900;letter-spacing:0;text-transform:uppercase}
+.lockup .obj{font-size:30px;font-weight:500;opacity:.72}
+/* The logo is a blue tile with a white mark, so it needs NO filter on either
+   stage — brightness(0) invert(1) (which used to be here) flattens both the
+   background and the mark to solid white. */
+.lockup.on-white img{filter:none}
+
+/* ---- endcard lockup. The logo IS a blue tile with a white mark
+   (apps/web/public/logo.svg), so on the blue stage it needs no backing plate -
+   only a hard offset shadow to lift it off the field. Two earlier attempts were
+   wrong: brightness(0) invert(1) flattened BOTH the blue background and the
+   white mark to solid white (the end card shipped a blank white square), and a
+   white plate behind an opaque blue logo is simply invisible. Tracking is 0: a
+   tracked wordmark is not the wordmark. */
+.ecmark{position:relative;width:168px;height:168px}
+.ecmark img{position:absolute;inset:0;width:168px;height:168px;border-radius:18px;
+  display:block;box-shadow:0 10px 0 0 rgba(9,32,63,0.30)}
+.wordmark{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:0;text-transform:uppercase;color:#FFFFFF;white-space:nowrap}
+
+/* ---- type scale */
+.hero{font:900 104px/1.02 'Satoshi', system-ui, sans-serif;letter-spacing:-.03em}
+.h1{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:-.025em}
+.h2{font:900 62px/1.08 'Satoshi', system-ui, sans-serif;letter-spacing:-.02em}
+.h3{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;letter-spacing:-.015em}
+.body{font:400 30px/1.45 'Satoshi', system-ui, sans-serif}
+.eyebrow{font:700 20px/1 'Satoshi', system-ui, sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.label{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.kv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;letter-spacing:.04em}
+.cap{font:400 34px/1.34 'Satoshi', system-ui, sans-serif}
+.blue{color:#2A8CFF}
+.white{color:#FFFFFF}
+.dim{opacity:.72}
+.dim2{opacity:.55}
+
+/* ---- glass card on blue: border-white/30 bg-white/10 (OnboardingSteps.tsx:322) */
+.glass{background:rgba(255,255,255,.10);border:1.5px solid rgba(255,255,255,.30);
+ box-shadow:0 6px 0 0 rgba(9,32,63,0.30)}
+.glass:hover{background:rgba(255,255,255,.20)}
+/* inverted: the selected state, border-white bg-white text-[#2a8cff] (:321) */
+.invert{background:#FFFFFF;color:#2A8CFF}
+/* white surface on blue: rounded-[32px] bg-white text-slate-900 (:475) */
+.surface{background:#FFFFFF;color:#0F172A;
+ box-shadow:0 10px 0 0 rgba(13,42,76,0.22),0 26px 60px -28px rgba(15,30,51,.45)}
+.hard{box-shadow:inset 0 1px 0 0 #1f6fe6, inset 0 -2px 0 0 #117eff, 0 0 3px 0 rgba(0,0,0,0.2)}
+
+/* ---- captions: the onboarding dashed underline is the signature link style
+   (OnboardingSteps.tsx:369). Captions use it as their rail. */
+.cap{z-index:80;display:flex;justify-content:center;align-items:flex-end;padding:0 260px 74px;pointer-events:none}
+.cap span{display:inline-block;max-width:1440px;text-align:center;font:400 34px/1.34 'Satoshi', system-ui, sans-serif;
+ font-weight:400;color:#FFFFFF;padding:14px 30px;border-radius:12px;
+ background:rgba(10,24,48,.42);border:1.5px solid rgba(255,255,255,.16)}
+#root.tone-white .cap span{color:#0F172A;background:rgba(255,255,255,.88);border-color:#E2E8F0}
+
+/* ---- shared diagram primitives */
+.connector{fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round}
+.connector.blue{stroke:#2A8CFF}
+.node{padding:22px 26px}
+.node .nk{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
+.node .nv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:6px}
+
+/* ---- icon primitive. Heroicons 24 outline, stroke currentColor, sw 1.5 -
+   the app's own icon defaults (lkicons.mjs). Sits at the LEFT of a card.
+   Radius is rounded-sm (8), NOT a large radius: the app has no fully-rounded
+   tile in this position, and at 72px a 12px radius already reads as a lozenge.
+   Two tile treatments, and the difference matters:
+     .ico.on-blue  brand-blue tile, WHITE glyph  - on a white card
+     .ico.on-white light tint tile, BLUE glyph    - on a blue stage
+   A bare icon with no tile is fine either way. */
+.ic{display:block;flex:none;overflow:visible}
+.ico{display:flex;flex:none;align-items:center;justify-content:center;
+ width:72px;height:72px;border-radius:8px;
+ background:#2A8CFF;color:#FFFFFF;box-shadow:0 0 0 3px #0A0F1A}
+.ico.on-white{background:#EFF6FF;color:#2A8CFF}
+/* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
+   a blue glyph. A blue tile on a blue card is the icon disappearing, which is
+   the exact failure the white-stage cards had. */
+.ico.on-bluecard{background:#FFFFFF;color:#2A8CFF}
+.ico.plain{background:none;width:auto;height:auto;color:inherit;box-shadow:none}
+/* Compact tile for a chip / inline row, where the 72px panel tile would make the
+   label wrap. Same colour rule as .ico - solid brand blue with a white glyph on
+   a white card, inverted to solid white with a blue glyph on a blue card. */
+.ico.xs{width:44px;height:44px;border-radius:8px}
+.irow{display:flex;align-items:center;gap:24px}
+.irow > .itx{flex:1;min-width:0}
+
+/* ---- grid + list rows used by the field-by-field beats */
+.rows{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:22px;padding:18px 24px;border-radius:14px}
+.row .rk{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:270px;flex-shrink:0;opacity:.8}
+.row .rv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:500}
+.row .rdot{margin-left:auto;width:12px;height:12px;border-radius:50%;background:currentColor;opacity:.28}
+
+/* ---- countup, the one pure-number beat */
+.count{display:flex;align-items:baseline;justify-content:center;gap:16px}
+.count .n{font-size:300px;font-weight:900;line-height:.9;letter-spacing:-.045em;
+ font-variant-numeric:tabular-nums}
+.count .u{font-size:84px;font-weight:500;opacity:.72}
+
+/* ---- bar chart (sentiment) */
+.bar{display:flex;align-items:center;gap:20px;padding:14px 0}
+.bar .bl{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:130px;opacity:.8}
+.bar .bt{flex:1;height:26px;border-radius:8px;overflow:hidden;background:rgba(127,127,127,.14)}
+.bar .bf{display:block;height:100%;width:0;border-radius:8px}
+.bar .bv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:150px;text-align:right;opacity:.8}
+
+/* ---- journey / step cards */
+.jr{display:flex;gap:20px;justify-content:center}
+.jr .card{width:400px;padding:30px 28px;border-radius:20px}
+.jr .num{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;
+ justify-content:center;font-size:20px;font-weight:700}
+.jr .ch{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:20px}
+.jr .cs{font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:400;opacity:.72;margin-top:10px}
+.jr .cm{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;margin-top:18px;opacity:.6}
+
+/* ---- transcript surface */
+.tw{border-radius:24px;overflow:hidden}
+.thead{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;
+ border-bottom:1.5px solid rgba(127,127,127,.14)}
+.tscroll{height:400px;overflow:hidden;padding:24px 32px;position:relative}
+.tline{font:400 30px/1.55 'Satoshi',sans-serif;margin-bottom:18px;opacity:.9}
+.tline.hit{font-weight:900}
+.wave{display:flex;align-items:flex-end;gap:4px;height:92px;padding:18px 28px}
+.wave i{flex:1;height:var(--h);border-radius:3px;transform-origin:bottom}
+
+/* ---- data table: moved to src/components/table (its css lives with the component) */
+
+/* ---- working / progress theater */
+.wrow{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:14px}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(127,127,127,.2);
+ border-top-color:currentColor}
+.wrow[data-state=done] .spin{display:none}
+.chk{width:30px;height:30px;margin-left:auto}
+.chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
+   carrying an object name, not status badges, and a 999px radius turned them
+   into lozenges. Fully-rounded is for real pills only (DESIGN_SYSTEM 2.3). */
+.chip{padding:13px 22px;border-radius:14px;font-size:23px;font-weight:600;
+ white-space:nowrap}
+
+/* ---- cursor. The real product cursors, lifted from
+   nebius-hackathon/apps/web/public/cursors/ - not a hand-drawn triangle.
+   pointer.svg is the dark arrow with a light outline, so it survives on both
+   the blue and the white stage without a second asset. Sized large on purpose:
+   at 34px it read as a speck on a 1920 frame. */
+/* The cursor art is cropped to the arrow itself (viewBox 0 0 34 38) and drawn at
+   exactly 2x: 68x76 px, arrow tip at (10,10) inside the box. It used to be an
+   80x64 canvas with a 30px arrow in one corner, drawn at 168px - so the "large
+   cursor" was a 63px arrow floating in 100px of nothing, and its tip sat ~10px
+   off wherever it was aimed. Size and hotspot now mean what they say, and the
+   director (lkdirector.mjs) aims the TIP at a measured element.
+   left/top are pinned to 0 so a GSAP x/y is a stage coordinate, not an offset
+   from wherever a flex container decided an inset-less box should sit. */
+.cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:75;pointer-events:none}
+/* Three states stacked on one anchor, each offset so ITS hotspot sits on the anchor:
+     .cs-n  the arrow           viewBox 0 0 34 38   at 2.4x -> tip at (12,12)
+     .cs-h  the open hand       viewBox -6 -6 89 75 at 2x   -> middle fingertip (40,4)
+     .cs-c  the pointing hand   viewBox -6 -6 89 75 at 2x   -> fingertip (30,4)
+   The director switches them (arrow -> hand on hover -> pointing hand on the press ->
+   arrow). Only the active one has opacity 1. The cursor is the subject of every scene,
+   so it is drawn large: ~90px of arrow on a 1920 frame. */
+.cursor .cs{position:absolute;display:block;opacity:0;background-repeat:no-repeat;background-size:100% 100%} /* swap-ok: sprite swap */
+.cursor .cs-n{left:-12px;top:-12px;width:82px;height:91px;opacity:1;background-image:url('assets/cursors/pointer.svg')} /* swap-ok */
+.cursor .cs-h{left:-40px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/hover.svg')}
+.cursor .cs-c{left:-30px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/click.svg')}
+/* The click ripple. A ring, because it is a transient effect, never a surface. */
+.ripple{position:absolute;left:0;top:0;z-index:74;width:80px;height:80px;border-radius:50%;
+ pointer-events:none;border:4px solid #7FBAFF}
+.ripple.on-blue{border-color:#FFFFFF}
+
+/* ---- how a Twenty object is NAMED on screen.
+   The camelCase API name was being set in the same weight and size as the
+   human title beside it, in a different case pattern, at low opacity. Three
+   competing shapes of type for one idea. The rule now: the human title is the
+   display element, and the API name is a small uppercase monospace-ish tag in
+   a translucent chip - present for accuracy, visually subordinate. */
+.apichip{display:inline-block;font:500 19px/1 'Satoshi',system-ui,sans-serif;
+ letter-spacing:.02em;padding:9px 14px;border-radius:8px;
+ background:rgba(42,140,255,.10);border:1.5px solid rgba(42,140,255,.22);
+ color:#2A8CFF;white-space:nowrap;vertical-align:middle}
+.on-blue .apichip,.apichip.on-blue{background:rgba(255,255,255,.14);
+ border-color:rgba(255,255,255,.30);color:#FFFFFF}
+
+/* ---- stage centre: every beat composes around the middle of the frame, never
+   a fixed top-left corner. */
+.stagec{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;gap:34px;padding:110px 120px 150px;z-index:20;text-align:center}
+.stagec .row{text-align:left}
+.stagec .bar{text-align:left}
+
+/* ---- extrusion (lkextrude.mjs): a host that is a slab, and its slices */
+/* A slab is OWNED by its host: the host is the slices' containing block (position:relative), so the extrusion
+   moves, scales and rotates with the element and can never be positioned off some other layer. Without this the
+   absolutely-positioned slices attach to the nearest positioned ancestor the moment the host's own transform
+   clears at rest: the "extruded off the layer the div is on" bug. */
+.x3d{transform-style:preserve-3d;position:relative}
+/* the chain of preserve-3d: a slab sitting under a flat wrapper is flattened into the plane, so everything inside
+   the stage keeps the 3D context (overflow:hidden leaves flatten themselves, which is fine: they have no slab) */
+.stagec,.stagec *:not(svg):not(svg *){transform-style:preserve-3d}
+.xl{position:absolute;pointer-events:none;border-radius:inherit;background:currentColor} /* the runtime replaces it with the derived lip */
+
+
+.pillc{display:flex;align-items:center;gap:20px;padding:0 28px 0 12px;font:900 34px/1 'Satoshi',sans-serif;white-space:nowrap}
+.pillc .ico{width:64px;height:64px}
+
+
+/* ---- components/table: header band, column heads, rows that each rise on their own.
+   Plain grid, no <table>: every cell animates. */
+.tcols,.trow{display:grid;align-items:center;gap:18px;padding:14px 30px}
+.tcols{padding-top:18px;padding-bottom:6px}
+.tch{display:flex;align-items:center;gap:12px;font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+.tbody{display:flex;flex-direction:column;gap:10px;padding:6px 18px 26px}
+.trow{border-radius:14px;font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:500;text-align:left}
+.trow .tc:first-child{font-weight:900}
+.tc{white-space:nowrap;overflow:hidden;text-overflow:clip}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
+   GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
+   element would be overwritten the moment it scales. */
+.ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
+.ovbox{z-index:3}
+/* .ovorb is the orbiting anchor (GSAP positions it on an ellipse); .ovcard sits
+   centred on it and is what flies in. Two elements so the orbit and the entrance
+   never write the same transform. */
+.ovorb{position:absolute;left:50%;top:50%;width:0;height:0;z-index:2}
+.ovcard{position:absolute;left:0;top:0;text-align:left}
+.ovt{font-size:36px;font-weight:700;line-height:1.15;white-space:nowrap}
+
+/* zoom-out reveal */
+.zw{display:flex;flex-direction:column;align-items:center;gap:40px}
+.myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:64px;margin-bottom:48px}
+
+/* record panel + note callout */
+.pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
+.note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
+.relsvg{z-index:1}
+
+/* agent work */
+.wk{z-index:2}
+
+/* sentiment */
+.sb{z-index:2;width:1120px}
+.sb .note{right:auto;left:120px;top:auto;bottom:120px;transform:none;width:700px}
+
+/* converge */
+.cvf{display:flex;align-items:center;justify-content:center}
+.cvchip{z-index:1}
+
+/* journey cards */
+.jcard{z-index:2;text-align:left}
+
+/* typewriter */
+.twl-line{display:flex;align-items:center;justify-content:center;min-height:64px}
+.caret{margin-left:6px}
+
+/* split */
+.sp{z-index:2;text-align:left}
+.spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+</style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-listings" data-start="0" data-duration="147.800" data-width="1920" data-height="1080" data-fps="30">
+      <div class="stages" data-a="stages">
+        <div class="stage white" data-s="0" style="opacity:0"></div>
+        <div class="stage " data-s="1" style="opacity:0"></div>
+        <div class="stage white" data-s="2" style="opacity:0"></div>
+        <div class="stage " data-s="3" style="opacity:0"></div>
+        <div class="stage white" data-s="4" style="opacity:0"></div>
+        <div class="stage " data-s="5" style="opacity:0"></div>
+        <div class="stage white" data-s="6" style="opacity:0"></div>
+        <div class="stage " data-s="7" style="opacity:0"></div>
+        <div class="stage white" data-s="8" style="opacity:0"></div>
+        <div class="stage " data-s="9" style="opacity:0"></div>
+        <div class="stage white" data-s="10" style="opacity:0"></div>
+        <div class="stage " data-s="11" style="opacity:0"></div>
+        <div class="stage white" data-s="12" style="opacity:0"></div>
+        <div class="stage " data-s="13" style="opacity:0"></div>
+        <div class="stage white" data-s="14" style="opacity:0"></div>
+        <div class="stage " data-s="15" style="opacity:0"></div>
+        <div class="stage white" data-s="16" style="opacity:0"></div>
+        <div class="stage " data-s="17" style="opacity:0"></div>
+        <div class="stage white" data-s="18" style="opacity:0"></div>
+        <div class="stage " data-s="19" style="opacity:0"></div>
+        <div class="stage white" data-s="20" style="opacity:0"></div>
+        <div class="stage " data-s="21" style="opacity:0"></div>
+        <div class="stage white" data-s="22" style="opacity:0"></div>
+        <div class="stage " data-s="23" style="opacity:0"></div>
+        <div class="stage white" data-s="24" style="opacity:0"></div>
+        <div class="stage " data-s="25" style="opacity:0"></div>
+        <div class="stage " data-s="26" style="opacity:0"></div>
+      </div>
+      <div id="dither"></div>
+      <div class="flash"></div>
+      
+
+      <div class="clip beat" data-layout-allow-overlap id="beat-0" data-b="0" data-composition-id="agency-listings-b0" data-composition-src="compositions/agency-listings/b0.html" data-start="1" data-duration="8.5" data-track-index="1"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-1" data-b="1" data-composition-id="agency-listings-b1" data-composition-src="compositions/agency-listings/b1.html" data-start="7.75" data-duration="6.55" data-track-index="2"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-2" data-b="2" data-composition-id="agency-listings-b2" data-composition-src="compositions/agency-listings/b2.html" data-start="13.2" data-duration="6.55" data-track-index="3"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-3" data-b="3" data-composition-id="agency-listings-b3" data-composition-src="compositions/agency-listings/b3.html" data-start="18.65" data-duration="5.77" data-track-index="4"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-4" data-b="4" data-composition-id="agency-listings-b4" data-composition-src="compositions/agency-listings/b4.html" data-start="23.32" data-duration="5.76" data-track-index="5"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-5" data-b="5" data-composition-id="agency-listings-b5" data-composition-src="compositions/agency-listings/b5.html" data-start="27.98" data-duration="5.77" data-track-index="6"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-6" data-b="6" data-composition-id="agency-listings-b6" data-composition-src="compositions/agency-listings/b6.html" data-start="32.65" data-duration="6.43" data-track-index="7"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-7" data-b="7" data-composition-id="agency-listings-b7" data-composition-src="compositions/agency-listings/b7.html" data-start="37.98" data-duration="6.44" data-track-index="8"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-8" data-b="8" data-composition-id="agency-listings-b8" data-composition-src="compositions/agency-listings/b8.html" data-start="43.32" data-duration="6.43" data-track-index="9"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-9" data-b="9" data-composition-id="agency-listings-b9" data-composition-src="compositions/agency-listings/b9.html" data-start="48.65" data-duration="5.33" data-track-index="10"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-10" data-b="10" data-composition-id="agency-listings-b10" data-composition-src="compositions/agency-listings/b10.html" data-start="52.88" data-duration="5.34" data-track-index="11"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-11" data-b="11" data-composition-id="agency-listings-b11" data-composition-src="compositions/agency-listings/b11.html" data-start="57.12" data-duration="5.33" data-track-index="12"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-12" data-b="12" data-composition-id="agency-listings-b12" data-composition-src="compositions/agency-listings/b12.html" data-start="61.35" data-duration="6.37" data-track-index="13"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-13" data-b="13" data-composition-id="agency-listings-b13" data-composition-src="compositions/agency-listings/b13.html" data-start="66.62" data-duration="6.38" data-track-index="14"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-14" data-b="14" data-composition-id="agency-listings-b14" data-composition-src="compositions/agency-listings/b14.html" data-start="71.9" data-duration="6.38" data-track-index="15"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-15" data-b="15" data-composition-id="agency-listings-b15" data-composition-src="compositions/agency-listings/b15.html" data-start="77.18" data-duration="6.37" data-track-index="16"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-16" data-b="16" data-composition-id="agency-listings-b16" data-composition-src="compositions/agency-listings/b16.html" data-start="82.45" data-duration="6.5" data-track-index="17"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-17" data-b="17" data-composition-id="agency-listings-b17" data-composition-src="compositions/agency-listings/b17.html" data-start="87.85" data-duration="6.5" data-track-index="18"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-18" data-b="18" data-composition-id="agency-listings-b18" data-composition-src="compositions/agency-listings/b18.html" data-start="93.25" data-duration="6.5" data-track-index="19"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-19" data-b="19" data-composition-id="agency-listings-b19" data-composition-src="compositions/agency-listings/b19.html" data-start="98.65" data-duration="6.5" data-track-index="20"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-20" data-b="20" data-composition-id="agency-listings-b20" data-composition-src="compositions/agency-listings/b20.html" data-start="104.05" data-duration="6.5" data-track-index="21"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-21" data-b="21" data-composition-id="agency-listings-b21" data-composition-src="compositions/agency-listings/b21.html" data-start="109.45" data-duration="6.55" data-track-index="22"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-22" data-b="22" data-composition-id="agency-listings-b22" data-composition-src="compositions/agency-listings/b22.html" data-start="114.9" data-duration="6.55" data-track-index="23"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-23" data-b="23" data-composition-id="agency-listings-b23" data-composition-src="compositions/agency-listings/b23.html" data-start="120.35" data-duration="6.55" data-track-index="24"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-24" data-b="24" data-composition-id="agency-listings-b24" data-composition-src="compositions/agency-listings/b24.html" data-start="125.8" data-duration="6.55" data-track-index="25"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-25" data-b="25" data-composition-id="agency-listings-b25" data-composition-src="compositions/agency-listings/b25.html" data-start="131.25" data-duration="9" data-track-index="26"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-26" data-b="26" data-composition-id="agency-listings-b26" data-composition-src="compositions/agency-listings/b26.html" data-start="139.15" data-duration="8.65" data-track-index="27"></div>
+
+
+      <div class="clip cap" data-start="1.040" data-duration="2.800" data-track-index="90"><span>An agency listing is a directory style page we</span></div>
+      <div class="clip cap" data-start="3.840" data-duration="1.760" data-track-index="90"><span>publish in order to show up for a local</span></div>
+      <div class="clip cap" data-start="5.600" data-duration="1.040" data-track-index="90"><span>search.</span></div>
+      <div class="clip cap" data-start="6.640" data-duration="1.760" data-track-index="90"><span>We have two at the moment.</span></div>
+      <div class="clip cap" data-start="8.400" data-duration="2.000" data-track-index="90"><span>The idea is a very old one and it</span></div>
+      <div class="clip cap" data-start="10.400" data-duration="1.120" data-track-index="90"><span>still works.</span></div>
+      <div class="clip cap" data-start="11.520" data-duration="3.040" data-track-index="90"><span>Somebody in Leeds searches for window tinting leads.</span></div>
+      <div class="clip cap" data-start="14.560" data-duration="1.600" data-track-index="90"><span>We want a page of ours to be the</span></div>
+      <div class="clip cap" data-start="16.160" data-duration="0.775" data-track-index="90"><span>result.</span></div>
+      <div class="clip cap" data-start="16.935" data-duration="2.400" data-track-index="90"><span>Each listing is one such page.</span></div>
+      <div class="clip cap" data-start="19.335" data-duration="1.680" data-track-index="90"><span>It is not a home page and it is</span></div>
+      <div class="clip cap" data-start="21.015" data-duration="1.360" data-track-index="90"><span>not a blog post.</span></div>
+      <div class="clip cap" data-start="22.375" data-duration="3.040" data-track-index="90"><span>It is a thin, local, highly specific page built</span></div>
+      <div class="clip cap" data-start="25.415" data-duration="2.560" data-track-index="90"><span>around a location query, and the whole point of</span></div>
+      <div class="clip cap" data-start="27.975" data-duration="2.085" data-track-index="90"><span>keeping them in the CRM is that there are</span></div>
+      <div class="clip cap" data-start="30.060" data-duration="3.200" data-track-index="90"><span>hundreds of them over time, and they need managing.</span></div>
+      <div class="clip cap" data-start="33.260" data-duration="1.920" data-track-index="90"><span>The title is the page heading.</span></div>
+      <div class="clip cap" data-start="35.180" data-duration="2.480" data-track-index="90"><span>The location query is the actual search term we</span></div>
+      <div class="clip cap" data-start="37.660" data-duration="2.320" data-track-index="90"><span>are targeting, which is the field that makes the</span></div>
+      <div class="clip cap" data-start="39.980" data-duration="3.200" data-track-index="90"><span>record meaningful, because a listing without a location query</span></div>
+      <div class="clip cap" data-start="43.180" data-duration="1.565" data-track-index="90"><span>is just a page.</span></div>
+      <div class="clip cap" data-start="44.745" data-duration="3.280" data-track-index="90"><span>Then the status, whether it is live, pending, or</span></div>
+      <div class="clip cap" data-start="48.025" data-duration="1.280" data-track-index="90"><span>being worked.</span></div>
+      <div class="clip cap" data-start="49.305" data-duration="2.560" data-track-index="90"><span>Then two fields that handle the messy reality of</span></div>
+      <div class="clip cap" data-start="51.865" data-duration="1.120" data-track-index="90"><span>SEO.</span></div>
+      <div class="clip cap" data-start="52.985" data-duration="3.280" data-track-index="90"><span>A parent listing ID and a superseded by ID.</span></div>
+      <div class="clip cap" data-start="56.265" data-duration="1.840" data-track-index="90"><span>These let us tell the story of a page</span></div>
+      <div class="clip cap" data-start="58.105" data-duration="2.775" data-track-index="90"><span>being rewritten without losing the traffic the old one</span></div>
+      <div class="clip cap" data-start="60.880" data-duration="1.120" data-track-index="90"><span>had earned.</span></div>
+      <div class="clip cap" data-start="62.000" data-duration="3.280" data-track-index="90"><span>And finally, the screenshot URL, a picture of the</span></div>
+      <div class="clip cap" data-start="65.280" data-duration="3.360" data-track-index="90"><span>live page, which sounds cosmetic and is not.</span></div>
+      <div class="clip cap" data-start="68.640" data-duration="2.400" data-track-index="90"><span>It is proof the page rendered, which is the</span></div>
+      <div class="clip cap" data-start="71.040" data-duration="1.600" data-track-index="90"><span>first thing that breaks.</span></div>
+      <div class="clip cap" data-start="72.640" data-duration="3.655" data-track-index="90"><span>Why invest in listings rather than nicer pages?</span></div>
+      <div class="clip cap" data-start="76.295" data-duration="3.200" data-track-index="90"><span>Because local intent is the cheapest repeatable win available</span></div>
+      <div class="clip cap" data-start="79.495" data-duration="0.960" data-track-index="90"><span>to us.</span></div>
+      <div class="clip cap" data-start="80.455" data-duration="2.640" data-track-index="90"><span>A good homepage might take a year to rank.</span></div>
+      <div class="clip cap" data-start="83.095" data-duration="2.160" data-track-index="90"><span>A well built location page for a town we</span></div>
+      <div class="clip cap" data-start="85.255" data-duration="3.465" data-track-index="90"><span>have never targeted can start bringing inquiries in weeks.</span></div>
+      <div class="clip cap" data-start="88.720" data-duration="2.800" data-track-index="90"><span>And because the template repeats, the cost per page</span></div>
+      <div class="clip cap" data-start="91.520" data-duration="1.920" data-track-index="90"><span>falls as we build more.</span></div>
+      <div class="clip cap" data-start="93.440" data-duration="2.480" data-track-index="90"><span>That compounding is why these live in a structured</span></div>
+      <div class="clip cap" data-start="95.920" data-duration="2.880" data-track-index="90"><span>object rather than being built ad hoc.</span></div>
+      <div class="clip cap" data-start="98.800" data-duration="3.355" data-track-index="90"><span>The downside is volume creates mess, which is exactly</span></div>
+      <div class="clip cap" data-start="102.155" data-duration="3.600" data-track-index="90"><span>what the parent and superseded fields exist to manage.</span></div>
+      <div class="clip cap" data-start="105.755" data-duration="2.880" data-track-index="90"><span>Where does a person actually use this object?</span></div>
+      <div class="clip cap" data-start="108.635" data-duration="1.440" data-track-index="90"><span>Three times.</span></div>
+      <div class="clip cap" data-start="110.075" data-duration="2.240" data-track-index="90"><span>When we need to prove a listing is live,</span></div>
+      <div class="clip cap" data-start="112.315" data-duration="2.815" data-track-index="90"><span>the screenshot URL is the receipt, and it is</span></div>
+      <div class="clip cap" data-start="115.130" data-duration="2.720" data-track-index="90"><span>faster and more reliable than asking somebody to go</span></div>
+      <div class="clip cap" data-start="117.850" data-duration="1.200" data-track-index="90"><span>and check.</span></div>
+      <div class="clip cap" data-start="119.050" data-duration="2.880" data-track-index="90"><span>When a page is rewritten, the parent and superseded</span></div>
+      <div class="clip cap" data-start="121.930" data-duration="2.560" data-track-index="90"><span>fields stop us from throwing away rankings we spent</span></div>
+      <div class="clip cap" data-start="124.490" data-duration="1.360" data-track-index="90"><span>months earning.</span></div>
+      <div class="clip cap" data-start="125.850" data-duration="2.640" data-track-index="90"><span>And when the agency contact object renders the live</span></div>
+      <div class="clip cap" data-start="128.490" data-duration="3.415" data-track-index="90"><span>website, listing pages are what it is pulling.</span></div>
+      <div class="clip cap" data-start="131.905" data-duration="2.000" data-track-index="90"><span>If you want to understand how the search side</span></div>
+      <div class="clip cap" data-start="133.905" data-duration="3.040" data-track-index="90"><span>of this business works, this is the object.</span></div>
+      <div class="clip cap" data-start="136.945" data-duration="1.360" data-track-index="90"><span>Two records today.</span></div>
+      <div class="clip cap" data-start="138.305" data-duration="2.080" data-track-index="90"><span>It is very early and it is the clearest</span></div>
+      <div class="clip cap" data-start="140.385" data-duration="2.560" data-track-index="90"><span>example of a play that scales without more headcount.</span></div>
+
+      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i><i data-c="18"><b></b></i><i data-c="19"><b></b></i><i data-c="20"><b></b></i><i data-c="21"><b></b></i><i data-c="22"><b></b></i><i data-c="23"><b></b></i><i data-c="24"><b></b></i><i data-c="25"><b></b></i><i data-c="26"><b></b></i></div>
+
+      <audio id="agency-listings-audio" src="assets/audio/agency-listings.mp3" data-start="0.8" data-duration="142.145" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const __spr = (function springModule() {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+
+  /** The step response of a damped spring: 0 at t <= 0, settles on 1. f in Hz, z the damping ratio. */
+  function S(t, f, z) {
+    if (t <= 0) return 0;
+    const w = TAU * f;
+    if (z >= 1) return 1 - Math.exp(-w * t) * (1 + w * t);
+    const wd = w * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t));
+  }
+
+  /** A pulse: 0, rises to exactly 1 at t = 1 / (2 pi f), then decays to 0. A hit that does not stay. */
+  function pulse(t, f) {
+    if (t <= 0) return 0;
+    const x = TAU * f * t;
+    return x * Math.exp(1 - x);
+  }
+
+  const SPR = {
+    // ---- ours (entrances and the camera)
+    pop: { f: 3.0, z: 0.62 },
+    snap: { f: 3.6, z: 0.5 },
+    soft: { f: 2.6, z: 0.72 },
+    row: { f: 2.8, z: 0.78 },
+    settle: { f: 3.2, z: 1 },
+    cam: { f: 0.9, z: 0.72 },
+    // ---- the gist's presets, for anything that needs them
+    shape: { f: 1.9, z: 0.82 },
+    enter: { f: 3.6, z: 1 },
+    exit: { f: 8, z: 1 },
+    cursor: { f: 2.3, z: 1 },
+    glide: { f: 0.95, z: 1 },
+    press: { f: 10, z: 1 },
+    lead: { f: 3.4, z: 0.78 },
+    trail: { f: 1.7, z: 0.92 },
+  };
+
+  const spec = (s) => (typeof s === "string" ? SPR[s] : s) || SPR.pop;
+
+  /**
+   * One value that changes target several times: keys = [[time, value, spring?], ...] sorted by time. Each key
+   * ADDS one spring (the change from the previous value) starting at its own time, so the motion is continuous
+   * at every change and a seek anywhere is exact. `def` is the spring a key uses when it names none.
+   */
+  function track(t, keys, def) {
+    const d = spec(def || "cam");
+    let v = keys[0][1];
+    for (let i = 1; i < keys.length; i++) {
+      const s = spec(keys[i][2] || d);
+      v += (keys[i][1] - keys[i - 1][1]) * S(t - keys[i][0], s.f, s.z);
+    }
+    return v;
+  }
+
+  /** A stretching indicator: the leading edge is stiffer than the trailing edge. stops = [[time, x], ...]. */
+  function indicator(t, stops, width = 0) {
+    const lead = track(t, stops, SPR.lead), trail = track(t, stops, SPR.trail);
+    return { left: Math.min(lead, trail), right: Math.max(lead, trail) + width };
+  }
+
+  /** A seamless loop: pin the last frame to the first. */
+  const loopT = (t, dur) => ((t % dur) + dur) % dur;
+
+  /** Time (s) at which the response first reaches its overshoot peak, or null if it does not overshoot. */
+  function peakTime(f, z) {
+    if (z >= 1) return null;
+    return Math.PI / (TAU * f * Math.sqrt(1 - z * z));
+  }
+  /** The overshoot as a fraction of the move (0.09 = 9 %), 0 for a critically damped spring. */
+  function overshoot(f, z) {
+    if (z >= 1) return 0;
+    return Math.exp((-Math.PI * z) / Math.sqrt(1 - z * z));
+  }
+  /** Time (s) until the response stays within `eps` of its target. */
+  function settleTime(f, z, eps = 0.005) {
+    let last = 0;
+    for (let t = 0; t < 6; t += 1 / 480) if (Math.abs(S(t, f, z) - 1) > eps) last = t;
+    return last + 1 / 480;
+  }
+
+  /**
+   * A GSAP ease: progress 0..1 -> the spring's response over its own settle time, so a tween of ANY duration
+   * plays the whole spring (accelerate, overshoot, settle) across that duration.
+   */
+  function ease(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : S(p * Ts, s.f, s.z));
+  }
+
+  /**
+   * The EXIT ease: a spring played in reverse. It dips first (a hair of anticipation, the mass gathering) and
+   * then accelerates into the end, so a scale 1 -> 0 leaves with the same mass an entrance arrives with.
+   */
+  function easeIn(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - S((1 - p) * Ts, s.f, s.z));
+  }
+
+  /** Fraction (0..1) of an entrance tween at which its mass is at the peak of the overshoot. */
+  const peakFrac = (name) => {
+    const s = spec(name), pk = peakTime(s.f, s.z);
+    return pk === null ? 1 : pk / settleTime(s.f, s.z);
+  };
+  /** Seconds after an entrance of duration `dur` starts that its mass is at the peak of its overshoot. */
+  const peakDelay = (name, dur) => +(peakFrac(name) * dur).toFixed(3);
+
+  const out = { S, pulse, SPR, track, indicator, loopT, peakTime, overshoot, settleTime, ease, peakFrac, peakDelay, clamp };
+  // ready-made GSAP eases by name: `__spr.pop` is a function, usable as `ease: __spr.pop`
+  for (const k of ["pop", "snap", "soft", "row", "settle", "cam"]) { out[k] = ease(k); out[k + "In"] = easeIn(k); }
+  out.easeIn = easeIn;
+  return out;
+})();
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-listings"] = tl;
+
+      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":1,"dur":8.5,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":null,"xf":null,"shots":6},{"i":1,"sel":".beat[data-b=\"1\"]","start":7.75,"dur":6.55,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":2,"sel":".beat[data-b=\"2\"]","start":13.2,"dur":6.55,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":3,"sel":".beat[data-b=\"3\"]","start":18.65,"dur":5.77,"tone":"blue","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"push-up","shots":2},{"i":4,"sel":".beat[data-b=\"4\"]","start":23.32,"dur":5.76,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-right","shots":2},{"i":5,"sel":".beat[data-b=\"5\"]","start":27.98,"dur":5.77,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":2},{"i":6,"sel":".beat[data-b=\"6\"]","start":32.65,"dur":6.43,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":7,"sel":".beat[data-b=\"7\"]","start":37.98,"dur":6.44,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":8,"sel":".beat[data-b=\"8\"]","start":43.32,"dur":6.43,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":9,"sel":".beat[data-b=\"9\"]","start":48.65,"dur":5.33,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-up","shots":2},{"i":10,"sel":".beat[data-b=\"10\"]","start":52.88,"dur":5.34,"tone":"white","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-right","shots":2},{"i":11,"sel":".beat[data-b=\"11\"]","start":57.12,"dur":5.33,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":2},{"i":12,"sel":".beat[data-b=\"12\"]","start":61.35,"dur":6.37,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":13,"sel":".beat[data-b=\"13\"]","start":66.62,"dur":6.38,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"push-left","shots":4},{"i":14,"sel":".beat[data-b=\"14\"]","start":71.9,"dur":6.38,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":15,"sel":".beat[data-b=\"15\"]","start":77.18,"dur":6.37,"tone":"blue","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"push-up","shots":4},{"i":16,"sel":".beat[data-b=\"16\"]","start":82.45,"dur":6.5,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"push-right","shots":4},{"i":17,"sel":".beat[data-b=\"17\"]","start":87.85,"dur":6.5,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":18,"sel":".beat[data-b=\"18\"]","start":93.25,"dur":6.5,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-down","shots":4},{"i":19,"sel":".beat[data-b=\"19\"]","start":98.65,"dur":6.5,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":20,"sel":".beat[data-b=\"20\"]","start":104.05,"dur":6.5,"tone":"white","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":21,"sel":".beat[data-b=\"21\"]","start":109.45,"dur":6.55,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"push-up","shots":4},{"i":22,"sel":".beat[data-b=\"22\"]","start":114.9,"dur":6.55,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-right","shots":4},{"i":23,"sel":".beat[data-b=\"23\"]","start":120.35,"dur":6.55,"tone":"blue","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":24,"sel":".beat[data-b=\"24\"]","start":125.8,"dur":6.55,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":25,"sel":".beat[data-b=\"25\"]","start":131.25,"dur":9,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":26,"sel":".beat[data-b=\"26\"]","start":139.15,"dur":8.65,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":"zoom-in","shots":0}];
+      // The seams are DATA (lkmotion.mjs SEAMS): a clip shape for the stage-colour
+      // reveal, and where the outgoing and incoming scenes travel. One generic
+      // builder below turns any of them into tweens.
+      const SEAMS = {"push-left":{"from":["page-slide","whip-pan-cut"],"exit":"start"},"push-right":{"from":["page-slide","whip-pan-cut"],"exit":"end"},"push-up":{"from":["shared-axis-y","push-in"],"exit":"center"},"push-down":{"from":["shared-axis-y"],"exit":"edges"},"zoom-in":{"from":["zoom-through-transition"],"exit":"center"},"zoom-out":{"from":["zoom-through-transition","iris-reveal"],"exit":"edges"},"blur":{"from":["fade-through"],"exit":"center"}};
+      const XF = 0.45;
+      const LEAD = 0.65;
+      const TOTAL = 147.800;
+      const OUTRO_END = TOTAL - 2.4;
+const root = document.getElementById("root");
+
+      tl.to({}, { duration: TOTAL }, 0);
+
+      const stages = Array.from(root.querySelectorAll(".stage"));
+      const chips = Array.from(root.querySelectorAll(".chapter i b"));
+
+      function toneAt(i) { return PLAN[i].tone; }
+
+      // Stage colour, dither palette, chapter rail - and the SEAM between beats.
+      //
+      // NOTHING FADES (DESIGN_SYSTEM 4). Elements enter by scale 0 -> 1 with overshoot and leave by
+      // scale 1 -> 0; no element, scene or beat is ever tweened in opacity. A seam is:
+      //   S-0.3..S   the OUTGOING scene removes every element: each scales DOWN to 0 (staggered, in the
+      //              order its seam names), inside that beat's own timeline (lkdirector.mjs exit)
+      //   S..C       the stage is empty. An exposure flare (a light overlay, not a fade of content)
+      //              rises on a cosine to hide the stage-colour swap
+      //   C          the peak: stage colour, dither and tone swap here, unseen
+      //   ENTER..    the INCOMING scene's elements scale UP from 0 with overshoot, into the falling flare
+      const FLASH_UP = 0.3;
+      const FLASH_DOWN = 0.55;
+      const flashEl = root.querySelector(".flash");
+      PLAN.forEach((b, i) => {
+        const st = stages[b.i];
+        const tone = toneAt(i);
+        const C = b.start + FLASH_UP;
+        if (st) {
+          if (i === 0) tl.set(st, { opacity: 1 }, 0);
+          else {
+            tl.set(st, { opacity: 1 }, C);
+            tl.set(stages[i - 1], { opacity: 0 }, C);
+          }
+        }
+        if (i > 0) {
+          tl.call(() => {
+            root.classList.toggle("tone-white", tone === "white");
+            const dth = document.getElementById("dither");
+            if (dth) dth.classList.toggle("on-white", tone === "white");
+          }, null, C);
+          if (flashEl) {
+            // flare-ok: the exposure flare is a LIGHT OVERLAY (it hides the stage-colour swap), not a fade of content
+            tl.fromTo(flashEl, { opacity: 0 }, { opacity: 1, duration: FLASH_UP, ease: "sine.inOut" }, b.start);
+            tl.to(flashEl, { opacity: 0, duration: FLASH_DOWN, ease: "sine.out" }, C);
+          }
+        }
+        const chip = chips[i];
+        if (chip) {
+          tl.set(chip, { scaleX: 0 }, b.start);
+          tl.to(chip, { scaleX: 1, duration: b.dur, ease: "none" }, b.start);
+        }
+        // The beat element itself is never animated: it holds the scene, and the scene's own elements
+        // scale in and out inside their own timelines.
+      });
+
+      // The subtitles are NORMAL bottom captions, in the root, outside the 3D world.
+      Array.from(root.querySelectorAll(".cap")).forEach((c) => {
+        const at = parseFloat(c.dataset.start);
+        const sp = c.querySelector("span");
+        if (sp) tl.fromTo(sp, { y: 16, scale: 0.97 }, { y: 0, scale: 1, duration: 0.22, ease: "power2.out" }, at);
+      });
+
+      // the subtitle pill and the chapter rail leave by scale too
+      tl.to(".cap span", { scale: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
+      tl.to(".chapter", { scaleY: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
+
+      tl.seek(0);
+    </script>
+  </body>
+</html>

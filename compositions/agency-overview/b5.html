@@ -25,19 +25,6 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stages{position:absolute;inset:0;z-index:0}
 .stage{position:absolute;inset:0;background:#2A8CFF}
 .stage.white{background:#FFFFFF}
-/* The per-beat STAGE PLATE. The wipe is a MASK now: the incoming beat is revealed
-   through a growing lattice of pixel windows while the outgoing beat stays live
-   everywhere else. For that to be correct the incoming beat has to bring its own
-   BACKGROUND with it - a root-level stage swap would repaint the outgoing scene
-   mid-wipe. So each beat sub-composition paints its own tone on its own #root
-   (see build-beats.mjs), and these classes key the chapter rail and the caption
-   pill to that tone. */
-#root.tone-white .chapter i{background:rgba(42,140,255,.16)}
-#root.tone-white .chapter i b{background:#2A8CFF}
-#root.tone-white #dither{opacity:.55;
-  background-image:
-   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
-   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
 
 /* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
    ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
@@ -48,7 +35,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
    repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
    once quantised, plus the app's edge mask. It animates by sliding the lattice,
    so the frame is never static. */
-#dither,#root .dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
  background-image:
   repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
@@ -59,7 +46,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
    over every white beat: the stage stopped reading as white and white type on
    it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
    backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
-#dither.on-white,#root .dither.on-white{opacity:.55;
+#dither.on-white{opacity:.55;
  background-image:
   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
@@ -366,17 +353,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
 
-/* The PIXEL WIPE is a MASK, not an overlay: the incoming beat is revealed THROUGH a
-   growing lattice of pixel windows (an SVG clipPath on the beat's own element), so the
-   outgoing beat stays live and visible everywhere the lattice has not reached. Nothing
-   is painted over the scene - the only thing drawn on top is a 2px outline on the cells
-   that are still growing, so the pixels read as pixels. This mirrors
-   src/transitions/pixel-wipe.mjs exactly. An earlier pass here drew 144 opaque colour
-   TILES at z-index 85 that closed over the whole frame: an overlay, which is what made
-   the transition read as a heavy coloured slab rather than a cut. Each beat sub-file
-   carries its own stage colour for the same reason - the incoming background has to
-   arrive with the windows, not be swapped behind them. */
-.pxedge{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:86;pointer-events:none}
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
   // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
 
 .fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
@@ -405,37 +385,32 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-overview-b5" data-start="0" data-duration="9.700" data-width="1920" data-height="1080" data-fps="30" style="background:#2A8CFF">
-<div class="dither"></div>
+    <div id="root" data-composition-id="agency-overview-b5" data-start="0" data-duration="6.820" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="eyebrow white" data-a="k">Never miss the call</div>
+        <div class="eyebrow white" data-a="k">Overview</div>
         <div class="recrow">
         <div class="pan" data-a="p" style="max-width:1000px;background:#FFFFFF;border-radius:24px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;overflow:hidden" data-slab-exempt="clip"><div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid #E2E8F0">
         <span class="ico on-white" style="width:56px;height:56px;border-radius:12px"><svg class="ic" width="32" height="32" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg></span>
-        <span class="h3" style="font-weight:900;color:#0F172A">Capture</span>
-        <span class="apichip">agencyPhones</span></div><div style="padding:26px 30px 30px;color:#0F172A"><div class="rows"><div class="row irow" data-row="missed" data-fill="rgba(42,140,255,0.06)" data-focusfill="#F4F9FF"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span>
+        <span class="h3" style="font-weight:900;color:#0F172A">Overview</span>
+        <span class="apichip">agencyOverview</span></div><div style="padding:26px 30px 30px;color:#0F172A"><div class="rows"><div class="row irow" data-row="price" data-fill="rgba(42,140,255,0.06)" data-focusfill="#F4F9FF"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">missed</span><span class="rv">caller texts back</span><span class="rdot"></span></div><div class="row irow" data-row="seconds" data-fill="rgba(42,140,255,0.06)" data-focusfill="#F4F9FF"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">price</span><span class="rv">—</span><span class="rdot"></span></div><div class="row irow" data-row="name" data-fill="rgba(42,140,255,0.06)" data-focusfill="#F4F9FF"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">seconds</span><span class="rv">not hours</span><span class="rdot"></span></div><div class="row irow" data-row="booked" data-fill="rgba(42,140,255,0.06)" data-focusfill="#F4F9FF"><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
- stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">booked</span><span class="rv">the job stays yours</span><span class="rdot"></span></div></div></div></div>
+ aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg></span><span class="rk">name</span><span class="rv">ListeningKit</span><span class="rdot"></span></div></div></div></div>
         <div class="note inrow x3d" data-a="n" style="max-width:600px;background:#FFFFFF;border-radius:20px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;padding:26px 28px;color:#0F172A;position:relative" data-slab="card"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i>
-          <div class="label" style="color:#2A8CFF">missed</div>
-          <div class="body" style="font-weight:500;margin-top:10px">Missed-call capture texts back every missed caller in seconds.</div>
+          <div class="label" style="color:#2A8CFF">price</div>
+          <div class="body" style="font-weight:500;margin-top:10px">Inside the overview row.</div>
         </div>
         </div>
       <div class="satset" data-layout-allow-overlap><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="0" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>trades</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="1" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>heroH1</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="1" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>setup</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="2" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>primaryCta</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="2" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>line</span></div><div class="sat cut x3d" data-layout-allow-overlap data-hit="cutout" data-i="3" data-rot="9" style="width:220px;height:220px;transform:rotate(9deg)"><img class="cutsl xl" src="assets/ears/ear4.webp" alt="" style="transform:translateZ(-8px)"/><img class="cutsl xl" src="assets/ears/ear4.webp" alt="" style="transform:translateZ(-6px)"/><img class="cutsl xl" src="assets/ears/ear4.webp" alt="" style="transform:translateZ(-4px)"/><img class="cutsl xl" src="assets/ears/ear4.webp" alt="" style="transform:translateZ(-2px)"/><img class="cutf" src="assets/ears/ear4.webp" alt=""/></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="4" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
- stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>tooling</span></div></div></div>
+ aria-hidden="true" focusable="false"><path d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></svg></span><span class="satl" data-layout-allow-overlap>status</span></div></div><div class="ripple on-blue" data-a="rip" data-layout-allow-overlap></div><div class="cursor" data-a="cur" data-layout-allow-overlap><i class="cs cs-n"></i><i class="cs cs-h"></i><i class="cs cs-c"></i></div></div>
     </div>
     <script>
       
@@ -542,17 +517,13 @@ const __dir = {
   camera(tl, root, spec, cs) {
     const stage = root.querySelector(spec.stage || ".stagec");
     if (!stage) return;
-    // Owner call (2026-10-04, second pass): NO camera movement at all — no push-in,
-    // no zoom, no tilt, no pull-back. The 3D lives in the depth set (the cards sit at
-    // different z, the pointer travels in z); the frame itself never moves or scales.
-    if (spec.flat) return;
-    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1);
+    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1), EASE_WIDE = __dir.bez(0.42, 0, 0.14, 1);
     // Aim a little BELOW the target, so what the camera is on rides high in the frame and clears
     // the subtitle pill that sits flat across the bottom (it is in the root, outside this world).
     const LOW = 120;
     tl.set(stage, { transformPerspective: D, transformOrigin: "50% 50%" }, 0);
-    // The entrance: the frame comes in from a little way back, LEVEL (no tilt), settling to rest.
-    tl.fromTo(stage, { z: 160, rotationY: 0, rotationX: 0, x: 0, y: 0 },
+    // The entrance: the frame starts pushed toward the camera and a few degrees off axis.
+    tl.fromTo(stage, { z: 220, rotationY: -spec.dir * 6, rotationX: 2, x: 0, y: 0 },
       { z: 0, rotationY: 0, rotationX: 0, duration: 1.2, ease: EASE }, spec.enter);
     spec.shots.forEach((sh, i) => {
       const at = spec.enter + sh.at;
@@ -581,9 +552,9 @@ const __dir = {
       const to = __dir.pose(P, s, sh.rx, sh.ry);
       const nextAt = i + 1 < spec.shots.length ? spec.enter + spec.shots[i + 1].at : spec.end;
       tl.to(stage, { x: to.x, y: to.y, z: to.z, rotationX: to.rotationX, rotationY: to.rotationY,
-        duration: 0.8, ease: EASE }, at);
-      // hold: a level push-in stays where it landed. No creep, no drift.
-      tl.to(stage, { z: to.z, rotationY: 0, rotationX: 0, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
+        duration: 0.8, ease: sh.mode === "wide" ? EASE_WIDE : EASE }, at);
+      // creep: a held shot keeps drifting - closer, and a little further round
+      tl.to(stage, { z: to.z + 45, rotationY: to.rotationY * 0.55, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
     });
     // Level out before the seam, so the exit animation starts from a flat frame.
     tl.to(stage, { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, duration: 0.5, ease: "power2.inOut" }, spec.end);
@@ -1106,7 +1077,7 @@ const __lip = { apply: __oklch.apply };
             tl.fromTo(q('[data-a="n"]'), { scale: 0, x: 70 }, { scale: 1, x: 0, duration: 0.45, ease: __spr.pop }, at + 0.45);
           }
         });
-      });})({"kicker":"Never miss the call","title":"Capture","api":"agencyPhones","r":[["missed","caller texts back"],["seconds","not hours"],["booked","the job stays yours"]],"focus":"missed","note":"Missed-call capture texts back every missed caller in seconds."});
+      });})({"kicker":"Overview","title":"Overview","api":"agencyOverview","r":[["price","—"],["name","ListeningKit"]],"focus":"price","note":"Inside the overview row."});
       const root = document.getElementById("root");
       ANIM(tl, 0.34, {
         q: (s) => root.querySelector(s),
@@ -1114,7 +1085,7 @@ const __lip = { apply: __oklch.apply };
       });
       // The pacing layer runs AFTER the scene has built its own timeline: it retimes
       // item entrances to the narration, then adds the camera and the cursor.
-      __dir.run(tl, root, {"clauses":[0.65,4.89,6.81,9.205],"span":8.6,"sats":{"enter":0.34,"items":[{"x":860,"y":-170,"z":230,"name":"trades"},{"x":-880,"y":220,"z":200,"name":"setup"},{"x":560,"y":-400,"z":-310,"name":"line"},{"x":-620,"y":-350,"z":-330,"name":"bundles"},{"x":700,"y":310,"z":-290,"name":"tooling"}]},"stops":[{"at":1.9,"ref":".pan","item":null,"peakAt":null},{"at":4.75,"ref":".pan [data-row=\"missed\"]","item":null,"peakAt":null},{"at":7.6,"ref":null,"item":null,"peakAt":null}],"peak":{"delay":0.224,"hand":0.26},"camera":{"stage":".stagec","flat":true,"enter":0.34,"dir":1,"sats":[{"x":860,"y":-170,"z":230,"name":"trades"},{"x":-880,"y":220,"z":200,"name":"setup"},{"x":560,"y":-400,"z":-310,"name":"line"},{"x":-620,"y":-350,"z":-330,"name":"bundles"},{"x":700,"y":310,"z":-290,"name":"tooling"}],"stops":[{"world":null},{"world":null},{"world":{"x":700,"y":310,"z":-290}}],"shots":[{"at":0.61,"mode":"in","stop":0,"zoom":2.1,"rx":0,"ry":0},{"at":3.46,"mode":"in","stop":1,"zoom":2.1,"rx":0,"ry":0},{"at":6.31,"mode":"in","stop":2,"zoom":2.1,"rx":0,"ry":0}],"end":8.1},"exit":{"at":9.011,"from":"edges"},"cursor":null,"lift":[{"sel":"[data-a=\"n\"]","at":1.6,"z":110},{"sel":".pan","at":1.2,"z":40}]});
+      __dir.run(tl, root, {"clauses":[0.65,4.49],"span":5.72,"sats":{"enter":0.34,"items":[{"x":860,"y":-170,"z":230,"name":"heroH1"},{"x":-880,"y":220,"z":200,"name":"primaryCta"},{"x":560,"y":-400,"z":-310,"name":"status"}]},"stops":[{"at":1.9,"ref":".pan","item":null,"peakAt":null},{"at":4.72,"ref":".pan [data-row=\"price\"]","item":null,"peakAt":null}],"peak":{"delay":0.224,"hand":0.26},"camera":{"stage":".stagec","enter":0.34,"dir":1,"sats":[{"x":860,"y":-170,"z":230,"name":"heroH1"},{"x":-880,"y":220,"z":200,"name":"primaryCta"},{"x":560,"y":-400,"z":-310,"name":"status"}],"stops":[{"world":null},{"world":null}],"shots":[{"at":0.61,"mode":"in","stop":0,"zoom":2.1,"rx":-3,"ry":7},{"at":2.01,"mode":"out","zoom":0.94,"rx":0,"ry":-4},{"at":3.43,"mode":"in","stop":1,"zoom":2.1,"rx":3,"ry":-7},{"at":4.83,"mode":"out","zoom":0.94,"rx":0,"ry":4}],"end":5.22},"exit":{"at":5.68,"from":"edges"},"cursor":{"appear":0.64,"start":{"x":1570,"y":310},"stops":[{"at":1.9,"ref":".pan","world":null,"rest":{"x":1570,"y":310,"z":260},"fx":0.6},{"at":4.72,"ref":".pan [data-row=\"price\"]","world":null,"rest":{"x":290,"y":730,"z":260},"fx":0.6}],"end":5.22,"endPos":{"x":290,"y":730}},"lift":[{"sel":"[data-a=\"n\"]","at":1.6,"z":110},{"sel":".pan","at":1.2,"z":40}]});
       // THE LIP: derived at render time from each slab host's own computed colour, in OKLCH (lkcolor.mjs)
       __lip.apply(root);
       tl.seek(0);

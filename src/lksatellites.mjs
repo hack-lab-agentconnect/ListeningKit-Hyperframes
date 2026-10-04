@@ -47,6 +47,54 @@ export const FAMILY = {
     fields: ["title", "status", "assignee", "dueAt"],
     objects: ["agencyProspects", "agencyLeads", "agencyOpportunities", "agencyCampaigns", "agencyContents", "agencyCalls", "agencyMessages"],
   },
+  "agency-campaigns": {
+    fields: ["name", "status", "campaignType", "urlKey", "funnelBaseUrl", "templateBaseUrl", "packDir"],
+    objects: ["agencyProspects", "agencyLeads", "agencyScripts", "agencyPhones"],
+  },
+  "agency-opportunities": {
+    fields: ["name", "stage", "description", "owner"],
+    objects: ["agencyLeads", "agencyOffers", "agencyTasks", "agencyCalls"],
+  },
+  "agency-offers": {
+    fields: ["name", "brandName", "heroH1", "ctaType", "status", "calendlyUrl", "metaPixelId"],
+    objects: ["agencyProspects", "agencyLeads", "agencyCalls", "agencyOpportunities"],
+  },
+  "agency-scripts": {
+    fields: ["name", "scriptData", "campaign"],
+    objects: ["agencyCampaigns", "agencyPhones", "agencyProspects"],
+  },
+  "agency-listings": {
+    fields: ["title", "locationQuery", "status", "parentListingId", "supersededById", "screenshotUrl"],
+    objects: ["agencyContents", "agencyProspects"],
+  },
+  "agency-contents": {
+    fields: ["name", "slug", "canonicalPath", "family", "status", "seoTitle", "primaryCta", "primaryHref"],
+    objects: ["agencyCampaigns", "agencyListings", "agencyCareers", "agencyCompetitors"],
+  },
+  "agency-competitors": {
+    fields: ["name", "domainName", "website", "industry", "competitiveLevel", "rankedKeywords", "gtmPriority"],
+    objects: ["agencyContents", "agencyListings"],
+  },
+  "agency-careers": {
+    fields: ["name", "title", "slug", "canonicalPath", "status", "family", "primaryHref"],
+    objects: ["agencyContents", "agencyCareerApplications"],
+  },
+  "agency-career-applications": {
+    fields: ["name", "email", "phone", "roleTitle", "resumeUrl", "coverLetter", "status"],
+    objects: ["agencyCareers"],
+  },
+  "agency-messages": {
+    fields: ["body", "direction", "fromNumber", "toNumber", "status", "telnyxMessageId"],
+    objects: ["agencyPhones", "agencyConversations", "agencyProspects", "agencyLeads"],
+  },
+  "agency-conversations": {
+    fields: ["pairKey", "peerPhone", "latestPreview", "latestDirection", "blasterConversationId"],
+    objects: ["agencyMessages", "agencyPhones", "agencyProspects", "agencyLeads"],
+  },
+  "agency-overview": {
+    fields: ["name", "status", "heroH1", "primaryCta", "price"],
+    objects: ["agencyOffers", "agencyContents", "agencyProspects", "agencyLeads", "agencyCalls", "agencyCampaigns"],
+  },
 };
 
 /** Beats that are about relationships or the whole object draw from the related objects. */

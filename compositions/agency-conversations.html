@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+/* ---- fonts: Satoshi only. tailwind.config.js aliases mono to sans on purpose. */
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Light.woff') format('woff');font-weight:300;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Regular.woff') format('woff');font-weight:400;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Medium.woff') format('woff');font-weight:500;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Bold.woff') format('woff');font-weight:700;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Black.woff') format('woff');font-weight:900;font-display:block}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;
+ font-family:'Satoshi',system-ui,sans-serif;font-synthesis:none;
+ -webkit-font-smoothing:antialiased}
+.clip{position:absolute;inset:0}
+.ringdefs{position:absolute;top:0;left:0;pointer-events:none}
+
+/* ---- stage. Flat colour, never a gradient: the app's shell is a flat
+   backgroundColor with a dither layer on top (OnboardingShell.tsx:65,70).
+   One .stage div per beat, so the background itself cuts between beats. */
+.stages{position:absolute;inset:0;z-index:0}
+.stage{position:absolute;inset:0;background:#2A8CFF}
+.stage.white{background:#FFFFFF}
+
+/* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
+   ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
+   to the left and right edges at opacity-55 (OnboardingShell.tsx:15,70).
+   Recreating that per-pixel in canvas JS produced a heavy overlay that both
+   looked wrong and counted against the capture layer's overlay budget, so the
+   visible surface here is the ordered-dither lattice itself: two 3px-period
+   repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
+   once quantised, plus the app's edge mask. It animates by sliding the lattice,
+   so the frame is never static. */
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
+ background-size:6px 6px,6px 6px;
+ mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%);-webkit-mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)}
+/* On a white stage the lattice is BLUE, but it keeps the app's edge mask.
+   Removing the mask here (as an earlier pass did) laid a full-frame blue wash
+   over every white beat: the stage stopped reading as white and white type on
+   it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
+   backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
+#dither.on-white{opacity:.55;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
+
+/* ---- the one persistent element is a moving chapter rail, not a stuck
+   eyebrow. It wipes, it moves, it changes - see .rail in build-beats. */
+.chapter{position:absolute;left:0;right:0;bottom:0;height:6px;z-index:70;
+ display:flex;gap:4px;padding:0 88px 0}
+.chapter i{flex:1;height:6px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+.stage.white .chapter i{background:rgba(42,140,255,.16)}
+.chapter i b{position:absolute;inset:0;transform-origin:left center;transform:scaleX(0);
+ background:#FFFFFF;display:block}
+.stage.white .chapter i b{background:#2A8CFF}
+
+/* ---- logo lockup: the onboarding hero treatment (OnboardingShell.tsx:43-45) */
+.lockup{position:absolute;z-index:70;display:flex;align-items:center;gap:18px}
+.lockup img{width:64px;height:64px;border-radius:18px;display:block}
+.lockup .word{font-size:30px;font-weight:900;letter-spacing:0;text-transform:uppercase}
+.lockup .obj{font-size:30px;font-weight:500;opacity:.72}
+/* The logo is a blue tile with a white mark, so it needs NO filter on either
+   stage — brightness(0) invert(1) (which used to be here) flattens both the
+   background and the mark to solid white. */
+.lockup.on-white img{filter:none}
+
+/* ---- endcard lockup. The logo IS a blue tile with a white mark
+   (apps/web/public/logo.svg), so on the blue stage it needs no backing plate -
+   only a hard offset shadow to lift it off the field. Two earlier attempts were
+   wrong: brightness(0) invert(1) flattened BOTH the blue background and the
+   white mark to solid white (the end card shipped a blank white square), and a
+   white plate behind an opaque blue logo is simply invisible. Tracking is 0: a
+   tracked wordmark is not the wordmark. */
+.ecmark{position:relative;width:168px;height:168px}
+.ecmark img{position:absolute;inset:0;width:168px;height:168px;border-radius:18px;
+  display:block;box-shadow:0 10px 0 0 rgba(9,32,63,0.30)}
+.wordmark{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:0;text-transform:uppercase;color:#FFFFFF;white-space:nowrap}
+
+/* ---- type scale */
+.hero{font:900 104px/1.02 'Satoshi', system-ui, sans-serif;letter-spacing:-.03em}
+.h1{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:-.025em}
+.h2{font:900 62px/1.08 'Satoshi', system-ui, sans-serif;letter-spacing:-.02em}
+.h3{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;letter-spacing:-.015em}
+.body{font:400 30px/1.45 'Satoshi', system-ui, sans-serif}
+.eyebrow{font:700 20px/1 'Satoshi', system-ui, sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.label{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.kv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;letter-spacing:.04em}
+.cap{font:400 34px/1.34 'Satoshi', system-ui, sans-serif}
+.blue{color:#2A8CFF}
+.white{color:#FFFFFF}
+.dim{opacity:.72}
+.dim2{opacity:.55}
+
+/* ---- glass card on blue: border-white/30 bg-white/10 (OnboardingSteps.tsx:322) */
+.glass{background:rgba(255,255,255,.10);border:1.5px solid rgba(255,255,255,.30);
+ box-shadow:0 6px 0 0 rgba(9,32,63,0.30)}
+.glass:hover{background:rgba(255,255,255,.20)}
+/* inverted: the selected state, border-white bg-white text-[#2a8cff] (:321) */
+.invert{background:#FFFFFF;color:#2A8CFF}
+/* white surface on blue: rounded-[32px] bg-white text-slate-900 (:475) */
+.surface{background:#FFFFFF;color:#0F172A;
+ box-shadow:0 10px 0 0 rgba(13,42,76,0.22),0 26px 60px -28px rgba(15,30,51,.45)}
+.hard{box-shadow:inset 0 1px 0 0 #1f6fe6, inset 0 -2px 0 0 #117eff, 0 0 3px 0 rgba(0,0,0,0.2)}
+
+/* ---- captions: the onboarding dashed underline is the signature link style
+   (OnboardingSteps.tsx:369). Captions use it as their rail. */
+.cap{z-index:80;display:flex;justify-content:center;align-items:flex-end;padding:0 260px 74px;pointer-events:none}
+.cap span{display:inline-block;max-width:1440px;text-align:center;font:400 34px/1.34 'Satoshi', system-ui, sans-serif;
+ font-weight:400;color:#FFFFFF;padding:14px 30px;border-radius:12px;
+ background:rgba(10,24,48,.42);border:1.5px solid rgba(255,255,255,.16)}
+#root.tone-white .cap span{color:#0F172A;background:rgba(255,255,255,.88);border-color:#E2E8F0}
+
+/* ---- shared diagram primitives */
+.connector{fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round}
+.connector.blue{stroke:#2A8CFF}
+.node{padding:22px 26px}
+.node .nk{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
+.node .nv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:6px}
+
+/* ---- icon primitive. Heroicons 24 outline, stroke currentColor, sw 1.5 -
+   the app's own icon defaults (lkicons.mjs). Sits at the LEFT of a card.
+   Radius is rounded-sm (8), NOT a large radius: the app has no fully-rounded
+   tile in this position, and at 72px a 12px radius already reads as a lozenge.
+   Two tile treatments, and the difference matters:
+     .ico.on-blue  brand-blue tile, WHITE glyph  - on a white card
+     .ico.on-white light tint tile, BLUE glyph    - on a blue stage
+   A bare icon with no tile is fine either way. */
+.ic{display:block;flex:none;overflow:visible}
+.ico{display:flex;flex:none;align-items:center;justify-content:center;
+ width:72px;height:72px;border-radius:8px;
+ background:#2A8CFF;color:#FFFFFF;box-shadow:0 0 0 3px #0A0F1A}
+.ico.on-white{background:#EFF6FF;color:#2A8CFF}
+/* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
+   a blue glyph. A blue tile on a blue card is the icon disappearing, which is
+   the exact failure the white-stage cards had. */
+.ico.on-bluecard{background:#FFFFFF;color:#2A8CFF}
+.ico.plain{background:none;width:auto;height:auto;color:inherit;box-shadow:none}
+/* Compact tile for a chip / inline row, where the 72px panel tile would make the
+   label wrap. Same colour rule as .ico - solid brand blue with a white glyph on
+   a white card, inverted to solid white with a blue glyph on a blue card. */
+.ico.xs{width:44px;height:44px;border-radius:8px}
+.irow{display:flex;align-items:center;gap:24px}
+.irow > .itx{flex:1;min-width:0}
+
+/* ---- grid + list rows used by the field-by-field beats */
+.rows{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:22px;padding:18px 24px;border-radius:14px}
+.row .rk{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:270px;flex-shrink:0;opacity:.8}
+.row .rv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:500}
+.row .rdot{margin-left:auto;width:12px;height:12px;border-radius:50%;background:currentColor;opacity:.28}
+
+/* ---- countup, the one pure-number beat */
+.count{display:flex;align-items:baseline;justify-content:center;gap:16px}
+.count .n{font-size:300px;font-weight:900;line-height:.9;letter-spacing:-.045em;
+ font-variant-numeric:tabular-nums}
+.count .u{font-size:84px;font-weight:500;opacity:.72}
+
+/* ---- bar chart (sentiment) */
+.bar{display:flex;align-items:center;gap:20px;padding:14px 0}
+.bar .bl{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:130px;opacity:.8}
+.bar .bt{flex:1;height:26px;border-radius:8px;overflow:hidden;background:rgba(127,127,127,.14)}
+.bar .bf{display:block;height:100%;width:0;border-radius:8px}
+.bar .bv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:150px;text-align:right;opacity:.8}
+
+/* ---- journey / step cards */
+.jr{display:flex;gap:20px;justify-content:center}
+.jr .card{width:400px;padding:30px 28px;border-radius:20px}
+.jr .num{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;
+ justify-content:center;font-size:20px;font-weight:700}
+.jr .ch{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:20px}
+.jr .cs{font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:400;opacity:.72;margin-top:10px}
+.jr .cm{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;margin-top:18px;opacity:.6}
+
+/* ---- transcript surface */
+.tw{border-radius:24px;overflow:hidden}
+.thead{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;
+ border-bottom:1.5px solid rgba(127,127,127,.14)}
+.tscroll{height:400px;overflow:hidden;padding:24px 32px;position:relative}
+.tline{font:400 30px/1.55 'Satoshi',sans-serif;margin-bottom:18px;opacity:.9}
+.tline.hit{font-weight:900}
+.wave{display:flex;align-items:flex-end;gap:4px;height:92px;padding:18px 28px}
+.wave i{flex:1;height:var(--h);border-radius:3px;transform-origin:bottom}
+
+/* ---- data table: moved to src/components/table (its css lives with the component) */
+
+/* ---- working / progress theater */
+.wrow{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:14px}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(127,127,127,.2);
+ border-top-color:currentColor}
+.wrow[data-state=done] .spin{display:none}
+.chk{width:30px;height:30px;margin-left:auto}
+.chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
+   carrying an object name, not status badges, and a 999px radius turned them
+   into lozenges. Fully-rounded is for real pills only (DESIGN_SYSTEM 2.3). */
+.chip{padding:13px 22px;border-radius:14px;font-size:23px;font-weight:600;
+ white-space:nowrap}
+
+/* ---- cursor. The real product cursors, lifted from
+   nebius-hackathon/apps/web/public/cursors/ - not a hand-drawn triangle.
+   pointer.svg is the dark arrow with a light outline, so it survives on both
+   the blue and the white stage without a second asset. Sized large on purpose:
+   at 34px it read as a speck on a 1920 frame. */
+/* The cursor art is cropped to the arrow itself (viewBox 0 0 34 38) and drawn at
+   exactly 2x: 68x76 px, arrow tip at (10,10) inside the box. It used to be an
+   80x64 canvas with a 30px arrow in one corner, drawn at 168px - so the "large
+   cursor" was a 63px arrow floating in 100px of nothing, and its tip sat ~10px
+   off wherever it was aimed. Size and hotspot now mean what they say, and the
+   director (lkdirector.mjs) aims the TIP at a measured element.
+   left/top are pinned to 0 so a GSAP x/y is a stage coordinate, not an offset
+   from wherever a flex container decided an inset-less box should sit. */
+.cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:75;pointer-events:none}
+/* Three states stacked on one anchor, each offset so ITS hotspot sits on the anchor:
+     .cs-n  the arrow           viewBox 0 0 34 38   at 2.4x -> tip at (12,12)
+     .cs-h  the open hand       viewBox -6 -6 89 75 at 2x   -> middle fingertip (40,4)
+     .cs-c  the pointing hand   viewBox -6 -6 89 75 at 2x   -> fingertip (30,4)
+   The director switches them (arrow -> hand on hover -> pointing hand on the press ->
+   arrow). Only the active one has opacity 1. The cursor is the subject of every scene,
+   so it is drawn large: ~90px of arrow on a 1920 frame. */
+.cursor .cs{position:absolute;display:block;opacity:0;background-repeat:no-repeat;background-size:100% 100%} /* swap-ok: sprite swap */
+.cursor .cs-n{left:-12px;top:-12px;width:82px;height:91px;opacity:1;background-image:url('assets/cursors/pointer.svg')} /* swap-ok */
+.cursor .cs-h{left:-40px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/hover.svg')}
+.cursor .cs-c{left:-30px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/click.svg')}
+/* The click ripple. A ring, because it is a transient effect, never a surface. */
+.ripple{position:absolute;left:0;top:0;z-index:74;width:80px;height:80px;border-radius:50%;
+ pointer-events:none;border:4px solid #7FBAFF}
+.ripple.on-blue{border-color:#FFFFFF}
+
+/* ---- how a Twenty object is NAMED on screen.
+   The camelCase API name was being set in the same weight and size as the
+   human title beside it, in a different case pattern, at low opacity. Three
+   competing shapes of type for one idea. The rule now: the human title is the
+   display element, and the API name is a small uppercase monospace-ish tag in
+   a translucent chip - present for accuracy, visually subordinate. */
+.apichip{display:inline-block;font:500 19px/1 'Satoshi',system-ui,sans-serif;
+ letter-spacing:.02em;padding:9px 14px;border-radius:8px;
+ background:rgba(42,140,255,.10);border:1.5px solid rgba(42,140,255,.22);
+ color:#2A8CFF;white-space:nowrap;vertical-align:middle}
+.on-blue .apichip,.apichip.on-blue{background:rgba(255,255,255,.14);
+ border-color:rgba(255,255,255,.30);color:#FFFFFF}
+
+/* ---- stage centre: every beat composes around the middle of the frame, never
+   a fixed top-left corner. */
+.stagec{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;gap:34px;padding:110px 120px 150px;z-index:20;text-align:center}
+.stagec .row{text-align:left}
+.stagec .bar{text-align:left}
+
+/* ---- extrusion (lkextrude.mjs): a host that is a slab, and its slices */
+/* A slab is OWNED by its host: the host is the slices' containing block (position:relative), so the extrusion
+   moves, scales and rotates with the element and can never be positioned off some other layer. Without this the
+   absolutely-positioned slices attach to the nearest positioned ancestor the moment the host's own transform
+   clears at rest: the "extruded off the layer the div is on" bug. */
+.x3d{transform-style:preserve-3d;position:relative}
+/* the chain of preserve-3d: a slab sitting under a flat wrapper is flattened into the plane, so everything inside
+   the stage keeps the 3D context (overflow:hidden leaves flatten themselves, which is fine: they have no slab) */
+.stagec,.stagec *:not(svg):not(svg *){transform-style:preserve-3d}
+.xl{position:absolute;pointer-events:none;border-radius:inherit;background:currentColor} /* the runtime replaces it with the derived lip */
+
+
+.pillc{display:flex;align-items:center;gap:20px;padding:0 28px 0 12px;font:900 34px/1 'Satoshi',sans-serif;white-space:nowrap}
+.pillc .ico{width:64px;height:64px}
+
+
+/* ---- components/table: header band, column heads, rows that each rise on their own.
+   Plain grid, no <table>: every cell animates. */
+.tcols,.trow{display:grid;align-items:center;gap:18px;padding:14px 30px}
+.tcols{padding-top:18px;padding-bottom:6px}
+.tch{display:flex;align-items:center;gap:12px;font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+.tbody{display:flex;flex-direction:column;gap:10px;padding:6px 18px 26px}
+.trow{border-radius:14px;font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:500;text-align:left}
+.trow .tc:first-child{font-weight:900}
+.tc{white-space:nowrap;overflow:hidden;text-overflow:clip}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
+   GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
+   element would be overwritten the moment it scales. */
+.ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
+.ovbox{z-index:3}
+/* .ovorb is the orbiting anchor (GSAP positions it on an ellipse); .ovcard sits
+   centred on it and is what flies in. Two elements so the orbit and the entrance
+   never write the same transform. */
+.ovorb{position:absolute;left:50%;top:50%;width:0;height:0;z-index:2}
+.ovcard{position:absolute;left:0;top:0;text-align:left}
+.ovt{font-size:36px;font-weight:700;line-height:1.15;white-space:nowrap}
+
+/* zoom-out reveal */
+.zw{display:flex;flex-direction:column;align-items:center;gap:40px}
+.myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:64px;margin-bottom:48px}
+
+/* record panel + note callout */
+.pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
+.note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
+.relsvg{z-index:1}
+
+/* agent work */
+.wk{z-index:2}
+
+/* sentiment */
+.sb{z-index:2;width:1120px}
+.sb .note{right:auto;left:120px;top:auto;bottom:120px;transform:none;width:700px}
+
+/* converge */
+.cvf{display:flex;align-items:center;justify-content:center}
+.cvchip{z-index:1}
+
+/* journey cards */
+.jcard{z-index:2;text-align:left}
+
+/* typewriter */
+.twl-line{display:flex;align-items:center;justify-content:center;min-height:64px}
+.caret{margin-left:6px}
+
+/* split */
+.sp{z-index:2;text-align:left}
+.spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+</style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-conversations" data-start="0" data-duration="204.800" data-width="1920" data-height="1080" data-fps="30">
+      <div class="stages" data-a="stages">
+        <div class="stage white" data-s="0" style="opacity:0"></div>
+        <div class="stage " data-s="1" style="opacity:0"></div>
+        <div class="stage white" data-s="2" style="opacity:0"></div>
+        <div class="stage " data-s="3" style="opacity:0"></div>
+        <div class="stage white" data-s="4" style="opacity:0"></div>
+        <div class="stage " data-s="5" style="opacity:0"></div>
+        <div class="stage white" data-s="6" style="opacity:0"></div>
+        <div class="stage " data-s="7" style="opacity:0"></div>
+        <div class="stage white" data-s="8" style="opacity:0"></div>
+        <div class="stage " data-s="9" style="opacity:0"></div>
+        <div class="stage " data-s="10" style="opacity:0"></div>
+        <div class="stage white" data-s="11" style="opacity:0"></div>
+        <div class="stage " data-s="12" style="opacity:0"></div>
+        <div class="stage white" data-s="13" style="opacity:0"></div>
+        <div class="stage " data-s="14" style="opacity:0"></div>
+        <div class="stage white" data-s="15" style="opacity:0"></div>
+        <div class="stage " data-s="16" style="opacity:0"></div>
+        <div class="stage white" data-s="17" style="opacity:0"></div>
+        <div class="stage " data-s="18" style="opacity:0"></div>
+        <div class="stage white" data-s="19" style="opacity:0"></div>
+        <div class="stage " data-s="20" style="opacity:0"></div>
+        <div class="stage white" data-s="21" style="opacity:0"></div>
+        <div class="stage " data-s="22" style="opacity:0"></div>
+        <div class="stage " data-s="23" style="opacity:0"></div>
+        <div class="stage white" data-s="24" style="opacity:0"></div>
+        <div class="stage " data-s="25" style="opacity:0"></div>
+        <div class="stage white" data-s="26" style="opacity:0"></div>
+        <div class="stage " data-s="27" style="opacity:0"></div>
+        <div class="stage white" data-s="28" style="opacity:0"></div>
+        <div class="stage " data-s="29" style="opacity:0"></div>
+        <div class="stage white" data-s="30" style="opacity:0"></div>
+        <div class="stage " data-s="31" style="opacity:0"></div>
+        <div class="stage white" data-s="32" style="opacity:0"></div>
+        <div class="stage " data-s="33" style="opacity:0"></div>
+        <div class="stage white" data-s="34" style="opacity:0"></div>
+        <div class="stage " data-s="35" style="opacity:0"></div>
+        <div class="stage white" data-s="36" style="opacity:0"></div>
+        <div class="stage " data-s="37" style="opacity:0"></div>
+      </div>
+      <div id="dither"></div>
+      <div class="flash"></div>
+      
+
+      <div class="clip beat" data-layout-allow-overlap id="beat-0" data-b="0" data-composition-id="agency-conversations-b0" data-composition-src="compositions/agency-conversations/b0.html" data-start="0.8" data-duration="6.55" data-track-index="1"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-1" data-b="1" data-composition-id="agency-conversations-b1" data-composition-src="compositions/agency-conversations/b1.html" data-start="5.6" data-duration="6.55" data-track-index="2"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-2" data-b="2" data-composition-id="agency-conversations-b2" data-composition-src="compositions/agency-conversations/b2.html" data-start="11.05" data-duration="6.55" data-track-index="3"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-3" data-b="3" data-composition-id="agency-conversations-b3" data-composition-src="compositions/agency-conversations/b3.html" data-start="16.5" data-duration="6.55" data-track-index="4"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-4" data-b="4" data-composition-id="agency-conversations-b4" data-composition-src="compositions/agency-conversations/b4.html" data-start="21.95" data-duration="5.23" data-track-index="5"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-5" data-b="5" data-composition-id="agency-conversations-b5" data-composition-src="compositions/agency-conversations/b5.html" data-start="26.08" data-duration="5.24" data-track-index="6"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-6" data-b="6" data-composition-id="agency-conversations-b6" data-composition-src="compositions/agency-conversations/b6.html" data-start="30.22" data-duration="5.23" data-track-index="7"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-7" data-b="7" data-composition-id="agency-conversations-b7" data-composition-src="compositions/agency-conversations/b7.html" data-start="34.35" data-duration="5.96" data-track-index="8"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-8" data-b="8" data-composition-id="agency-conversations-b8" data-composition-src="compositions/agency-conversations/b8.html" data-start="39.21" data-duration="5.96" data-track-index="9"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-9" data-b="9" data-composition-id="agency-conversations-b9" data-composition-src="compositions/agency-conversations/b9.html" data-start="44.07" data-duration="5.96" data-track-index="10"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-10" data-b="10" data-composition-id="agency-conversations-b10" data-composition-src="compositions/agency-conversations/b10.html" data-start="48.93" data-duration="5.96" data-track-index="11"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-11" data-b="11" data-composition-id="agency-conversations-b11" data-composition-src="compositions/agency-conversations/b11.html" data-start="53.79" data-duration="5.96" data-track-index="12"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-12" data-b="12" data-composition-id="agency-conversations-b12" data-composition-src="compositions/agency-conversations/b12.html" data-start="58.65" data-duration="7" data-track-index="13"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-13" data-b="13" data-composition-id="agency-conversations-b13" data-composition-src="compositions/agency-conversations/b13.html" data-start="64.55" data-duration="7" data-track-index="14"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-14" data-b="14" data-composition-id="agency-conversations-b14" data-composition-src="compositions/agency-conversations/b14.html" data-start="70.45" data-duration="7.03" data-track-index="15"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-15" data-b="15" data-composition-id="agency-conversations-b15" data-composition-src="compositions/agency-conversations/b15.html" data-start="76.38" data-duration="7.04" data-track-index="16"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-16" data-b="16" data-composition-id="agency-conversations-b16" data-composition-src="compositions/agency-conversations/b16.html" data-start="82.32" data-duration="7.03" data-track-index="17"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-17" data-b="17" data-composition-id="agency-conversations-b17" data-composition-src="compositions/agency-conversations/b17.html" data-start="88.25" data-duration="7.03" data-track-index="18"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-18" data-b="18" data-composition-id="agency-conversations-b18" data-composition-src="compositions/agency-conversations/b18.html" data-start="94.18" data-duration="7.04" data-track-index="19"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-19" data-b="19" data-composition-id="agency-conversations-b19" data-composition-src="compositions/agency-conversations/b19.html" data-start="100.12" data-duration="7.03" data-track-index="20"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-20" data-b="20" data-composition-id="agency-conversations-b20" data-composition-src="compositions/agency-conversations/b20.html" data-start="106.05" data-duration="5.78" data-track-index="21"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-21" data-b="21" data-composition-id="agency-conversations-b21" data-composition-src="compositions/agency-conversations/b21.html" data-start="110.73" data-duration="5.77" data-track-index="22"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-22" data-b="22" data-composition-id="agency-conversations-b22" data-composition-src="compositions/agency-conversations/b22.html" data-start="115.4" data-duration="5.77" data-track-index="23"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-23" data-b="23" data-composition-id="agency-conversations-b23" data-composition-src="compositions/agency-conversations/b23.html" data-start="120.07" data-duration="5.78" data-track-index="24"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-24" data-b="24" data-composition-id="agency-conversations-b24" data-composition-src="compositions/agency-conversations/b24.html" data-start="124.75" data-duration="6.79" data-track-index="25"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-25" data-b="25" data-composition-id="agency-conversations-b25" data-composition-src="compositions/agency-conversations/b25.html" data-start="130.44" data-duration="6.78" data-track-index="26"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-26" data-b="26" data-composition-id="agency-conversations-b26" data-composition-src="compositions/agency-conversations/b26.html" data-start="136.12" data-duration="6.79" data-track-index="27"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-27" data-b="27" data-composition-id="agency-conversations-b27" data-composition-src="compositions/agency-conversations/b27.html" data-start="141.81" data-duration="6.79" data-track-index="28"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-28" data-b="28" data-composition-id="agency-conversations-b28" data-composition-src="compositions/agency-conversations/b28.html" data-start="147.5" data-duration="6.79" data-track-index="29"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-29" data-b="29" data-composition-id="agency-conversations-b29" data-composition-src="compositions/agency-conversations/b29.html" data-start="153.19" data-duration="6.78" data-track-index="30"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-30" data-b="30" data-composition-id="agency-conversations-b30" data-composition-src="compositions/agency-conversations/b30.html" data-start="158.87" data-duration="6.79" data-track-index="31"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-31" data-b="31" data-composition-id="agency-conversations-b31" data-composition-src="compositions/agency-conversations/b31.html" data-start="164.56" data-duration="6.79" data-track-index="32"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-32" data-b="32" data-composition-id="agency-conversations-b32" data-composition-src="compositions/agency-conversations/b32.html" data-start="170.25" data-duration="6.3" data-track-index="33"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-33" data-b="33" data-composition-id="agency-conversations-b33" data-composition-src="compositions/agency-conversations/b33.html" data-start="175.45" data-duration="6.3" data-track-index="34"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-34" data-b="34" data-composition-id="agency-conversations-b34" data-composition-src="compositions/agency-conversations/b34.html" data-start="180.65" data-duration="6.3" data-track-index="35"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-35" data-b="35" data-composition-id="agency-conversations-b35" data-composition-src="compositions/agency-conversations/b35.html" data-start="185.85" data-duration="6.3" data-track-index="36"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-36" data-b="36" data-composition-id="agency-conversations-b36" data-composition-src="compositions/agency-conversations/b36.html" data-start="191.05" data-duration="6.2" data-track-index="37"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-37" data-b="37" data-composition-id="agency-conversations-b37" data-composition-src="compositions/agency-conversations/b37.html" data-start="196.15" data-duration="8.65" data-track-index="38"></div>
+
+
+      <div class="clip cap" data-start="0.800" data-duration="2.960" data-track-index="90"><span>A conversation record is a rolling thread of messages</span></div>
+      <div class="clip cap" data-start="3.760" data-duration="1.680" data-track-index="90"><span>with one phone number.</span></div>
+      <div class="clip cap" data-start="5.440" data-duration="1.840" data-track-index="90"><span>We have zero right now.</span></div>
+      <div class="clip cap" data-start="7.280" data-duration="2.480" data-track-index="90"><span>Where the message object holds one text at a</span></div>
+      <div class="clip cap" data-start="9.760" data-duration="2.880" data-track-index="90"><span>time, a conversation holds all of the texts with</span></div>
+      <div class="clip cap" data-start="12.640" data-duration="2.560" data-track-index="90"><span>that one person in order as a single thing</span></div>
+      <div class="clip cap" data-start="15.200" data-duration="1.120" data-track-index="90"><span>you can read.</span></div>
+      <div class="clip cap" data-start="16.320" data-duration="2.755" data-track-index="90"><span>It mirrored in from Blaster, which is the system</span></div>
+      <div class="clip cap" data-start="19.075" data-duration="1.920" data-track-index="90"><span>that runs the actual messaging.</span></div>
+      <div class="clip cap" data-start="20.995" data-duration="1.600" data-track-index="90"><span>So think of it this way.</span></div>
+      <div class="clip cap" data-start="22.595" data-duration="2.560" data-track-index="90"><span>The message object is the raw material and the</span></div>
+      <div class="clip cap" data-start="25.155" data-duration="3.040" data-track-index="90"><span>conversation object is the finished, readable thread that a</span></div>
+      <div class="clip cap" data-start="28.195" data-duration="2.965" data-track-index="90"><span>human being can actually open and understand.</span></div>
+      <div class="clip cap" data-start="31.160" data-duration="2.640" data-track-index="90"><span>The fields are built around keeping a thread stable</span></div>
+      <div class="clip cap" data-start="33.800" data-duration="1.200" data-track-index="90"><span>and readable.</span></div>
+      <div class="clip cap" data-start="35.000" data-duration="3.040" data-track-index="90"><span>The pair key is the internal identifier that groups</span></div>
+      <div class="clip cap" data-start="38.040" data-duration="2.720" data-track-index="90"><span>messages together, and it is what stops a thread</span></div>
+      <div class="clip cap" data-start="40.760" data-duration="6.955" data-track-index="90"><span>fragmenting into a dozen separate conversations The peer phone</span></div>
+      <div class="clip cap" data-start="47.715" data-duration="2.320" data-track-index="90"><span>is the prospect's number, which is how you know</span></div>
+      <div class="clip cap" data-start="50.035" data-duration="1.680" data-track-index="90"><span>whose thread you are reading.</span></div>
+      <div class="clip cap" data-start="51.715" data-duration="2.240" data-track-index="90"><span>The Latest Preview is a short snippet of the</span></div>
+      <div class="clip cap" data-start="53.955" data-duration="2.560" data-track-index="90"><span>most recent message, so you can scan a list</span></div>
+      <div class="clip cap" data-start="56.515" data-duration="2.745" data-track-index="90"><span>of conversations without opening each one.</span></div>
+      <div class="clip cap" data-start="59.260" data-duration="2.560" data-track-index="90"><span>The latest direction tells you whether we spoke last</span></div>
+      <div class="clip cap" data-start="61.820" data-duration="2.880" data-track-index="90"><span>or they did, and that single fact changes who</span></div>
+      <div class="clip cap" data-start="64.700" data-duration="1.280" data-track-index="90"><span>should be chasing.</span></div>
+      <div class="clip cap" data-start="65.980" data-duration="2.800" data-track-index="90"><span>And the Blaster conversation ID ties the thread back</span></div>
+      <div class="clip cap" data-start="68.780" data-duration="2.320" data-track-index="90"><span>to the system that actually owns it.</span></div>
+      <div class="clip cap" data-start="71.100" data-duration="3.040" data-track-index="90"><span>Why roll messages up into conversations at all?</span></div>
+      <div class="clip cap" data-start="74.140" data-duration="3.425" data-track-index="90"><span>Because scatter of individual messages is not a conversation.</span></div>
+      <div class="clip cap" data-start="77.565" data-duration="1.120" data-track-index="90"><span>It is a pile.</span></div>
+      <div class="clip cap" data-start="78.685" data-duration="2.240" data-track-index="90"><span>And the value in talking to a prospect is</span></div>
+      <div class="clip cap" data-start="80.925" data-duration="2.880" data-track-index="90"><span>almost entirely in the context of what was already</span></div>
+      <div class="clip cap" data-start="83.805" data-duration="0.640" data-track-index="90"><span>said.</span></div>
+      <div class="clip cap" data-start="84.445" data-duration="2.575" data-track-index="90"><span>If somebody rings us back, the person on the</span></div>
+      <div class="clip cap" data-start="87.020" data-duration="2.720" data-track-index="90"><span>phone needs to know they already texted twice about</span></div>
+      <div class="clip cap" data-start="89.740" data-duration="2.160" data-track-index="90"><span>a price and what we offered.</span></div>
+      <div class="clip cap" data-start="91.900" data-duration="3.280" data-track-index="90"><span>The latest direction field makes that instant because if</span></div>
+      <div class="clip cap" data-start="95.180" data-duration="2.640" data-track-index="90"><span>the last message was ours, it is our turn</span></div>
+      <div class="clip cap" data-start="97.820" data-duration="1.760" data-track-index="90"><span>and we are being ignored.</span></div>
+      <div class="clip cap" data-start="99.580" data-duration="2.960" data-track-index="90"><span>If the last message was theirs, somebody needs to</span></div>
+      <div class="clip cap" data-start="102.540" data-duration="1.495" data-track-index="90"><span>read it and respond.</span></div>
+      <div class="clip cap" data-start="104.035" data-duration="2.000" data-track-index="90"><span>Where does this get used in the day to</span></div>
+      <div class="clip cap" data-start="106.035" data-duration="0.640" data-track-index="90"><span>day?</span></div>
+      <div class="clip cap" data-start="106.675" data-duration="2.880" data-track-index="90"><span>It becomes the inbox view for the entire outbound</span></div>
+      <div class="clip cap" data-start="109.555" data-duration="0.800" data-track-index="90"><span>motion.</span></div>
+      <div class="clip cap" data-start="110.355" data-duration="3.520" data-track-index="90"><span>Instead of hunting through individual messages, somebody opens</span></div>
+      <div class="clip cap" data-start="113.875" data-duration="3.600" data-track-index="90"><span>this object, sorts by latest activity, and works the</span></div>
+      <div class="clip cap" data-start="117.475" data-duration="1.175" data-track-index="90"><span>top of the list.</span></div>
+      <div class="clip cap" data-start="118.650" data-duration="2.800" data-track-index="90"><span>That is the handoff between the dialer, which makes</span></div>
+      <div class="clip cap" data-start="121.450" data-duration="2.800" data-track-index="90"><span>the calls, and whoever is replying to the text</span></div>
+      <div class="clip cap" data-start="124.250" data-duration="1.120" data-track-index="90"><span>that come back.</span></div>
+      <div class="clip cap" data-start="125.370" data-duration="2.400" data-track-index="90"><span>It is also the object a new joiner reads</span></div>
+      <div class="clip cap" data-start="127.770" data-duration="2.880" data-track-index="90"><span>first to understand how the business actually talks to</span></div>
+      <div class="clip cap" data-start="130.650" data-duration="1.035" data-track-index="90"><span>customers.</span></div>
+      <div class="clip cap" data-start="131.685" data-duration="3.600" data-track-index="90"><span>Zero records today means messaging is not yet live.</span></div>
+      <div class="clip cap" data-start="135.285" data-duration="2.240" data-track-index="90"><span>When it is, this is the screen that makes</span></div>
+      <div class="clip cap" data-start="137.525" data-duration="2.400" data-track-index="90"><span>it feel like a real sales floor rather than</span></div>
+      <div class="clip cap" data-start="139.925" data-duration="2.000" data-track-index="90"><span>a list of phone numbers.</span></div>
+      <div class="clip cap" data-start="141.925" data-duration="2.480" data-track-index="90"><span>This is the object that makes the outbound motion</span></div>
+      <div class="clip cap" data-start="144.405" data-duration="3.485" data-track-index="90"><span>feel human, rather than automated, so it is worth</span></div>
+      <div class="clip cap" data-start="147.890" data-duration="2.480" data-track-index="90"><span>being concrete about the handover.</span></div>
+      <div class="clip cap" data-start="150.370" data-duration="3.440" data-track-index="90"><span>A number rings, it goes to voicemail, and an</span></div>
+      <div class="clip cap" data-start="153.810" data-duration="2.160" data-track-index="90"><span>automated text goes out.</span></div>
+      <div class="clip cap" data-start="155.970" data-duration="2.675" data-track-index="90"><span>Two hours later, a human being replies.</span></div>
+      <div class="clip cap" data-start="158.645" data-duration="2.640" data-track-index="90"><span>That reply has to land somewhere a human will</span></div>
+      <div class="clip cap" data-start="161.285" data-duration="3.280" data-track-index="90"><span>actually see, attached to the business it came from,</span></div>
+      <div class="clip cap" data-start="164.565" data-duration="3.760" data-track-index="90"><span>with the earlier automated message still visible above it.</span></div>
+      <div class="clip cap" data-start="168.325" data-duration="2.545" data-track-index="90"><span>That is what a conversation row is.</span></div>
+      <div class="clip cap" data-start="170.870" data-duration="2.240" data-track-index="90"><span>The Pair Key is the part people get wrong</span></div>
+      <div class="clip cap" data-start="173.110" data-duration="1.680" data-track-index="90"><span>when they first look at it.</span></div>
+      <div class="clip cap" data-start="174.790" data-duration="2.640" data-track-index="90"><span>It is not a database identifier it is a</span></div>
+      <div class="clip cap" data-start="177.430" data-duration="3.120" data-track-index="90"><span>stable fingerprint of this number paired with this business.</span></div>
+      <div class="clip cap" data-start="180.550" data-duration="3.135" data-track-index="90"><span>And it is deliberately not something a human types.</span></div>
+      <div class="clip cap" data-start="183.685" data-duration="2.480" data-track-index="90"><span>It is computed so that the same thread always</span></div>
+      <div class="clip cap" data-start="186.165" data-duration="1.680" data-track-index="90"><span>lands on the same row.</span></div>
+      <div class="clip cap" data-start="187.845" data-duration="2.480" data-track-index="90"><span>Change how it is computed and you orphan every</span></div>
+      <div class="clip cap" data-start="190.325" data-duration="1.360" data-track-index="90"><span>existing thread.</span></div>
+      <div class="clip cap" data-start="191.685" data-duration="2.400" data-track-index="90"><span>So if you are building anything that reads these,</span></div>
+      <div class="clip cap" data-start="194.085" data-duration="2.560" data-track-index="90"><span>use the key as given, and never parse it.</span></div>
+
+      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i><i data-c="18"><b></b></i><i data-c="19"><b></b></i><i data-c="20"><b></b></i><i data-c="21"><b></b></i><i data-c="22"><b></b></i><i data-c="23"><b></b></i><i data-c="24"><b></b></i><i data-c="25"><b></b></i><i data-c="26"><b></b></i><i data-c="27"><b></b></i><i data-c="28"><b></b></i><i data-c="29"><b></b></i><i data-c="30"><b></b></i><i data-c="31"><b></b></i><i data-c="32"><b></b></i><i data-c="33"><b></b></i><i data-c="34"><b></b></i><i data-c="35"><b></b></i><i data-c="36"><b></b></i><i data-c="37"><b></b></i></div>
+
+      <audio id="agency-conversations-audio" src="assets/audio/agency-conversations.mp3" data-start="0.8" data-duration="195.845" data-has-audio="true" data-volume="1"></audio>
+    </div>
+    <script>
+      const __spr = (function springModule() {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+
+  /** The step response of a damped spring: 0 at t <= 0, settles on 1. f in Hz, z the damping ratio. */
+  function S(t, f, z) {
+    if (t <= 0) return 0;
+    const w = TAU * f;
+    if (z >= 1) return 1 - Math.exp(-w * t) * (1 + w * t);
+    const wd = w * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t));
+  }
+
+  /** A pulse: 0, rises to exactly 1 at t = 1 / (2 pi f), then decays to 0. A hit that does not stay. */
+  function pulse(t, f) {
+    if (t <= 0) return 0;
+    const x = TAU * f * t;
+    return x * Math.exp(1 - x);
+  }
+
+  const SPR = {
+    // ---- ours (entrances and the camera)
+    pop: { f: 3.0, z: 0.62 },
+    snap: { f: 3.6, z: 0.5 },
+    soft: { f: 2.6, z: 0.72 },
+    row: { f: 2.8, z: 0.78 },
+    settle: { f: 3.2, z: 1 },
+    cam: { f: 0.9, z: 0.72 },
+    // ---- the gist's presets, for anything that needs them
+    shape: { f: 1.9, z: 0.82 },
+    enter: { f: 3.6, z: 1 },
+    exit: { f: 8, z: 1 },
+    cursor: { f: 2.3, z: 1 },
+    glide: { f: 0.95, z: 1 },
+    press: { f: 10, z: 1 },
+    lead: { f: 3.4, z: 0.78 },
+    trail: { f: 1.7, z: 0.92 },
+  };
+
+  const spec = (s) => (typeof s === "string" ? SPR[s] : s) || SPR.pop;
+
+  /**
+   * One value that changes target several times: keys = [[time, value, spring?], ...] sorted by time. Each key
+   * ADDS one spring (the change from the previous value) starting at its own time, so the motion is continuous
+   * at every change and a seek anywhere is exact. `def` is the spring a key uses when it names none.
+   */
+  function track(t, keys, def) {
+    const d = spec(def || "cam");
+    let v = keys[0][1];
+    for (let i = 1; i < keys.length; i++) {
+      const s = spec(keys[i][2] || d);
+      v += (keys[i][1] - keys[i - 1][1]) * S(t - keys[i][0], s.f, s.z);
+    }
+    return v;
+  }
+
+  /** A stretching indicator: the leading edge is stiffer than the trailing edge. stops = [[time, x], ...]. */
+  function indicator(t, stops, width = 0) {
+    const lead = track(t, stops, SPR.lead), trail = track(t, stops, SPR.trail);
+    return { left: Math.min(lead, trail), right: Math.max(lead, trail) + width };
+  }
+
+  /** A seamless loop: pin the last frame to the first. */
+  const loopT = (t, dur) => ((t % dur) + dur) % dur;
+
+  /** Time (s) at which the response first reaches its overshoot peak, or null if it does not overshoot. */
+  function peakTime(f, z) {
+    if (z >= 1) return null;
+    return Math.PI / (TAU * f * Math.sqrt(1 - z * z));
+  }
+  /** The overshoot as a fraction of the move (0.09 = 9 %), 0 for a critically damped spring. */
+  function overshoot(f, z) {
+    if (z >= 1) return 0;
+    return Math.exp((-Math.PI * z) / Math.sqrt(1 - z * z));
+  }
+  /** Time (s) until the response stays within `eps` of its target. */
+  function settleTime(f, z, eps = 0.005) {
+    let last = 0;
+    for (let t = 0; t < 6; t += 1 / 480) if (Math.abs(S(t, f, z) - 1) > eps) last = t;
+    return last + 1 / 480;
+  }
+
+  /**
+   * A GSAP ease: progress 0..1 -> the spring's response over its own settle time, so a tween of ANY duration
+   * plays the whole spring (accelerate, overshoot, settle) across that duration.
+   */
+  function ease(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : S(p * Ts, s.f, s.z));
+  }
+
+  /**
+   * The EXIT ease: a spring played in reverse. It dips first (a hair of anticipation, the mass gathering) and
+   * then accelerates into the end, so a scale 1 -> 0 leaves with the same mass an entrance arrives with.
+   */
+  function easeIn(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - S((1 - p) * Ts, s.f, s.z));
+  }
+
+  /** Fraction (0..1) of an entrance tween at which its mass is at the peak of the overshoot. */
+  const peakFrac = (name) => {
+    const s = spec(name), pk = peakTime(s.f, s.z);
+    return pk === null ? 1 : pk / settleTime(s.f, s.z);
+  };
+  /** Seconds after an entrance of duration `dur` starts that its mass is at the peak of its overshoot. */
+  const peakDelay = (name, dur) => +(peakFrac(name) * dur).toFixed(3);
+
+  const out = { S, pulse, SPR, track, indicator, loopT, peakTime, overshoot, settleTime, ease, peakFrac, peakDelay, clamp };
+  // ready-made GSAP eases by name: `__spr.pop` is a function, usable as `ease: __spr.pop`
+  for (const k of ["pop", "snap", "soft", "row", "settle", "cam"]) { out[k] = ease(k); out[k + "In"] = easeIn(k); }
+  out.easeIn = easeIn;
+  return out;
+})();
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-conversations"] = tl;
+
+      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":6.55,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":null,"xf":null,"shots":4},{"i":1,"sel":".beat[data-b=\"1\"]","start":5.6,"dur":6.55,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":2,"sel":".beat[data-b=\"2\"]","start":11.05,"dur":6.55,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"zoom-in","shots":4},{"i":3,"sel":".beat[data-b=\"3\"]","start":16.5,"dur":6.55,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":4},{"i":4,"sel":".beat[data-b=\"4\"]","start":21.95,"dur":5.23,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"push-right","shots":2},{"i":5,"sel":".beat[data-b=\"5\"]","start":26.08,"dur":5.24,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":2},{"i":6,"sel":".beat[data-b=\"6\"]","start":30.22,"dur":5.23,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":2},{"i":7,"sel":".beat[data-b=\"7\"]","start":34.35,"dur":5.96,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":8,"sel":".beat[data-b=\"8\"]","start":39.21,"dur":5.96,"tone":"white","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":9,"sel":".beat[data-b=\"9\"]","start":44.07,"dur":5.96,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":4},{"i":10,"sel":".beat[data-b=\"10\"]","start":48.93,"dur":5.96,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"push-right","shots":2},{"i":11,"sel":".beat[data-b=\"11\"]","start":53.79,"dur":5.96,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":12,"sel":".beat[data-b=\"12\"]","start":58.65,"dur":7,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":13,"sel":".beat[data-b=\"13\"]","start":64.55,"dur":7,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"push-left","shots":4},{"i":14,"sel":".beat[data-b=\"14\"]","start":70.45,"dur":7.03,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"zoom-in","shots":4},{"i":15,"sel":".beat[data-b=\"15\"]","start":76.38,"dur":7.04,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":4},{"i":16,"sel":".beat[data-b=\"16\"]","start":82.32,"dur":7.03,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-right","shots":4},{"i":17,"sel":".beat[data-b=\"17\"]","start":88.25,"dur":7.03,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":18,"sel":".beat[data-b=\"18\"]","start":94.18,"dur":7.04,"tone":"blue","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":19,"sel":".beat[data-b=\"19\"]","start":100.12,"dur":7.03,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":20,"sel":".beat[data-b=\"20\"]","start":106.05,"dur":5.78,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"zoom-in","shots":2},{"i":21,"sel":".beat[data-b=\"21\"]","start":110.73,"dur":5.77,"tone":"white","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-up","shots":2},{"i":22,"sel":".beat[data-b=\"22\"]","start":115.4,"dur":5.77,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-right","shots":2},{"i":23,"sel":".beat[data-b=\"23\"]","start":120.07,"dur":5.78,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"zoom-out","shots":2},{"i":24,"sel":".beat[data-b=\"24\"]","start":124.75,"dur":6.79,"tone":"white","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":25,"sel":".beat[data-b=\"25\"]","start":130.44,"dur":6.78,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":26,"sel":".beat[data-b=\"26\"]","start":136.12,"dur":6.79,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"zoom-in","shots":4},{"i":27,"sel":".beat[data-b=\"27\"]","start":141.81,"dur":6.79,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":4},{"i":28,"sel":".beat[data-b=\"28\"]","start":147.5,"dur":6.79,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-right","shots":4},{"i":29,"sel":".beat[data-b=\"29\"]","start":153.19,"dur":6.78,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":30,"sel":".beat[data-b=\"30\"]","start":158.87,"dur":6.79,"tone":"white","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":31,"sel":".beat[data-b=\"31\"]","start":164.56,"dur":6.79,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":32,"sel":".beat[data-b=\"32\"]","start":170.25,"dur":6.3,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":33,"sel":".beat[data-b=\"33\"]","start":175.45,"dur":6.3,"tone":"blue","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-up","shots":2},{"i":34,"sel":".beat[data-b=\"34\"]","start":180.65,"dur":6.3,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-right","shots":2},{"i":35,"sel":".beat[data-b=\"35\"]","start":185.85,"dur":6.3,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"zoom-out","shots":4},{"i":36,"sel":".beat[data-b=\"36\"]","start":191.05,"dur":6.2,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":37,"sel":".beat[data-b=\"37\"]","start":196.15,"dur":8.65,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":"push-left","shots":0}];
+      // The seams are DATA (lkmotion.mjs SEAMS): a clip shape for the stage-colour
+      // reveal, and where the outgoing and incoming scenes travel. One generic
+      // builder below turns any of them into tweens.
+      const SEAMS = {"push-left":{"from":["page-slide","whip-pan-cut"],"exit":"start"},"push-right":{"from":["page-slide","whip-pan-cut"],"exit":"end"},"push-up":{"from":["shared-axis-y","push-in"],"exit":"center"},"push-down":{"from":["shared-axis-y"],"exit":"edges"},"zoom-in":{"from":["zoom-through-transition"],"exit":"center"},"zoom-out":{"from":["zoom-through-transition","iris-reveal"],"exit":"edges"},"blur":{"from":["fade-through"],"exit":"center"}};
+      const XF = 0.45;
+      const LEAD = 0.65;
+      const TOTAL = 204.800;
+      const OUTRO_END = TOTAL - 2.4;
+const root = document.getElementById("root");
+
+      tl.to({}, { duration: TOTAL }, 0);
+
+      const stages = Array.from(root.querySelectorAll(".stage"));
+      const chips = Array.from(root.querySelectorAll(".chapter i b"));
+
+      function toneAt(i) { return PLAN[i].tone; }
+
+      // Stage colour, dither palette, chapter rail - and the SEAM between beats.
+      //
+      // NOTHING FADES (DESIGN_SYSTEM 4). Elements enter by scale 0 -> 1 with overshoot and leave by
+      // scale 1 -> 0; no element, scene or beat is ever tweened in opacity. A seam is:
+      //   S-0.3..S   the OUTGOING scene removes every element: each scales DOWN to 0 (staggered, in the
+      //              order its seam names), inside that beat's own timeline (lkdirector.mjs exit)
+      //   S..C       the stage is empty. An exposure flare (a light overlay, not a fade of content)
+      //              rises on a cosine to hide the stage-colour swap
+      //   C          the peak: stage colour, dither and tone swap here, unseen
+      //   ENTER..    the INCOMING scene's elements scale UP from 0 with overshoot, into the falling flare
+      const FLASH_UP = 0.3;
+      const FLASH_DOWN = 0.55;
+      const flashEl = root.querySelector(".flash");
+      PLAN.forEach((b, i) => {
+        const st = stages[b.i];
+        const tone = toneAt(i);
+        const C = b.start + FLASH_UP;
+        if (st) {
+          if (i === 0) tl.set(st, { opacity: 1 }, 0);
+          else {
+            tl.set(st, { opacity: 1 }, C);
+            tl.set(stages[i - 1], { opacity: 0 }, C);
+          }
+        }
+        if (i > 0) {
+          tl.call(() => {
+            root.classList.toggle("tone-white", tone === "white");
+            const dth = document.getElementById("dither");
+            if (dth) dth.classList.toggle("on-white", tone === "white");
+          }, null, C);
+          if (flashEl) {
+            // flare-ok: the exposure flare is a LIGHT OVERLAY (it hides the stage-colour swap), not a fade of content
+            tl.fromTo(flashEl, { opacity: 0 }, { opacity: 1, duration: FLASH_UP, ease: "sine.inOut" }, b.start);
+            tl.to(flashEl, { opacity: 0, duration: FLASH_DOWN, ease: "sine.out" }, C);
+          }
+        }
+        const chip = chips[i];
+        if (chip) {
+          tl.set(chip, { scaleX: 0 }, b.start);
+          tl.to(chip, { scaleX: 1, duration: b.dur, ease: "none" }, b.start);
+        }
+        // The beat element itself is never animated: it holds the scene, and the scene's own elements
+        // scale in and out inside their own timelines.
+      });
+
+      // The subtitles are NORMAL bottom captions, in the root, outside the 3D world.
+      Array.from(root.querySelectorAll(".cap")).forEach((c) => {
+        const at = parseFloat(c.dataset.start);
+        const sp = c.querySelector("span");
+        if (sp) tl.fromTo(sp, { y: 16, scale: 0.97 }, { y: 0, scale: 1, duration: 0.22, ease: "power2.out" }, at);
+      });
+
+      // the subtitle pill and the chapter rail leave by scale too
+      tl.to(".cap span", { scale: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
+      tl.to(".chapter", { scaleY: 0, duration: 0.35, ease: __spr.popIn }, OUTRO_END - 0.1);
+
+      tl.seek(0);
+    </script>
+  </body>
+</html>

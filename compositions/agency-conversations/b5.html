@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+/* ---- fonts: Satoshi only. tailwind.config.js aliases mono to sans on purpose. */
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Light.woff') format('woff');font-weight:300;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Regular.woff') format('woff');font-weight:400;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Medium.woff') format('woff');font-weight:500;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Bold.woff') format('woff');font-weight:700;font-display:block}
+@font-face{font-family:'Satoshi';src:url('assets/fonts/Satoshi-Black.woff') format('woff');font-weight:900;font-display:block}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden;
+ font-family:'Satoshi',system-ui,sans-serif;font-synthesis:none;
+ -webkit-font-smoothing:antialiased}
+.clip{position:absolute;inset:0}
+.ringdefs{position:absolute;top:0;left:0;pointer-events:none}
+
+/* ---- stage. Flat colour, never a gradient: the app's shell is a flat
+   backgroundColor with a dither layer on top (OnboardingShell.tsx:65,70).
+   One .stage div per beat, so the background itself cuts between beats. */
+.stages{position:absolute;inset:0;z-index:0}
+.stage{position:absolute;inset:0;background:#2A8CFF}
+.stage.white{background:#FFFFFF}
+
+/* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
+   ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
+   to the left and right edges at opacity-55 (OnboardingShell.tsx:15,70).
+   Recreating that per-pixel in canvas JS produced a heavy overlay that both
+   looked wrong and counted against the capture layer's overlay budget, so the
+   visible surface here is the ordered-dither lattice itself: two 3px-period
+   repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
+   once quantised, plus the app's edge mask. It animates by sliding the lattice,
+   so the frame is never static. */
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
+ background-size:6px 6px,6px 6px;
+ mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%);-webkit-mask-image:linear-gradient(to right, black 0%, transparent 20%, transparent 80%, black 100%)}
+/* On a white stage the lattice is BLUE, but it keeps the app's edge mask.
+   Removing the mask here (as an earlier pass did) laid a full-frame blue wash
+   over every white beat: the stage stopped reading as white and white type on
+   it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
+   backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
+#dither.on-white{opacity:.55;
+ background-image:
+  repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
+  repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
+
+/* ---- the one persistent element is a moving chapter rail, not a stuck
+   eyebrow. It wipes, it moves, it changes - see .rail in build-beats. */
+.chapter{position:absolute;left:0;right:0;bottom:0;height:6px;z-index:70;
+ display:flex;gap:4px;padding:0 88px 0}
+.chapter i{flex:1;height:6px;background:rgba(255,255,255,.22);overflow:hidden;position:relative}
+.stage.white .chapter i{background:rgba(42,140,255,.16)}
+.chapter i b{position:absolute;inset:0;transform-origin:left center;transform:scaleX(0);
+ background:#FFFFFF;display:block}
+.stage.white .chapter i b{background:#2A8CFF}
+
+/* ---- logo lockup: the onboarding hero treatment (OnboardingShell.tsx:43-45) */
+.lockup{position:absolute;z-index:70;display:flex;align-items:center;gap:18px}
+.lockup img{width:64px;height:64px;border-radius:18px;display:block}
+.lockup .word{font-size:30px;font-weight:900;letter-spacing:0;text-transform:uppercase}
+.lockup .obj{font-size:30px;font-weight:500;opacity:.72}
+/* The logo is a blue tile with a white mark, so it needs NO filter on either
+   stage — brightness(0) invert(1) (which used to be here) flattens both the
+   background and the mark to solid white. */
+.lockup.on-white img{filter:none}
+
+/* ---- endcard lockup. The logo IS a blue tile with a white mark
+   (apps/web/public/logo.svg), so on the blue stage it needs no backing plate -
+   only a hard offset shadow to lift it off the field. Two earlier attempts were
+   wrong: brightness(0) invert(1) flattened BOTH the blue background and the
+   white mark to solid white (the end card shipped a blank white square), and a
+   white plate behind an opaque blue logo is simply invisible. Tracking is 0: a
+   tracked wordmark is not the wordmark. */
+.ecmark{position:relative;width:168px;height:168px}
+.ecmark img{position:absolute;inset:0;width:168px;height:168px;border-radius:18px;
+  display:block;box-shadow:0 10px 0 0 rgba(9,32,63,0.30)}
+.wordmark{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:0;text-transform:uppercase;color:#FFFFFF;white-space:nowrap}
+
+/* ---- type scale */
+.hero{font:900 104px/1.02 'Satoshi', system-ui, sans-serif;letter-spacing:-.03em}
+.h1{font:900 84px/1.05 'Satoshi', system-ui, sans-serif;letter-spacing:-.025em}
+.h2{font:900 62px/1.08 'Satoshi', system-ui, sans-serif;letter-spacing:-.02em}
+.h3{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;letter-spacing:-.015em}
+.body{font:400 30px/1.45 'Satoshi', system-ui, sans-serif}
+.eyebrow{font:700 20px/1 'Satoshi', system-ui, sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.label{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.kv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;letter-spacing:.04em}
+.cap{font:400 34px/1.34 'Satoshi', system-ui, sans-serif}
+.blue{color:#2A8CFF}
+.white{color:#FFFFFF}
+.dim{opacity:.72}
+.dim2{opacity:.55}
+
+/* ---- glass card on blue: border-white/30 bg-white/10 (OnboardingSteps.tsx:322) */
+.glass{background:rgba(255,255,255,.10);border:1.5px solid rgba(255,255,255,.30);
+ box-shadow:0 6px 0 0 rgba(9,32,63,0.30)}
+.glass:hover{background:rgba(255,255,255,.20)}
+/* inverted: the selected state, border-white bg-white text-[#2a8cff] (:321) */
+.invert{background:#FFFFFF;color:#2A8CFF}
+/* white surface on blue: rounded-[32px] bg-white text-slate-900 (:475) */
+.surface{background:#FFFFFF;color:#0F172A;
+ box-shadow:0 10px 0 0 rgba(13,42,76,0.22),0 26px 60px -28px rgba(15,30,51,.45)}
+.hard{box-shadow:inset 0 1px 0 0 #1f6fe6, inset 0 -2px 0 0 #117eff, 0 0 3px 0 rgba(0,0,0,0.2)}
+
+/* ---- captions: the onboarding dashed underline is the signature link style
+   (OnboardingSteps.tsx:369). Captions use it as their rail. */
+.cap{z-index:80;display:flex;justify-content:center;align-items:flex-end;padding:0 260px 74px;pointer-events:none}
+.cap span{display:inline-block;max-width:1440px;text-align:center;font:400 34px/1.34 'Satoshi', system-ui, sans-serif;
+ font-weight:400;color:#FFFFFF;padding:14px 30px;border-radius:12px;
+ background:rgba(10,24,48,.42);border:1.5px solid rgba(255,255,255,.16)}
+#root.tone-white .cap span{color:#0F172A;background:rgba(255,255,255,.88);border-color:#E2E8F0}
+
+/* ---- shared diagram primitives */
+.connector{fill:none;stroke:#FFFFFF;stroke-width:3;stroke-linecap:round}
+.connector.blue{stroke:#2A8CFF}
+.node{padding:22px 26px}
+.node .nk{font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.72}
+.node .nv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:6px}
+
+/* ---- icon primitive. Heroicons 24 outline, stroke currentColor, sw 1.5 -
+   the app's own icon defaults (lkicons.mjs). Sits at the LEFT of a card.
+   Radius is rounded-sm (8), NOT a large radius: the app has no fully-rounded
+   tile in this position, and at 72px a 12px radius already reads as a lozenge.
+   Two tile treatments, and the difference matters:
+     .ico.on-blue  brand-blue tile, WHITE glyph  - on a white card
+     .ico.on-white light tint tile, BLUE glyph    - on a blue stage
+   A bare icon with no tile is fine either way. */
+.ic{display:block;flex:none;overflow:visible}
+.ico{display:flex;flex:none;align-items:center;justify-content:center;
+ width:72px;height:72px;border-radius:8px;
+ background:#2A8CFF;color:#FFFFFF;box-shadow:0 0 0 3px #0A0F1A}
+.ico.on-white{background:#EFF6FF;color:#2A8CFF}
+/* Icon tile sitting on a BRAND BLUE card: the tile inverts to solid white with
+   a blue glyph. A blue tile on a blue card is the icon disappearing, which is
+   the exact failure the white-stage cards had. */
+.ico.on-bluecard{background:#FFFFFF;color:#2A8CFF}
+.ico.plain{background:none;width:auto;height:auto;color:inherit;box-shadow:none}
+/* Compact tile for a chip / inline row, where the 72px panel tile would make the
+   label wrap. Same colour rule as .ico - solid brand blue with a white glyph on
+   a white card, inverted to solid white with a blue glyph on a blue card. */
+.ico.xs{width:44px;height:44px;border-radius:8px}
+.irow{display:flex;align-items:center;gap:24px}
+.irow > .itx{flex:1;min-width:0}
+
+/* ---- grid + list rows used by the field-by-field beats */
+.rows{display:flex;flex-direction:column;gap:14px}
+.row{display:flex;align-items:center;gap:22px;padding:18px 24px;border-radius:14px}
+.row .rk{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:270px;flex-shrink:0;opacity:.8}
+.row .rv{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:500}
+.row .rdot{margin-left:auto;width:12px;height:12px;border-radius:50%;background:currentColor;opacity:.28}
+
+/* ---- countup, the one pure-number beat */
+.count{display:flex;align-items:baseline;justify-content:center;gap:16px}
+.count .n{font-size:300px;font-weight:900;line-height:.9;letter-spacing:-.045em;
+ font-variant-numeric:tabular-nums}
+.count .u{font-size:84px;font-weight:500;opacity:.72}
+
+/* ---- bar chart (sentiment) */
+.bar{display:flex;align-items:center;gap:20px;padding:14px 0}
+.bar .bl{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:130px;opacity:.8}
+.bar .bt{flex:1;height:26px;border-radius:8px;overflow:hidden;background:rgba(127,127,127,.14)}
+.bar .bf{display:block;height:100%;width:0;border-radius:8px}
+.bar .bv{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;width:150px;text-align:right;opacity:.8}
+
+/* ---- journey / step cards */
+.jr{display:flex;gap:20px;justify-content:center}
+.jr .card{width:400px;padding:30px 28px;border-radius:20px}
+.jr .num{width:44px;height:44px;border-radius:22px;display:flex;align-items:center;
+ justify-content:center;font-size:20px;font-weight:700}
+.jr .ch{font:500 38px/1.18 'Satoshi', system-ui, sans-serif;font-weight:900;margin-top:20px}
+.jr .cs{font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:400;opacity:.72;margin-top:10px}
+.jr .cm{font:500 21px/1.3 'Satoshi', system-ui, sans-serif;margin-top:18px;opacity:.6}
+
+/* ---- transcript surface */
+.tw{border-radius:24px;overflow:hidden}
+.thead{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;
+ border-bottom:1.5px solid rgba(127,127,127,.14)}
+.tscroll{height:400px;overflow:hidden;padding:24px 32px;position:relative}
+.tline{font:400 30px/1.55 'Satoshi',sans-serif;margin-bottom:18px;opacity:.9}
+.tline.hit{font-weight:900}
+.wave{display:flex;align-items:flex-end;gap:4px;height:92px;padding:18px 28px}
+.wave i{flex:1;height:var(--h);border-radius:3px;transform-origin:bottom}
+
+/* ---- data table: moved to src/components/table (its css lives with the component) */
+
+/* ---- working / progress theater */
+.wrow{display:flex;align-items:center;gap:20px;padding:18px 24px;border-radius:14px}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid rgba(127,127,127,.2);
+ border-top-color:currentColor}
+.wrow[data-state=done] .spin{display:none}
+.chk{width:30px;height:30px;margin-left:auto}
+.chk path{stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- chips that converge (constellation). R.lg, NOT R.pill: these are cards
+   carrying an object name, not status badges, and a 999px radius turned them
+   into lozenges. Fully-rounded is for real pills only (DESIGN_SYSTEM 2.3). */
+.chip{padding:13px 22px;border-radius:14px;font-size:23px;font-weight:600;
+ white-space:nowrap}
+
+/* ---- cursor. The real product cursors, lifted from
+   nebius-hackathon/apps/web/public/cursors/ - not a hand-drawn triangle.
+   pointer.svg is the dark arrow with a light outline, so it survives on both
+   the blue and the white stage without a second asset. Sized large on purpose:
+   at 34px it read as a speck on a 1920 frame. */
+/* The cursor art is cropped to the arrow itself (viewBox 0 0 34 38) and drawn at
+   exactly 2x: 68x76 px, arrow tip at (10,10) inside the box. It used to be an
+   80x64 canvas with a 30px arrow in one corner, drawn at 168px - so the "large
+   cursor" was a 63px arrow floating in 100px of nothing, and its tip sat ~10px
+   off wherever it was aimed. Size and hotspot now mean what they say, and the
+   director (lkdirector.mjs) aims the TIP at a measured element.
+   left/top are pinned to 0 so a GSAP x/y is a stage coordinate, not an offset
+   from wherever a flex container decided an inset-less box should sit. */
+.cursor{position:absolute;left:0;top:0;width:0;height:0;z-index:75;pointer-events:none}
+/* Three states stacked on one anchor, each offset so ITS hotspot sits on the anchor:
+     .cs-n  the arrow           viewBox 0 0 34 38   at 2.4x -> tip at (12,12)
+     .cs-h  the open hand       viewBox -6 -6 89 75 at 2x   -> middle fingertip (40,4)
+     .cs-c  the pointing hand   viewBox -6 -6 89 75 at 2x   -> fingertip (30,4)
+   The director switches them (arrow -> hand on hover -> pointing hand on the press ->
+   arrow). Only the active one has opacity 1. The cursor is the subject of every scene,
+   so it is drawn large: ~90px of arrow on a 1920 frame. */
+.cursor .cs{position:absolute;display:block;opacity:0;background-repeat:no-repeat;background-size:100% 100%} /* swap-ok: sprite swap */
+.cursor .cs-n{left:-12px;top:-12px;width:82px;height:91px;opacity:1;background-image:url('assets/cursors/pointer.svg')} /* swap-ok */
+.cursor .cs-h{left:-40px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/hover.svg')}
+.cursor .cs-c{left:-30px;top:-4px;width:178px;height:150px;background-image:url('assets/cursors/click.svg')}
+/* The click ripple. A ring, because it is a transient effect, never a surface. */
+.ripple{position:absolute;left:0;top:0;z-index:74;width:80px;height:80px;border-radius:50%;
+ pointer-events:none;border:4px solid #7FBAFF}
+.ripple.on-blue{border-color:#FFFFFF}
+
+/* ---- how a Twenty object is NAMED on screen.
+   The camelCase API name was being set in the same weight and size as the
+   human title beside it, in a different case pattern, at low opacity. Three
+   competing shapes of type for one idea. The rule now: the human title is the
+   display element, and the API name is a small uppercase monospace-ish tag in
+   a translucent chip - present for accuracy, visually subordinate. */
+.apichip{display:inline-block;font:500 19px/1 'Satoshi',system-ui,sans-serif;
+ letter-spacing:.02em;padding:9px 14px;border-radius:8px;
+ background:rgba(42,140,255,.10);border:1.5px solid rgba(42,140,255,.22);
+ color:#2A8CFF;white-space:nowrap;vertical-align:middle}
+.on-blue .apichip,.apichip.on-blue{background:rgba(255,255,255,.14);
+ border-color:rgba(255,255,255,.30);color:#FFFFFF}
+
+/* ---- stage centre: every beat composes around the middle of the frame, never
+   a fixed top-left corner. */
+.stagec{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;gap:34px;padding:110px 120px 150px;z-index:20;text-align:center}
+.stagec .row{text-align:left}
+.stagec .bar{text-align:left}
+
+/* ---- extrusion (lkextrude.mjs): a host that is a slab, and its slices */
+/* A slab is OWNED by its host: the host is the slices' containing block (position:relative), so the extrusion
+   moves, scales and rotates with the element and can never be positioned off some other layer. Without this the
+   absolutely-positioned slices attach to the nearest positioned ancestor the moment the host's own transform
+   clears at rest: the "extruded off the layer the div is on" bug. */
+.x3d{transform-style:preserve-3d;position:relative}
+/* the chain of preserve-3d: a slab sitting under a flat wrapper is flattened into the plane, so everything inside
+   the stage keeps the 3D context (overflow:hidden leaves flatten themselves, which is fine: they have no slab) */
+.stagec,.stagec *:not(svg):not(svg *){transform-style:preserve-3d}
+.xl{position:absolute;pointer-events:none;border-radius:inherit;background:currentColor} /* the runtime replaces it with the derived lip */
+
+
+.pillc{display:flex;align-items:center;gap:20px;padding:0 28px 0 12px;font:900 34px/1 'Satoshi',sans-serif;white-space:nowrap}
+.pillc .ico{width:64px;height:64px}
+
+
+/* ---- components/table: header band, column heads, rows that each rise on their own.
+   Plain grid, no <table>: every cell animates. */
+.tcols,.trow{display:grid;align-items:center;gap:18px;padding:14px 30px}
+.tcols{padding-top:18px;padding-bottom:6px}
+.tch{display:flex;align-items:center;gap:12px;font:700 17px/1.2 'Satoshi', system-ui, sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+.tbody{display:flex;flex-direction:column;gap:10px;padding:6px 18px 26px}
+.trow{border-radius:14px;font:400 30px/1.45 'Satoshi', system-ui, sans-serif;font-weight:500;text-align:left}
+.trow .tc:first-child{font-weight:900}
+.tc{white-space:nowrap;overflow:hidden;text-overflow:clip}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+
+/* overwhelm. The centring lives on the wrapper, never on the animated box ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â
+   GSAP writes the whole transform, so a translate(-50%,-50%) on the animated
+   element would be overwritten the moment it scales. */
+.ovwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:3}
+.ovbox{z-index:3}
+/* .ovorb is the orbiting anchor (GSAP positions it on an ellipse); .ovcard sits
+   centred on it and is what flies in. Two elements so the orbit and the entrance
+   never write the same transform. */
+.ovorb{position:absolute;left:50%;top:50%;width:0;height:0;z-index:2}
+.ovcard{position:absolute;left:0;top:0;text-align:left}
+.ovt{font-size:36px;font-weight:700;line-height:1.15;white-space:nowrap}
+
+/* zoom-out reveal */
+.zw{display:flex;flex-direction:column;align-items:center;gap:40px}
+.myst{display:flex;align-items:center;justify-content:center}
+/* The number's own line box is taller than its glyphs, so the eyebrow sitting
+   directly above it sat INSIDE that box on the counted beats. Breathing room
+   here is what keeps the kicker legible rather than relying on the gap alone. */
+.count{margin-top:64px;margin-bottom:48px}
+
+/* record panel + note callout */
+.pan{z-index:2}
+/* The panel and the note are laid out as a ROW, not as absolutely positioned
+   boxes. Positioned independently they were both centred/righted against the
+   frame and overlapped by ~310px on every record beat in the film, which the
+   layout check reported 12 times and which reads on screen as the note sitting
+   on top of the record. In a row they cannot collide at any width. */
+.recrow{display:flex;gap:44px;align-items:center;justify-content:center;width:100%;z-index:2}
+.note{position:absolute;right:120px;top:50%;transform:translateY(-50%);z-index:4;text-align:left;width:560px}
+.note.inrow{position:static;transform:none;width:auto;flex:0 0 600px;align-self:center}
+.relsvg{z-index:1}
+
+/* agent work */
+.wk{z-index:2}
+
+/* sentiment */
+.sb{z-index:2;width:1120px}
+.sb .note{right:auto;left:120px;top:auto;bottom:120px;transform:none;width:700px}
+
+/* converge */
+.cvf{display:flex;align-items:center;justify-content:center}
+.cvchip{z-index:1}
+
+/* journey cards */
+.jcard{z-index:2;text-align:left}
+
+/* typewriter */
+.twl-line{display:flex;align-items:center;justify-content:center;min-height:64px}
+.caret{margin-left:6px}
+
+/* split */
+.sp{z-index:2;text-align:left}
+.spdiv{align-self:center;height:300px}
+
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
+  // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
+
+.fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
+.fxmark{background-image:linear-gradient(#7FBAFF,#7FBAFF);background-repeat:no-repeat;
+  background-position:0 100%;background-size:0% 7px;padding:0 2px}
+.tone-blue .fxmark{background-image:linear-gradient(#FFFFFF,#FFFFFF)}
+.fxtick{display:flex;align-items:center}
+
+
+/* ---- the depth set. .stagec is a 3D rendering context: satellites sit at their own
+   depth, the director's camera moves through them. Components, not text blocks. */
+.stagec{transform-style:preserve-3d}
+.satset{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;z-index:1}
+.sat{position:absolute;left:50%;top:50%;display:flex;align-items:center;gap:16px;
+ padding:14px 32px 14px 14px;white-space:nowrap;font-weight:700;line-height:1.1}
+.satl{font-weight:700}
+.sat .ico.sat-fg{width:68px;height:68px}
+.sat .ico.sat-bg{width:54px;height:54px}
+
+/* ---- the cutout satellite: a die-cut sticker. The black outer stroke is four hard drop-shadows (zero blur). */
+.sat.cut{display:block;padding:0;gap:0;font-size:0;transform-style:preserve-3d}
+.cut img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;display:block}
+.cut .cutf{filter:drop-shadow(3px 0 0 #0A0F1A) drop-shadow(-3px 0 0 #0A0F1A) drop-shadow(0 3px 0 #0A0F1A) drop-shadow(0 -3px 0 #0A0F1A)}
+.cut .cutsl{filter:brightness(0.45);background:none} /* an image has no background to derive from: its own pixels, darker */
+
+</style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="agency-conversations-b5" data-start="0" data-duration="5.240" data-width="1920" data-height="1080" data-fps="30">
+<div class="stagec">
+        <div class="pan" style="max-width:1180px;background:#FFFFFF;border-radius:24px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;position:absolute;left:300px;top:456px;overflow:hidden;color:#0F172A" data-slab-exempt="clip">
+          <div class="phead" style="display:flex;align-items:center;gap:16px;padding:22px 30px;border-bottom:1.5px solid #E2E8F0"><span class="h3" style="font-weight:900;color:#0F172A">Conversations</span><span class="apichip">agencyConversations</span></div>
+          <div style="padding:26px 30px 30px"><div class="rows"><div class="row irow" data-row="peerPhone" data-fill="rgba(42,140,255,0.06)" data-focusfill=""><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">peerPhone</span><span class="rv">(xxx) xxx-9920</span><span class="rdot"></span></div><div class="row irow" data-row="latestPreview" data-fill="rgba(42,140,255,0.06)" data-focusfill=""><span class="ico plain"><svg class="ic" width="34" height="34" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="rk">latestPreview</span><span class="rv">“yes send me the price”</span><span class="rdot"></span></div></div></div>
+        </div>
+        <svg class="relsvg" viewBox="0 0 1920 1080" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"><path class="connector" data-p="0" d="M 1000 500 Q 1165 434.28 1330 394"/><path class="connector" data-p="1" d="M 1000 540 Q 1165 573.48 1330 594"/></svg>
+        <div class="node relnode x3d" data-node="0" style="max-width:430px;background:#FFFFFF;border-radius:20px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;position:absolute;left:1330px;top:330px;color:#0F172A" data-slab="card"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="nk" style="color:#0F172A">agencyMessages</span><span class="nv" style="color:#475569">connected here</span></div><div class="node relnode x3d" data-node="1" style="max-width:430px;background:#FFFFFF;border-radius:20px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;position:absolute;left:1330px;top:530px;color:#0F172A" data-slab="card"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="nk" style="color:#0F172A">agencyPhones</span><span class="nv" style="color:#475569">connected here</span></div>
+      <div class="satset" data-layout-allow-overlap><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="0" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyProspects</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="1" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyLeads</span></div></div><div class="ripple on-blue" data-a="rip" data-layout-allow-overlap></div><div class="cursor" data-a="cur" data-layout-allow-overlap><i class="cs cs-n"></i><i class="cs cs-h"></i><i class="cs cs-c"></i></div></div>
+    </div>
+    <script>
+      
+const __dir = {
+  W: 1920, H: 1080,
+
+  /** Centre of el in 1920x1080 stage space, with the timeline parked at `at`. */
+  centre(tl, root, el, at) {
+    if (!el) return null;
+    const keep = tl.time();
+    tl.seek(at, false);
+    const rr = root.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    tl.seek(keep, false);
+    if (!rr.width || !r.width) return null;
+    const k = rr.width / 1920;
+    return { x: (r.left + r.width / 2 - rr.left) / k, y: (r.top + r.height / 2 - rr.top) / k,
+             w: r.width / k, h: r.height / k, left: (r.left - rr.left) / k, top: (r.top - rr.top) / k };
+  },
+
+  all(root, sel) { try { return Array.from(root.querySelectorAll(sel)); } catch (e) { return []; } },
+
+  /**
+   * RETIME. Shift every tween that targets item i (or anything inside it) so the
+   * item's first tween starts at slots[i]. Never earlier than it already was: a
+   * retime only ever delays, so an entrance cannot jump ahead of the beat's own
+   * kicker. The tail group is pinned to land just after the last item.
+   */
+  retime(tl, root, spec) {
+    const items = spec.items.map((sel) => __dir.all(root, sel));
+    const tails = (spec.tail || []).map((sel) => __dir.all(root, sel));
+    const tweens = tl.getChildren(true, true, false);
+    const firstStart = (els) => {
+      let min = Infinity;
+      tweens.forEach((tw) => {
+        const tg = (tw.targets && tw.targets()) || [];
+        if (tg.some((t) => t && t.nodeType === 1 && els.some((e) => e === t || e.contains(t)))) min = Math.min(min, tw.startTime());
+      });
+      return min;
+    };
+    const shift = (els, delta) => {
+      if (!(delta > 0.01)) return;
+      tweens.forEach((tw) => {
+        const tg = (tw.targets && tw.targets()) || [];
+        if (tg.some((t) => t && t.nodeType === 1 && els.some((e) => e === t || e.contains(t)))) tw.startTime(tw.startTime() + delta);
+      });
+    };
+    let lastEnd = 0;
+    items.forEach((els, i) => {
+      if (!els.length) return;
+      const from = firstStart(els);
+      if (!isFinite(from)) return;
+      const want = Math.max(from, spec.slots[i] - spec.lead);
+      shift(els, want - from);
+      lastEnd = Math.max(lastEnd, want + 0.9);
+    });
+    tails.forEach((els) => {
+      if (!els.length) return;
+      const from = firstStart(els);
+      if (isFinite(from)) shift(els, Math.max(0, lastEnd + 0.15 - from));
+    });
+  },
+
+  /** A cubic bezier as a GSAP ease. y2 > 1 overshoots: the "bezier overshoot zoom". */
+  bez(x1, y1, x2, y2) {
+    const cv = (t, a, b) => ((1 - 3 * b + 3 * a) * t + (3 * b - 6 * a)) * t * t + 3 * a * t;
+    const sl = (t, a, b) => 3 * (1 - 3 * b + 3 * a) * t * t + 2 * (3 * b - 6 * a) * t + 3 * a;
+    return (p) => {
+      if (p <= 0) return 0;
+      if (p >= 1) return 1;
+      let t = p;
+      for (let i = 0; i < 8; i++) {
+        const e = cv(t, x1, x2) - p, d = sl(t, x1, x2);
+        if (Math.abs(e) < 1e-6) break;
+        if (Math.abs(d) < 1e-6) break;
+        t -= e / d;
+      }
+      return cv(t, y1, y2);
+    };
+  },
+
+  /**
+   * The camera pose that puts world point P at the centre of the frame, at zoom s,
+   * with a yaw/pitch tilt. The stage wrapper is rotated about the frame centre and
+   * then translated, so the translation has to cancel the ROTATED position of P -
+   * otherwise a tilted camera slides off its target. Zoom is a move along z under a
+   * fixed perspective (scale at depth = D / (D - z)), so tilt and zoom are one move.
+   */
+  pose(P, s, rx, ry) {
+    const D = 1600, r = Math.PI / 180;
+    const cx = Math.cos(rx * r), sx = Math.sin(rx * r), cy = Math.cos(ry * r), sy = Math.sin(ry * r);
+    const y1 = P[1] * cx - P[2] * sx, z1 = P[1] * sx + P[2] * cx;     // rotateX
+    const x2 = P[0] * cy + z1 * sy, z2 = -P[0] * sy + z1 * cy;         // then rotateY
+    return { x: -x2, y: -y1, z: D - D / s - z2, rotationX: rx, rotationY: ry };
+  },
+
+  /**
+   * CAMERA. One 3D transform on the stage wrapper (perspective, translate, tilt).
+   * A shot flies the frame onto a target - a chunk of captions, an item of the
+   * scene, or a wide that re-establishes both - on a bezier that overshoots and
+   * settles, then keeps creeping for as long as it is held. `cs` are the item
+   * centres, measured BEFORE any camera tween exists.
+   */
+  camera(tl, root, spec, cs) {
+    const stage = root.querySelector(spec.stage || ".stagec");
+    if (!stage) return;
+    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1), EASE_WIDE = __dir.bez(0.42, 0, 0.14, 1);
+    // Aim a little BELOW the target, so what the camera is on rides high in the frame and clears
+    // the subtitle pill that sits flat across the bottom (it is in the root, outside this world).
+    const LOW = 120;
+    tl.set(stage, { transformPerspective: D, transformOrigin: "50% 50%" }, 0);
+    // The entrance: the frame starts pushed toward the camera and a few degrees off axis.
+    tl.fromTo(stage, { z: 220, rotationY: -spec.dir * 6, rotationX: 2, x: 0, y: 0 },
+      { z: 0, rotationY: 0, rotationX: 0, duration: 1.2, ease: EASE }, spec.enter);
+    spec.shots.forEach((sh, i) => {
+      const at = spec.enter + sh.at;
+      let P = [0, 0, 0], s = sh.zoom || 1;
+      if (sh.mode === "in") {
+        // push IN on the thing the cursor is about to press (a satellite has a known
+        // world position; a scene item was measured)
+        const st = spec.stops[sh.stop];
+        if (st && st.world) {
+          // A depth-set component is PERIPHERAL: frame it together with the content it
+          // surrounds (aim between the two, zoom less), never centre on it alone - that threw
+          // the scene to the bottom edge and under the subtitles.
+          P = [st.world.x * 0.42, st.world.y * 0.42 + LOW, st.world.z * 0.4];
+          s = Math.min(sh.zoom, 1.25);
+        }
+        else if (cs[sh.stop]) {
+          const c = cs[sh.stop];
+          P = [c.x - __dir.W / 2, c.y - __dir.H / 2 + LOW, 0];
+          // CLOSE: fill the frame with the element, by whichever of its sides asks for more (a wide thin row fills by
+          // its height and is framed on the hand, cropped at the sides, instead of staying wide), never past sh.zoom
+          s = Math.max(1.3, Math.min(sh.zoom, Math.max((0.72 * __dir.W) / Math.max(c.w, 1), (0.3 * __dir.H) / Math.max(c.h, 1))));
+        }
+      } else {
+        s = sh.zoom; // OUT: pull back to take in the whole depth set as the cursor leaves
+      }
+      const to = __dir.pose(P, s, sh.rx, sh.ry);
+      const nextAt = i + 1 < spec.shots.length ? spec.enter + spec.shots[i + 1].at : spec.end;
+      tl.to(stage, { x: to.x, y: to.y, z: to.z, rotationX: to.rotationX, rotationY: to.rotationY,
+        duration: 0.8, ease: sh.mode === "wide" ? EASE_WIDE : EASE }, at);
+      // creep: a held shot keeps drifting - closer, and a little further round
+      tl.to(stage, { z: to.z + 45, rotationY: to.rotationY * 0.55, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
+    });
+    // Level out before the seam, so the exit animation starts from a flat frame.
+    tl.to(stage, { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, duration: 0.5, ease: "power2.inOut" }, spec.end);
+  },
+
+  /**
+   * SATELLITES. The depth set rises into the world: each component starts below and
+   * far behind its place and travels up the Y axis and forward along Z toward the
+   * camera, overshooting and settling, staggered rather than one after another. Once
+   * seated it keeps a slow bob, so the layers never freeze.
+   */
+  satellites(tl, root, spec) {
+    const EASE = __dir.bez(0.2, 1, 0.3, 1.14);
+    spec.items.forEach((sp, i) => {
+      const el = root.querySelector('.sat[data-i="' + i + '"]');
+      if (!el) return;
+      const at = spec.enter + 0.12 + i * 0.17;
+      tl.set(el, { xPercent: -50, yPercent: -50 }, 0);
+      tl.fromTo(el, { x: sp.x, y: sp.y + 340, z: sp.z - 720, rotationX: -32, scale: 0 },
+        { x: sp.x, y: sp.y, z: sp.z, rotationX: 0, scale: 1, duration: 0.95, ease: EASE, ease: __spr.pop }, at);
+      tl.to(el, { y: sp.y + (i % 2 ? 12 : -12), duration: 2.1 + i * 0.2, yoyo: true, repeat: 3, ease: "sine.inOut" }, at + 1.0);
+    });
+  },
+
+  /**
+   * LIFT. The component the narration is on rises toward the camera, and settles
+   * back when the narration moves on - the depth-of-field cue, with no blur.
+   * `list` is [{ sel, at, back }]: raise at `at`, return at `back` (or stay up).
+   */
+  lift(tl, root, list) {
+    list.forEach((l) => {
+      __dir.all(root, l.sel).forEach((el) => {
+        tl.to(el, { z: l.z || 90, duration: 0.5, ease: __spr.snap }, l.at);
+        if (l.back) tl.to(el, { z: 0, duration: 0.45, ease: "power2.inOut" }, l.back);
+      });
+    });
+  },
+
+  /**
+   * CURSOR - the through-line of the beat (criteria M4). One pointer that lives in the
+   * 3D world, is on screen in every scene, and is the thing the viewer follows.
+   *
+   * Its life is a loop of three moves, repeated for each stop:
+   *   APPROACH  leave the resting quadrant on a curved bezier, with mass: it starts
+   *             slowly, overshoots its mark and settles. As it nears the target it
+   *             also comes TOWARD THE CAMERA along z, so the click is the closest
+   *             thing in the frame.
+   *   CLICK     the arrow turns to an open hand on arrival (hover), a pointing hand on
+   *             the press (click), then back to the arrow. The press ripples.
+   *   RETREAT   pull away along z and back out to the opposite quadrant while the
+   *             camera pulls out with it, and sway there until the next stop.
+   *
+   * The whole path is ONE pure function of time, evaluated in a single tween onUpdate,
+   * so a seek anywhere lands the cursor exactly where it should be. `cs` are the
+   * target centres, measured before any camera tween exists.
+   */
+  cursor(tl, root, spec, cs) {
+    const cur = root.querySelector(".cursor");
+    if (!cur || !spec.stops.length) return;
+    const ripple = root.querySelector(".ripple");
+    const nS = cur.querySelector(".cs-n"), hS = cur.querySelector(".cs-h"), cS = cur.querySelector(".cs-c");
+    const EASE = __dir.bez(0.5, 0, 0.2, 1.1);          // inertia, then a small overshoot
+    const IN = __dir.bez(0.2, 1, 0.3, 1.25);           // the pointer's own entrance: overshoots
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const W = __dir.W, H = __dir.H;
+
+    // ---- the schedule: rest -> target (hover, click) -> rest ...
+    const segs = [];
+    let from = { x: spec.start.x, y: spec.start.y, z: 260, t: 0 };
+    const tgt = (st, c) => (st.world
+      ? { x: W / 2 + st.world.x, y: H / 2 + st.world.y, z: st.world.z + 110 }
+      : c ? { x: c.left + c.w * (st.fx != null ? st.fx : 0.6), y: c.y, z: 110 } : null);
+    spec.stops.forEach((st, i) => {
+      const T = tgt(st, cs[i]);
+      if (!T) return;
+      const dist = Math.hypot(T.x - from.x, T.y - from.y);
+      const travel = clamp(dist / 1500, 0.55, 1.05);
+      const arrive = st.at - 0.26;                        // the hand appears just before the press
+      const depart = Math.max(from.t + 0.05, arrive - travel);
+      segs.push({ kind: "go", t0: depart, t1: arrive, a: from, b: { ...T, t: arrive }, side: i % 2 ? -1 : 1, near: true });
+      segs.push({ kind: "hold", settle: true, t0: arrive, t1: st.at + 0.18, a: { ...T, t: arrive }, b: { ...T, t: st.at + 0.18 } });
+      const rest = st.rest, rt = st.at + 0.95;               // retreat to the resting quadrant
+      segs.push({ kind: "go", t0: st.at + 0.18, t1: rt, a: { ...T, t: st.at + 0.18 }, b: { x: rest.x, y: rest.y, z: rest.z, t: rt }, side: i % 2 ? 1 : -1, near: false });
+      from = { x: rest.x, y: rest.y, z: rest.z, t: rt };
+    });
+    segs.push({ kind: "hold", t0: from.t, t1: spec.end + 5, a: from, b: from });
+
+    const bz = (a, b, c, d, u) => {
+      const m = 1 - u;
+      return m * m * m * a + 3 * m * m * u * b + 3 * m * u * u * c + u * u * u * d;
+    };
+    const posAt = (t) => {
+      const seg = segs.find((g) => t >= g.t0 && t < g.t1) || segs[segs.length - 1];
+      if (seg.kind === "hold") {
+        // an idle drift with weight: the pointer is never parked
+        // right after an approach the pointer is at its closest and starts to ease back
+        const close = seg.settle ? 230 * Math.exp(-(t - seg.t0) * 4) : 0;
+        return { x: seg.a.x + Math.sin((t * 2 * Math.PI) / 3.1) * 12, y: seg.a.y + Math.cos((t * 2 * Math.PI) / 2.4) * 9, z: seg.a.z + close + Math.sin((t * 2 * Math.PI) / 2.7) * 28 };
+      }
+      const p = clamp((t - seg.t0) / (seg.t1 - seg.t0), 0, 1);
+      const u = EASE((t - seg.t0) / (seg.t1 - seg.t0));
+      const dx = seg.b.x - seg.a.x, dy = seg.b.y - seg.a.y, d = Math.hypot(dx, dy) || 1;
+      const px = (-dy / d) * d * 0.22 * seg.side, py = (dx / d) * d * 0.22 * seg.side;   // the arc
+      const x = bz(seg.a.x, seg.a.x + dx * 0.25 + px, seg.b.x - dx * 0.2 + px * 0.6, seg.b.x, u);
+      const y = bz(seg.a.y, seg.a.y + dy * 0.25 + py, seg.b.y - dy * 0.2 + py * 0.6, seg.b.y, u);
+      // z: coming in toward the click is a build (ease in); leaving is a release
+      const zk = seg.near ? Math.pow(p, 2.2) : 1 - Math.pow(1 - p, 2);
+      const z = seg.a.z + (seg.b.z - seg.a.z) * zk + (seg.near ? 230 * Math.sin(Math.PI * 0.5 * zk) : 90 * Math.sin(Math.PI * zk)) + Math.sin((t * 2 * Math.PI) / 2.2) * 26;
+      return { x, y, z };
+    };
+    const stateAt = (t) => {
+      for (const st of spec.stops) {
+        if (t >= st.at - 0.26 && t < st.at) return "h";
+        if (t >= st.at && t < st.at + 0.24) return "c";
+      }
+      return "n";
+    };
+
+    const clock = { t: 0 };
+    let last = null;
+    tl.to(clock, {
+      t: spec.end + 0.5, duration: spec.end + 0.5, ease: "none",
+      onUpdate() {
+        const t = clock.t, q = posAt(t), q2 = posAt(t + 0.03), q1 = posAt(t - 0.03);
+        const vx = (q2.x - q1.x) / 0.06, vy = (q2.y - q1.y) / 0.06;
+        const sp = Math.hypot(vx, vy);
+        const s = stateAt(t);
+        // mass: the pointer leans into its motion and swells with speed; a press squashes it
+        // it enters and leaves by SCALE (never a fade): grows in with overshoot, shrinks out before the seam
+        const env = IN(clamp((t - spec.appear) / 0.45, 0, 1)) * (1 - Math.pow(clamp((t - spec.end) / 0.3, 0, 1), 3));
+        gsap.set(cur, { x: q.x, y: q.y, z: q.z, rotation: clamp(-vx / 70, -18, 18), scale: env * (s === "c" ? 0.84 : 1) * (1 + Math.min(0.1, sp / 16000)) });
+        // swap-ok: the three sprites are SWAPPED (arrow / open hand / pointing hand), never faded
+        if (s !== last) { nS.style.opacity = s === "n" ? 1 : 0; hS.style.opacity = s === "h" ? 1 : 0; cS.style.opacity = s === "c" ? 1 : 0; last = s; }
+      },
+    }, 0);
+    // the press ripples where the target is
+    gsap.set(cur, { scale: 0 }); // hidden until its own entrance (scale), never a fade; immediate, so it cannot flash before the first seek
+    if (ripple) gsap.set(ripple, { scale: 0 });
+    if (ripple) spec.stops.forEach((st, i) => {
+      const T = tgt(st, cs[i]);
+      if (!T) return;
+      // the press ring grows, then shrinks to nothing: scale only
+      tl.set(ripple, { x: T.x - 40, y: T.y - 40, z: T.z, scale: 0.2 }, st.at);
+      tl.to(ripple, { scale: 1.6, duration: 0.3, ease: "power2.out" }, st.at);
+      tl.to(ripple, { scale: 0, duration: 0.22, ease: "power2.in" }, st.at + 0.3);
+    });
+  },
+
+  /**
+   * ANATOMY. Every element built as "a tile and some text" enters the same way, in
+   * order, quickly (criteria M5): the card overshoots in from an anchor at its
+   * centre; the blue tile inside it overshoots next; the heroicon inside the tile
+   * overshoots LAST; the text beside it rises and overshoots. One sequence, ~0.45s,
+   * staggered rather than sequential - each part starts before the last has settled.
+   * It runs for any card that contains a tile, so a new scene gets it for free.
+   */
+  anatomy(tl, root) {
+    const tweens = tl.getChildren(true, true, false);
+    const OVER = __spr.snap;
+    __dir.all(root, ".ico:not(.plain)").forEach((tile) => {
+      if (tile.dataset.anat) return;
+      tile.dataset.anat = "1";
+      // the card that owns this tile: nearest ancestor that has its own entrance tween
+      let card = tile.parentElement, at = Infinity;
+      while (card && card !== root) {
+        tweens.forEach((tw) => {
+          const tg = (tw.targets && tw.targets()) || [];
+          if (tg.indexOf(card) >= 0) at = Math.min(at, tw.startTime());
+        });
+        if (isFinite(at)) break;
+        card = card.parentElement;
+      }
+      if (!isFinite(at) || !card) return;
+      const svg = tile.querySelector("svg");
+      tl.fromTo(tile, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.4, ease: OVER }, at + 0.1);
+      if (svg) tl.fromTo(svg, { scale: 0, rotation: -24, transformOrigin: "50% 50%" }, { scale: 1, rotation: 0, duration: 0.42, ease: __spr.snap }, at + 0.24);
+      // text beside the tile: a rise with overshoot, starting under the tile's pop
+      let sib = tile.nextElementSibling;
+      let n = 0;
+      while (sib && n < 4) {
+        if (!sib.classList.contains("ovhit")) tl.fromTo(sib, { scale: 0, y: 28 }, { scale: 1, y: 0, duration: 0.42, ease: __spr.pop }, at + 0.16 + n * 0.05);
+        sib = sib.nextElementSibling; n++;
+      }
+    });
+  },
+
+  /**
+   * EXIT. "Remove all elements within a scene": every top-level element of the outgoing scene, every
+   * depth-set component and the pointer scale DOWN to 0 (staggered, the reversed spring (__spr.popIn), ~0.3 s each), finishing
+   * at the seam. Nothing fades. The incoming scene then scales UP from 0 with overshoot, so the
+   * moment between two scenes is an empty stage and the cut is a scale-out then a scale-in.
+   * `from` is the order they leave in (start | end | center | edges): the seam's character.
+   */
+  exit(tl, root, spec) {
+    const stage = root.querySelector(".stagec");
+    if (!stage) return;
+    const items = Array.from(stage.children).filter((el) => !el.classList.contains("satset") && !el.classList.contains("cursor") && !el.classList.contains("ripple"));
+    __dir.all(root, ".sat").forEach((el) => items.push(el));
+    const n = items.length;
+    if (!n) return;
+    const EACH = 0.04, DUR = 0.3;
+    const rank = (i) => {
+      const mid = (n - 1) / 2;
+      if (spec.from === "end") return n - 1 - i;
+      if (spec.from === "center") return Math.abs(i - mid);
+      if (spec.from === "edges") return mid - Math.abs(i - mid);
+      return i;
+    };
+    const total = DUR + EACH * (n - 1);
+    items.forEach((el, i) => {
+      tl.to(el, { scale: 0, duration: DUR, ease: __spr.popIn, transformOrigin: "50% 50%" }, spec.at - total + EACH * rank(i));
+    });
+  },
+
+  run(tl, root, plan) {
+    if (!plan) return;
+    try { if (plan.retime) __dir.retime(tl, root, plan.retime); } catch (e) { console.warn("[dir] retime", e); }
+    // Measure first, tween second. The cursor and the camera share ONE measurement of
+    // each stop target, taken before any camera tween exists.
+    let stopC = [];
+    try {
+      if (plan.stops) stopC = plan.stops.map((st) => {
+        const el = st.ref ? __dir.all(root, st.ref)[0] : null;
+        return el ? __dir.centre(tl, root, el, st.at) : null;
+      });
+    } catch (e) { console.warn("[dir] measure", e); }
+    try { if (plan.sats) __dir.satellites(tl, root, plan.sats); } catch (e) { console.warn("[dir] satellites", e); }
+    try { __dir.anatomy(tl, root); } catch (e) { console.warn("[dir] anatomy", e); }
+    try { if (plan.exit) __dir.exit(tl, root, plan.exit); } catch (e) { console.warn("[dir] exit", e); }
+    try { if (plan.lift) __dir.lift(tl, root, plan.lift); } catch (e) { console.warn("[dir] lift", e); }
+    try { if (plan.camera) __dir.camera(tl, root, plan.camera, stopC); } catch (e) { console.warn("[dir] camera", e); }
+    try { if (plan.cursor) __dir.cursor(tl, root, plan.cursor, stopC); } catch (e) { console.warn("[dir] cursor", e); }
+  },
+};
+
+      const __spr = (function springModule() {
+  const TAU = Math.PI * 2;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+
+  /** The step response of a damped spring: 0 at t <= 0, settles on 1. f in Hz, z the damping ratio. */
+  function S(t, f, z) {
+    if (t <= 0) return 0;
+    const w = TAU * f;
+    if (z >= 1) return 1 - Math.exp(-w * t) * (1 + w * t);
+    const wd = w * Math.sqrt(1 - z * z);
+    return 1 - Math.exp(-z * w * t) * (Math.cos(wd * t) + ((z * w) / wd) * Math.sin(wd * t));
+  }
+
+  /** A pulse: 0, rises to exactly 1 at t = 1 / (2 pi f), then decays to 0. A hit that does not stay. */
+  function pulse(t, f) {
+    if (t <= 0) return 0;
+    const x = TAU * f * t;
+    return x * Math.exp(1 - x);
+  }
+
+  const SPR = {
+    // ---- ours (entrances and the camera)
+    pop: { f: 3.0, z: 0.62 },
+    snap: { f: 3.6, z: 0.5 },
+    soft: { f: 2.6, z: 0.72 },
+    row: { f: 2.8, z: 0.78 },
+    settle: { f: 3.2, z: 1 },
+    cam: { f: 0.9, z: 0.72 },
+    // ---- the gist's presets, for anything that needs them
+    shape: { f: 1.9, z: 0.82 },
+    enter: { f: 3.6, z: 1 },
+    exit: { f: 8, z: 1 },
+    cursor: { f: 2.3, z: 1 },
+    glide: { f: 0.95, z: 1 },
+    press: { f: 10, z: 1 },
+    lead: { f: 3.4, z: 0.78 },
+    trail: { f: 1.7, z: 0.92 },
+  };
+
+  const spec = (s) => (typeof s === "string" ? SPR[s] : s) || SPR.pop;
+
+  /**
+   * One value that changes target several times: keys = [[time, value, spring?], ...] sorted by time. Each key
+   * ADDS one spring (the change from the previous value) starting at its own time, so the motion is continuous
+   * at every change and a seek anywhere is exact. `def` is the spring a key uses when it names none.
+   */
+  function track(t, keys, def) {
+    const d = spec(def || "cam");
+    let v = keys[0][1];
+    for (let i = 1; i < keys.length; i++) {
+      const s = spec(keys[i][2] || d);
+      v += (keys[i][1] - keys[i - 1][1]) * S(t - keys[i][0], s.f, s.z);
+    }
+    return v;
+  }
+
+  /** A stretching indicator: the leading edge is stiffer than the trailing edge. stops = [[time, x], ...]. */
+  function indicator(t, stops, width = 0) {
+    const lead = track(t, stops, SPR.lead), trail = track(t, stops, SPR.trail);
+    return { left: Math.min(lead, trail), right: Math.max(lead, trail) + width };
+  }
+
+  /** A seamless loop: pin the last frame to the first. */
+  const loopT = (t, dur) => ((t % dur) + dur) % dur;
+
+  /** Time (s) at which the response first reaches its overshoot peak, or null if it does not overshoot. */
+  function peakTime(f, z) {
+    if (z >= 1) return null;
+    return Math.PI / (TAU * f * Math.sqrt(1 - z * z));
+  }
+  /** The overshoot as a fraction of the move (0.09 = 9 %), 0 for a critically damped spring. */
+  function overshoot(f, z) {
+    if (z >= 1) return 0;
+    return Math.exp((-Math.PI * z) / Math.sqrt(1 - z * z));
+  }
+  /** Time (s) until the response stays within `eps` of its target. */
+  function settleTime(f, z, eps = 0.005) {
+    let last = 0;
+    for (let t = 0; t < 6; t += 1 / 480) if (Math.abs(S(t, f, z) - 1) > eps) last = t;
+    return last + 1 / 480;
+  }
+
+  /**
+   * A GSAP ease: progress 0..1 -> the spring's response over its own settle time, so a tween of ANY duration
+   * plays the whole spring (accelerate, overshoot, settle) across that duration.
+   */
+  function ease(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : S(p * Ts, s.f, s.z));
+  }
+
+  /**
+   * The EXIT ease: a spring played in reverse. It dips first (a hair of anticipation, the mass gathering) and
+   * then accelerates into the end, so a scale 1 -> 0 leaves with the same mass an entrance arrives with.
+   */
+  function easeIn(name) {
+    const s = spec(name), Ts = settleTime(s.f, s.z);
+    return (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - S((1 - p) * Ts, s.f, s.z));
+  }
+
+  /** Fraction (0..1) of an entrance tween at which its mass is at the peak of the overshoot. */
+  const peakFrac = (name) => {
+    const s = spec(name), pk = peakTime(s.f, s.z);
+    return pk === null ? 1 : pk / settleTime(s.f, s.z);
+  };
+  /** Seconds after an entrance of duration `dur` starts that its mass is at the peak of its overshoot. */
+  const peakDelay = (name, dur) => +(peakFrac(name) * dur).toFixed(3);
+
+  const out = { S, pulse, SPR, track, indicator, loopT, peakTime, overshoot, settleTime, ease, peakFrac, peakDelay, clamp };
+  // ready-made GSAP eases by name: `__spr.pop` is a function, usable as `ease: __spr.pop`
+  for (const k of ["pop", "snap", "soft", "row", "settle", "cam"]) { out[k] = ease(k); out[k + "In"] = easeIn(k); }
+  out.easeIn = easeIn;
+  return out;
+})();
+const __cmp = (function componentRuntime() {
+  function play(tl, qq, steps, t0) {
+    steps.forEach((s) => {
+      const els = qq(s.sel);
+      if (!els.length) return;
+      const target = s.one ? els[0] : els;
+      // "spr:pop" -> the closed-form spring ease (lkspring.mjs): entrances have MASS, never a fixed curve
+      const ease = typeof s.ease === "string" && s.ease.indexOf("spr:") === 0 ? __spr[s.ease.slice(4)] : s.ease;
+      const vars = Object.assign({}, s.to, { duration: s.dur, ease: ease });
+      if (s.stagger) vars.stagger = s.stagger;
+      // kind "to": a follow-on move from wherever the target is now (a row settling back flat after it has risen)
+      if (s.kind === "to") tl.to(target, vars, t0 + s.at);
+      else tl.fromTo(target, s.from, vars, t0 + s.at);
+    });
+  }
+  /**
+   * ACTIVATION: an element in a component is FLAT in its card's plane at rest. It lifts toward the camera (z = its
+   * slab's depth, so the slab shows under it) only when activated: the focus row, a hovered or pressed cell. The
+   * scale grows a hair with an overshoot; never opacity. `z` is the lift in px (0 = scale only).
+   */
+  function lift(tl, qq, sel, at, amount, z) {
+    qq(sel).forEach((el) => tl.to(el, { scale: amount, z: z || 0, duration: 0.4, ease: __spr.snap }, at));
+  }
+  /**
+   * ACTIVATION as a PURE FUNCTION OF TIME (the one-spring-per-change technique), not as overlapping tweens.
+   *
+   * Hovering one row after another used to be a lift tween and a release tween per row, on the SAME `z` and `scale`.
+   * GSAP captures a tween's start value lazily, the first time it renders, so where an overlapping tween started from
+   * depended on which tweens had already rendered: the render's parallel workers each seek independently, so frames
+   * could disagree. And a release on an overshooting spring dipped BELOW the card plane (z < 0), behind the card's
+   * opaque face, so the row vanished.
+   *
+   * Here each row owns ONE value a(t) = track(t, keys): +1 spring (snap) when the hand arrives, a settle spring (never
+   * overshoots) back to 0 when it leaves. Overlap is just a sum, any seek order gives the same frame, and a(t) is clamped
+   * at 0 so the element can never go behind its card. z = lift * a, scale = 1 + grow * a.
+   *
+   * spec: { rows: [{ sel, keys: [[time, 1 | 0], ...] }], lift: px, grow: 0.02, tail: s }  (time in the timeline's own clock)
+   * The window must start after the rows' entrance has finished (they write the same properties before it).
+   */
+  function activate(tl, qq, spec) {
+    const rows = spec.rows.map((r) => ({
+      els: qq(r.sel),
+      keys: [[-1e6, 0]].concat(r.keys.map((k) => [k[0], k[1], k[1] ? "snap" : "settle"])),
+    }));
+    let t0 = Infinity, t1 = -Infinity;
+    spec.rows.forEach((r) => r.keys.forEach((k) => { t0 = Math.min(t0, k[0]); t1 = Math.max(t1, k[0]); }));
+    const dur = t1 - t0 + (spec.tail || 1.6), proxy = { p: 0 };
+    tl.to(proxy, {
+      p: 1, duration: dur, ease: "none",
+      onUpdate: () => {
+        const t = t0 + proxy.p * dur;
+        rows.forEach((r) => {
+          const a = Math.max(0, __spr.track(t, r.keys, "settle")); // never below the plane
+          r.els.forEach((el) => gsap.set(el, { z: spec.lift * a, scale: 1 + (spec.grow || 0) * a }));
+        });
+      },
+    }, t0);
+  }
+  return { play, lift, activate };
+})();
+      const __oklch = (function colorModule() {
+  const clamp01 = (x) => Math.min(1, Math.max(0, x));
+
+  /** "rgb(r, g, b)" / "rgba(r, g, b, a)" / "#rrggbb" / "#rgb" -> { r, g, b, a } with r, g, b in 0..255. */
+  function parse(css) {
+    const s = String(css).trim().toLowerCase();
+    let m = s.match(/^rgba?\(([^)]+)\)$/);
+    if (m) {
+      const p = m[1].split(/[ ,\/]+/).filter(Boolean).map(parseFloat);
+      return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+    }
+    m = s.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/);
+    if (m) {
+      const h = m[1].length === 3 ? m[1].split("").map((c) => c + c).join("") : m[1];
+      return { r: parseInt(h.slice(0, 2), 16), g: parseInt(h.slice(2, 4), 16), b: parseInt(h.slice(4, 6), 16), a: 1 };
+    }
+    return null;
+  }
+
+  const toLinear = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+  const fromLinear = (c) => 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+
+  /** sRGB (0..255) -> OKLCH { L: 0..1, C, h: degrees }. */
+  function toOklch({ r, g, b }) {
+    const R = toLinear(r), G = toLinear(g), B = toLinear(b);
+    const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B);
+    const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B);
+    const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B);
+    const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+    const a = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+    const bb = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+    return { L, C: Math.hypot(a, bb), h: ((Math.atan2(bb, a) * 180) / Math.PI + 360) % 360 };
+  }
+
+  /** OKLCH -> linear sRGB channels (may be outside 0..1: out of gamut). */
+  function toLinearRgb({ L, C, h }) {
+    const a = C * Math.cos((h * Math.PI) / 180), b = C * Math.sin((h * Math.PI) / 180);
+    const l = Math.pow(L + 0.3963377774 * a + 0.2158037573 * b, 3);
+    const m = Math.pow(L - 0.1055613458 * a - 0.0638541728 * b, 3);
+    const s = Math.pow(L - 0.0894841775 * a - 1.291485548 * b, 3);
+    return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s];
+  }
+  const inGamut = (c) => c.every((v) => v >= -1e-4 && v <= 1 + 1e-4);
+
+  /** OKLCH -> sRGB (0..255, rounded). If it does not fit sRGB, the CHROMA is reduced (never the hue or the lightness). */
+  function fromOklch(k) {
+    let lin = toLinearRgb(k);
+    if (!inGamut(lin)) {
+      let lo = 0, hi = k.C;
+      for (let i = 0; i < 24; i++) { const mid = (lo + hi) / 2; if (inGamut(toLinearRgb({ L: k.L, C: mid, h: k.h }))) lo = mid; else hi = mid; }
+      lin = toLinearRgb({ L: k.L, C: lo, h: k.h });
+    }
+    const [r, g, b] = lin.map((v) => Math.round(Math.min(255, Math.max(0, fromLinear(clamp01(v))))));
+    return { r, g, b };
+  }
+
+  const LIP = { near: 0.78, far: 0.58 };
+
+  /**
+   * The lip colour for a base colour, `t` in 0..1 from the slice right behind the face (0) to the deepest (1):
+   * the base's OKLCH with the lightness multiplied down and the hue and chroma kept.
+   */
+  function lip(base, t, spec) {
+    const sp = spec || LIP, k = toOklch(base);
+    const f = sp.near + (sp.far - sp.near) * (t || 0);
+    return fromOklch({ L: k.L * f, C: k.C, h: k.h });
+  }
+
+  const css = (c) => "rgb(" + c.r + ", " + c.g + ", " + c.b + ")";
+
+  /**
+   * Derive and set the lip of EVERY slab under `root`, at render time, from each host's computed background. A slab
+   * host is any `.x3d` with `.xl` slices as children; each slice carries `data-t` (its depth, 0..1). Hosts with no
+   * solid background are skipped. Cutout slices (images) shade by filter instead.
+   */
+  function apply(root) {
+    const hosts = root.querySelectorAll(".x3d");
+    let n = 0;
+    hosts.forEach((host) => {
+      const slices = Array.prototype.filter.call(host.children, (el) => el.classList.contains("xl") && el.tagName !== "IMG");
+      if (!slices.length) return;
+      const base = parse(getComputedStyle(host).backgroundColor);
+      if (!base || base.a < 0.5) return;
+      slices.forEach((el) => { el.style.backgroundColor = css(lip(base, parseFloat(el.getAttribute("data-t")) || 0)); n++; });
+    });
+    return n;
+  }
+
+  return { parse, toOklch, fromOklch, lip, css, apply, LIP };
+})();
+const __lip = { apply: __oklch.apply };
+      const CMP = {}; // the scene's components, as data (src/components)
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["agency-conversations-b5"] = tl;
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;return (function (tl, t0, { q, qq }) {
+        tl.fromTo(q(".pan"), { scale: 0 }, { scale: 1, duration: 0.5, ease: __spr.pop }, t0);
+        qq(".relsvg path").forEach((p, i) => {
+          const len = p.getTotalLength();
+          tl.set(p, { strokeDasharray: len, strokeDashoffset: len }, t0);
+          tl.to(p, { strokeDashoffset: 0, duration: 0.8, ease: "power2.inOut" }, t0 + 0.9 + i * 0.6);
+          const node = qq(".relnode")[i];
+          if (node) {
+            tl.fromTo(node, { x: 60, scale: 0 }, { x: 0, scale: 1, duration: 0.5, ease: __spr.soft }, t0 + 1.5 + i * 0.6);
+            tl.to(node, { y: i ? 12 : -12, duration: 1.7 + i * 0.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2.2 + i * 0.6);
+          }
+          if (node) tl.to(p, { strokeOpacity: 0.45, duration: 1.3, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 2.6 + i * 0.6);
+        });
+      });})({"title":"Conversations","api":"agencyConversations","r":[["peerPhone","(xxx) xxx-9920"],["latestPreview","“yes send me the price”"]],"links":[["agencyMessages","connected here"],["agencyPhones","connected here"]]});
+      const root = document.getElementById("root");
+      ANIM(tl, 0.34, {
+        q: (s) => root.querySelector(s),
+        qq: (s) => Array.from(root.querySelectorAll(s)),
+      });
+      // The pacing layer runs AFTER the scene has built its own timeline: it retimes
+      // item entrances to the narration, then adds the camera and the cursor.
+      __dir.run(tl, root, {"clauses":[0.65],"span":4.14,"retime":{"items":[".relnode[data-node=\"0\"], .relsvg path[data-p=\"0\"]",".relnode[data-node=\"1\"], .relsvg path[data-p=\"1\"]"],"tail":[],"slots":[0.65,2.306],"lead":0.1},"slots":[0.65,2.306],"sats":{"enter":0.34,"items":[{"x":860,"y":-170,"z":230,"name":"agencyProspects"},{"x":-880,"y":220,"z":200,"name":"agencyLeads"}]},"stops":[{"at":2.73,"ref":".relnode[data-node=\"1\"]","item":1,"peakAt":2.43}],"peak":{"delay":0.224,"hand":0.26},"camera":{"stage":".stagec","enter":0.34,"dir":1,"sats":[{"x":860,"y":-170,"z":230,"name":"agencyProspects"},{"x":-880,"y":220,"z":200,"name":"agencyLeads"}],"stops":[{"world":null}],"shots":[{"at":2.09,"mode":"in","stop":0,"zoom":2.1,"rx":-3,"ry":7},{"at":2.84,"mode":"out","zoom":0.94,"rx":0,"ry":-4}],"end":3.64},"exit":{"at":4.1,"from":"edges"},"cursor":{"appear":0.64,"start":{"x":1570,"y":310},"stops":[{"at":2.73,"ref":".relnode[data-node=\"1\"]","world":null,"rest":{"x":1570,"y":310,"z":260},"fx":0.6}],"end":3.64,"endPos":{"x":1570,"y":310}},"lift":[{"sel":".relnode[data-node=\"0\"]","at":0.95,"back":2.406,"z":70},{"sel":".relnode[data-node=\"1\"]","at":2.606,"back":0,"z":70}]});
+      // THE LIP: derived at render time from each slab host's own computed colour, in OKLCH (lkcolor.mjs)
+      __lip.apply(root);
+      tl.seek(0);
+    </script>
+  </body>
+</html>

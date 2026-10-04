@@ -25,19 +25,6 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stages{position:absolute;inset:0;z-index:0}
 .stage{position:absolute;inset:0;background:#2A8CFF}
 .stage.white{background:#FFFFFF}
-/* The per-beat STAGE PLATE. The wipe is a MASK now: the incoming beat is revealed
-   through a growing lattice of pixel windows while the outgoing beat stays live
-   everywhere else. For that to be correct the incoming beat has to bring its own
-   BACKGROUND with it - a root-level stage swap would repaint the outgoing scene
-   mid-wipe. So each beat sub-composition paints its own tone on its own #root
-   (see build-beats.mjs), and these classes key the chapter rail and the caption
-   pill to that tone. */
-#root.tone-white .chapter i{background:rgba(42,140,255,.16)}
-#root.tone-white .chapter i b{background:#2A8CFF}
-#root.tone-white #dither{opacity:.55;
-  background-image:
-   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
-   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
 
 /* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
    ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
@@ -48,7 +35,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
    repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
    once quantised, plus the app's edge mask. It animates by sliding the lattice,
    so the frame is never static. */
-#dither,#root .dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
  background-image:
   repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
@@ -59,7 +46,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
    over every white beat: the stage stopped reading as white and white type on
    it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
    backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
-#dither.on-white,#root .dither.on-white{opacity:.55;
+#dither.on-white{opacity:.55;
  background-image:
   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
@@ -366,17 +353,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
 
-/* The PIXEL WIPE is a MASK, not an overlay: the incoming beat is revealed THROUGH a
-   growing lattice of pixel windows (an SVG clipPath on the beat's own element), so the
-   outgoing beat stays live and visible everywhere the lattice has not reached. Nothing
-   is painted over the scene - the only thing drawn on top is a 2px outline on the cells
-   that are still growing, so the pixels read as pixels. This mirrors
-   src/transitions/pixel-wipe.mjs exactly. An earlier pass here drew 144 opaque colour
-   TILES at z-index 85 that closed over the whole frame: an overlay, which is what made
-   the transition read as a heavy coloured slab rather than a cut. Each beat sub-file
-   carries its own stage colour for the same reason - the incoming background has to
-   arrive with the windows, not be swapped behind them. */
-.pxedge{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:86;pointer-events:none}
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
   // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
 
 .fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
@@ -405,50 +385,24 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-overview-b17" data-start="0" data-duration="8.650" data-width="1920" data-height="1080" data-fps="30" style="background:#2A8CFF">
-<div class="dither"></div>
-<div class="fx stagec">
-        <div class="ecmark" data-a="m"><img src="assets/logo.svg" alt="ListeningKit"/></div>
-        <div class="wordmark" data-a="w">ListeningKit</div>
-        <div class="body white" data-a="c" style="margin-top:26px">One offer, one price card — booked jobs for local shops</div>
-        <div class="kv white" data-a="u" style="margin-top:26px;padding:14px 26px;border-radius:14px;background:rgba(255,255,255,.14)">twenty.inferencesaver.com/objects/agencyOffers</div>
-      </div>
+    <div id="root" data-composition-id="agency-overview-b17" data-start="0" data-duration="7.300" data-width="1920" data-height="1080" data-fps="30">
+<div class="stagec">
+        <div class="eyebrow white" data-a="k">The whole business in a sentence</div>
+        <div class="twl" style="display:flex;flex-direction:column;gap:20px;align-items:center">
+          <p class="twl-line h2 white" data-text="Websites, SEO, ads, AEO, calls, listening, CRM."><span class="t"></span><span class="caret" style="width:4px;height:52px;background:#FFFFFF;display:inline-block"></span></p>
+        </div>
+        <div class="body white dim" data-a="h" style="margin-top:36px;text-align:center;max-width:1180px">Seven services, one booked job.</div>
+      <div class="satset" data-layout-allow-overlap><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="0" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>price</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="1" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg></span><span class="satl" data-layout-allow-overlap>name</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="2" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5"/></svg></span><span class="satl" data-layout-allow-overlap>status</span></div><div class="sat cut x3d" data-layout-allow-overlap data-hit="cutout" data-i="3" data-rot="9" style="width:220px;height:220px;transform:rotate(9deg)"><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-8px)"/><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-6px)"/><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-4px)"/><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-2px)"/><img class="cutf" src="assets/ears/ear2.webp" alt=""/></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="4" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
+ stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+ aria-hidden="true" focusable="false"><path d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"/></svg></span><span class="satl" data-layout-allow-overlap>primaryCta</span></div></div><div class="ripple on-blue" data-a="rip" data-layout-allow-overlap></div><div class="cursor" data-a="cur" data-layout-allow-overlap><i class="cs cs-n"></i><i class="cs cs-h"></i><i class="cs cs-c"></i></div></div>
     </div>
     <script>
-const __fx = {
-  // Heroicons 24 outline "check" (heroicons/md/24), inlined: a treatment cannot
-  // import lkicons.mjs, and the tick has to match the rest of the icon set.
-  tickSvg: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 12.75 6 6 9-13.5"/></svg>',
-  blue: "#2A8CFF",      // button.tsx:22
-  blueText: "#2B7FFF", // button.tsx:26
-  sel: (h, s) => {
-  const el = h.q(s);
-  return el ? (Array.isArray(el) ? el : [el]) : [];
-},
-  words: (el) => {
-  if (!el || el.dataset.fxSplit === "1") return [];
-  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
-  if (!text) return [];
-  el.dataset.fxSplit = "1";
-  el.innerHTML = text
-    .split(" ")
-    .map((w) => `<span class="w">${w}</span>`)
-    .join(" ");
-  return Array.from(el.querySelectorAll(".w"));
-},
-  chars: (el) => {
-  if (!el || el.dataset.fxChars === "1") return [];
-  const text = (el.textContent || "").replace(/\s+/g, " ").trim();
-  if (!text) return [];
-  el.dataset.fxChars = "1";
-  el.innerHTML = text
-    .split("")
-    .map((c) => `<span class="c">${c === " " ? "&nbsp;" : c}</span>`)
-    .join("");
-  return Array.from(el.querySelectorAll(".c"));
-},
-};
-
       
 const __dir = {
   W: 1920, H: 1080,
@@ -553,17 +507,13 @@ const __dir = {
   camera(tl, root, spec, cs) {
     const stage = root.querySelector(spec.stage || ".stagec");
     if (!stage) return;
-    // Owner call (2026-10-04, second pass): NO camera movement at all — no push-in,
-    // no zoom, no tilt, no pull-back. The 3D lives in the depth set (the cards sit at
-    // different z, the pointer travels in z); the frame itself never moves or scales.
-    if (spec.flat) return;
-    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1);
+    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1), EASE_WIDE = __dir.bez(0.42, 0, 0.14, 1);
     // Aim a little BELOW the target, so what the camera is on rides high in the frame and clears
     // the subtitle pill that sits flat across the bottom (it is in the root, outside this world).
     const LOW = 120;
     tl.set(stage, { transformPerspective: D, transformOrigin: "50% 50%" }, 0);
-    // The entrance: the frame comes in from a little way back, LEVEL (no tilt), settling to rest.
-    tl.fromTo(stage, { z: 160, rotationY: 0, rotationX: 0, x: 0, y: 0 },
+    // The entrance: the frame starts pushed toward the camera and a few degrees off axis.
+    tl.fromTo(stage, { z: 220, rotationY: -spec.dir * 6, rotationX: 2, x: 0, y: 0 },
       { z: 0, rotationY: 0, rotationX: 0, duration: 1.2, ease: EASE }, spec.enter);
     spec.shots.forEach((sh, i) => {
       const at = spec.enter + sh.at;
@@ -592,9 +542,9 @@ const __dir = {
       const to = __dir.pose(P, s, sh.rx, sh.ry);
       const nextAt = i + 1 < spec.shots.length ? spec.enter + spec.shots[i + 1].at : spec.end;
       tl.to(stage, { x: to.x, y: to.y, z: to.z, rotationX: to.rotationX, rotationY: to.rotationY,
-        duration: 0.8, ease: EASE }, at);
-      // hold: a level push-in stays where it landed. No creep, no drift.
-      tl.to(stage, { z: to.z, rotationY: 0, rotationX: 0, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
+        duration: 0.8, ease: sh.mode === "wide" ? EASE_WIDE : EASE }, at);
+      // creep: a held shot keeps drifting - closer, and a little further round
+      tl.to(stage, { z: to.z + 45, rotationY: to.rotationY * 0.55, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
     });
     // Level out before the seam, so the exit animation starts from a flat frame.
     tl.to(stage, { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, duration: 0.5, ease: "power2.inOut" }, spec.end);
@@ -1099,39 +1049,19 @@ const __lip = { apply: __oklch.apply };
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-overview-b17"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;
-const __base=function (tl, t0, { q }) {
-        tl.fromTo(q('[data-a="m"]'), { scale: 0, rotate: -12 }, { scale: 1, rotate: 0, duration: 0.6, ease: __spr.pop }, t0);
-        // Tracking is held static AND zero: letterSpacing reflows text and snaps
-        // glyph positions under frame-by-frame capture, and a tracked-out
-        // wordmark is not the wordmark. See `.wordmark` in lkchrome.mjs.
-        tl.fromTo(q('[data-a="w"]'), { scale: 0, y: 40 }, { scale: 1, y: 0, duration: 0.7, ease: __spr.pop }, t0 + 0.35);
-        tl.fromTo(q('[data-a="c"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 0.9);
-        tl.fromTo(q('[data-a="u"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 1.3);
-        tl.to(q('[data-a="m"]'), { y: -10, duration: 1.8, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
-        tl.to(q('[data-a="w"]'), { scale: 1.025, duration: 1.8, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
-      };
-const __fxrun=function (tl, t0, h) {
-      const mark = __fx.sel(h, ".ecmark")[0];
-      const word = __fx.sel(h, '[data-a="w"]')[0];
-      const cta = __fx.sel(h, '[data-a="c"]')[0];
-      const url = __fx.sel(h, '[data-a="u"]')[0];
-      if (mark) {
-        // scale + fade only. No rotate, no skew, no drawn-in rebuild: the
-        // asset IS the wordmark's lockup.
-        tl.fromTo(mark, { scale: 0 }, { scale: 1, duration: 0.9, ease: __spr.pop }, t0);
-      }
-      if (word) {
-        tl.fromTo(word, { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.75, ease: __spr.pop }, t0 + 0.45);
-        // letterSpacing is never animated. It reflows the glyphs on every frame
-        // and a tracked-out wordmark is not the wordmark.
-        tl.to(word, { scale: 1.02, duration: 2.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6);
-      }
-      if (cta) tl.fromTo(cta, { scale: 0, y: 22 }, { scale: 1, y: 0, duration: 0.6, ease: __spr.pop }, t0 + 1.0);
-      if (url) tl.fromTo(url, { scale: 0, y: 22 }, { scale: 1, y: 0, duration: 0.6, ease: __spr.pop }, t0 + 1.35);
-    };
-return function (tl,at,h){h.A=A;__fxrun(tl,at,h);};
-})({"word":"ListeningKit","cta":"One offer, one price card — booked jobs for local shops","url":"twenty.inferencesaver.com/objects/agencyOffers"});
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;return (function (tl, t0, { q, qq }) {
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        const lines = qq(".twl-line");
+        lines.forEach((el, li) => {
+          const target = el.querySelector(".t");
+          const text = lines[li].dataset.text || "";
+          const o = { n: 0 };
+          tl.to(o, { n: text.length, duration: Math.max(0.5, text.length * 0.035), ease: "none", onUpdate() { target.textContent = text.slice(0, Math.round(o.n)); } }, t0 + 0.5 + li * 1.5);
+          tl.fromTo(el, { scale: 0, y: 30 }, { scale: 1, y: 0, duration: 0.35, ease: __spr.pop }, t0 + 0.5 + li * 1.5);
+        });
+        qq(".caret").forEach((c, i) => tl.to(c, { opacity: 0, duration: 0.42, yoyo: true, repeat: -1, ease: "steps(1)" }, t0 + 1 + i)); // blink-ok: an instant on/off, not a fade
+        tl.fromTo(q('[data-a="h"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 0.5 + lines.length * 1.5 + 0.5);
+      });})({"kicker":"The whole business in a sentence","lines":["Websites, SEO, ads, AEO, calls, listening, CRM."],"hold":"Seven services, one booked job."});
       const root = document.getElementById("root");
       ANIM(tl, 0.34, {
         q: (s) => root.querySelector(s),
@@ -1139,7 +1069,7 @@ return function (tl,at,h){h.A=A;__fxrun(tl,at,h);};
       });
       // The pacing layer runs AFTER the scene has built its own timeline: it retimes
       // item entrances to the narration, then adds the camera and the cursor.
-      __dir.run(tl, root, null);
+      __dir.run(tl, root, {"clauses":[0.65,4.25],"span":6.2,"retime":{"items":[".twl-line:nth-of-type(1)"],"tail":["[data-a=\"h\"]"],"slots":[0.65],"lead":0.1},"slots":[0.65],"sats":{"enter":0.34,"items":[{"x":860,"y":-170,"z":230,"name":"price"},{"x":-880,"y":220,"z":200,"name":"name"},{"x":560,"y":-400,"z":-310,"name":"status"},{"x":-620,"y":-350,"z":-330,"name":"heroH1"},{"x":700,"y":310,"z":-290,"name":"primaryCta"}]},"stops":[{"at":1.9,"ref":".twl-line:nth-of-type(1)","item":0,"peakAt":0.774},{"at":5.2,"ref":".twl-line:nth-of-type(1)","item":0,"peakAt":0.774}],"peak":{"delay":0.224,"hand":0.26},"camera":{"stage":".stagec","enter":0.34,"dir":1,"sats":[{"x":860,"y":-170,"z":230,"name":"price"},{"x":-880,"y":220,"z":200,"name":"name"},{"x":560,"y":-400,"z":-310,"name":"status"},{"x":-620,"y":-350,"z":-330,"name":"heroH1"},{"x":700,"y":310,"z":-290,"name":"primaryCta"}],"stops":[{"world":null},{"world":null}],"shots":[{"at":0.61,"mode":"in","stop":0,"zoom":2.1,"rx":-3,"ry":7},{"at":2.01,"mode":"out","zoom":0.94,"rx":0,"ry":-4},{"at":3.91,"mode":"in","stop":1,"zoom":2.1,"rx":3,"ry":-7},{"at":5.31,"mode":"out","zoom":0.94,"rx":0,"ry":4}],"end":5.7},"exit":{"at":6.16,"from":"edges"},"cursor":{"appear":0.64,"start":{"x":290,"y":730},"stops":[{"at":1.9,"ref":".twl-line:nth-of-type(1)","world":null,"rest":{"x":1570,"y":310,"z":260},"fx":0.6},{"at":5.2,"ref":".twl-line:nth-of-type(1)","world":null,"rest":{"x":290,"y":730,"z":260},"fx":0.6}],"end":5.7,"endPos":{"x":290,"y":730}},"lift":[{"sel":".twl-line:nth-of-type(1)","at":0.95,"back":0,"z":70}]});
       // THE LIP: derived at render time from each slab host's own computed colour, in OKLCH (lkcolor.mjs)
       __lip.apply(root);
       tl.seek(0);

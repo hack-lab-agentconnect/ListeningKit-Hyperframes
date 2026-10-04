@@ -15,6 +15,8 @@
 // the piece reading as one held layout, and it is the app's own two-tone
 // idiom (OnboardingShell `tone` prop, OnboardingShell.tsx:64).
 
+import { EXTRA_ARCS } from "./storyboards-extra.mjs";
+
 export const ARCS = {
   // Beat times are AUDIO-RELATIVE seconds, matched against the Deepgram word
   // timings in assets/timing/agency-prospects.json. The narration runs 161.5s.
@@ -1148,6 +1150,9 @@ export const ARCS = {
     },
   },
 };
+
+// The arcs for the objects that had a narration but no storyboard yet.
+Object.assign(ARCS, EXTRA_ARCS);
 
 /**
  * Stage tones. A scene kind that only works on one stage keeps it (the count-ups sit on

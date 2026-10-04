@@ -25,19 +25,6 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .stages{position:absolute;inset:0;z-index:0}
 .stage{position:absolute;inset:0;background:#2A8CFF}
 .stage.white{background:#FFFFFF}
-/* The per-beat STAGE PLATE. The wipe is a MASK now: the incoming beat is revealed
-   through a growing lattice of pixel windows while the outgoing beat stays live
-   everywhere else. For that to be correct the incoming beat has to bring its own
-   BACKGROUND with it - a root-level stage swap would repaint the outgoing scene
-   mid-wipe. So each beat sub-composition paints its own tone on its own #root
-   (see build-beats.mjs), and these classes key the chapter rail and the caption
-   pill to that tone. */
-#root.tone-white .chapter i{background:rgba(42,140,255,.16)}
-#root.tone-white .chapter i b{background:#2A8CFF}
-#root.tone-white #dither{opacity:.55;
-  background-image:
-   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
-   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
 
 /* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
    ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
@@ -48,7 +35,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
    repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
    once quantised, plus the app's edge mask. It animates by sliding the lattice,
    so the frame is never static. */
-#dither,#root .dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
  background-image:
   repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
@@ -59,7 +46,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
    over every white beat: the stage stopped reading as white and white type on
    it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
    backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
-#dither.on-white,#root .dither.on-white{opacity:.55;
+#dither.on-white{opacity:.55;
  background-image:
   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
@@ -366,17 +353,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
 
-/* The PIXEL WIPE is a MASK, not an overlay: the incoming beat is revealed THROUGH a
-   growing lattice of pixel windows (an SVG clipPath on the beat's own element), so the
-   outgoing beat stays live and visible everywhere the lattice has not reached. Nothing
-   is painted over the scene - the only thing drawn on top is a 2px outline on the cells
-   that are still growing, so the pixels read as pixels. This mirrors
-   src/transitions/pixel-wipe.mjs exactly. An earlier pass here drew 144 opaque colour
-   TILES at z-index 85 that closed over the whole frame: an overlay, which is what made
-   the transition read as a heavy coloured slab rather than a cut. Each beat sub-file
-   carries its own stage colour for the same reason - the incoming background has to
-   arrive with the windows, not be swapped behind them. */
-.pxedge{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:86;pointer-events:none}
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
   // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
 
 .fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
@@ -405,25 +385,28 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:transparent}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-overview-b16" data-start="0" data-duration="4.800" data-width="1920" data-height="1080" data-fps="30" style="background:#2A8CFF">
-<div class="dither"></div>
+    <div id="root" data-composition-id="agency-overview-b16" data-start="0" data-duration="6.850" data-width="1920" data-height="1080" data-fps="30">
 <div class="stagec">
-        <div class="zw" data-a="zw">
-          <div class="myst" data-a="m" style="width:300px;height:300px;background:#FFFFFF;border-radius:12px;;color:#0F172A;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;border-radius:64px;display:flex;align-items:center;justify-content:center"><span class="count" style="color:#0F172A"><span class="n" style="font-size:170px">1</span></span></div>
-          <div class="rvf" data-a="r" style="text-align:center">
-            <div class="hero white">Start on Site</div>
-            <div class="body white dim" style="margin-top:22px;max-width:940px">Climb to Grow when the phones prove it.</div>
-          </div>
-        </div>
-      <div class="satset" data-layout-allow-overlap><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="0" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+        <div class="eyebrow blue" data-a="k">Overview · what it is for</div>
+        <div style="display:flex;gap:28px;align-items:stretch"><div class="sp x3d" style="max-width:700px;background:#2A8CFF;border-radius:20px;box-shadow:inset 0 0 0 3px #FFFFFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#FFFFFF;;padding:34px 36px;color:#FFFFFF;position:relative" data-slab="card"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i>
+        <div class="label" style="color:#FFFFFF">READ IT FOR</div>
+        <div class="h3" style="margin-top:16px">primaryCta</div>
+        <div class="body" style="margin-top:22px;font-weight:400;opacity:.72">the field that carries the meaning</div>
+      </div><div class="spdiv" data-a="d" style="width:2px;background:rgba(127,127,127,.2)"></div><div class="sp x3d" style="max-width:700px;background:#2A8CFF;border-radius:20px;box-shadow:inset 0 0 0 3px #FFFFFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#FFFFFF;;padding:34px 36px;color:#FFFFFF;position:relative" data-slab="card"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i>
+        <div class="label" style="color:#FFFFFF">DO NOT</div>
+        <div class="h3" style="margin-top:16px">guess at it</div>
+        <div class="body" style="margin-top:22px;font-weight:400;opacity:.72">the record is the source of truth</div>
+      </div></div>
+        <div class="body blue dim" data-a="f" style="margin-top:36px;text-align:center;max-width:1200px"></div>
+      <div class="satset" data-layout-allow-overlap><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="0" style="max-width:560px;background:#2A8CFF;border-radius:14px;box-shadow:inset 0 0 0 3px #FFFFFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#FFFFFF;;color:#FFFFFF;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico on-bluecard sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyProspects</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="1" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyProspects</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="1" style="max-width:560px;background:#2A8CFF;border-radius:14px;box-shadow:inset 0 0 0 3px #FFFFFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#FFFFFF;;color:#FFFFFF;font-size:46px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico on-bluecard sat-fg"><svg class="ic" width="38" height="38" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyLeads</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="2" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyLeads</span></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="2" style="max-width:560px;background:#2A8CFF;border-radius:14px;box-shadow:inset 0 0 0 3px #FFFFFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#FFFFFF;;color:#FFFFFF;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico on-bluecard sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyOpportunities</span></div><div class="sat cut x3d" data-layout-allow-overlap data-hit="cutout" data-i="3" data-rot="-9" style="width:220px;height:220px;transform:rotate(-9deg)"><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-8px)"/><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-6px)"/><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-4px)"/><img class="cutsl xl" src="assets/ears/ear2.webp" alt="" style="transform:translateZ(-2px)"/><img class="cutf" src="assets/ears/ear2.webp" alt=""/></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="4" style="max-width:560px;background:#FFFFFF;border-radius:14px;box-shadow:inset 0 0 0 3px #7FBAFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#0F172A;;color:#0F172A;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
+ aria-hidden="true" focusable="false"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyCalls</span></div><div class="sat cut x3d" data-layout-allow-overlap data-hit="cutout" data-i="3" data-rot="-9" style="width:220px;height:220px;transform:rotate(-9deg)"><img class="cutsl xl" src="assets/ears/ear3.webp" alt="" style="transform:translateZ(-8px)"/><img class="cutsl xl" src="assets/ears/ear3.webp" alt="" style="transform:translateZ(-6px)"/><img class="cutsl xl" src="assets/ears/ear3.webp" alt="" style="transform:translateZ(-4px)"/><img class="cutsl xl" src="assets/ears/ear3.webp" alt="" style="transform:translateZ(-2px)"/><img class="cutf" src="assets/ears/ear3.webp" alt=""/></div><div class="sat x3d" data-layout-allow-overlap data-hit="satellite" data-i="4" style="max-width:560px;background:#2A8CFF;border-radius:14px;box-shadow:inset 0 0 0 3px #FFFFFF,0 0 0 4px #0A0F1A, 0 6px 0 4px #0A0F1A;color:#FFFFFF;;color:#FFFFFF;font-size:36px"><i class="xl" data-t="1" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-22px) "></i><i class="xl" data-t="0.8" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-18.33px) "></i><i class="xl" data-t="0.6" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-14.67px) "></i><i class="xl" data-t="0.4" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-11px) "></i><i class="xl" data-t="0.2" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-7.33px) "></i><i class="xl" data-t="0" style="inset:-4px -4px -10px -4px;transform:translate3d(0px,0px,0) translateZ(-3.67px) "></i><span class="ico on-bluecard sat-bg"><svg class="ic" width="30" height="30" viewBox="0 0 24 24" fill="none"
  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
- aria-hidden="true" focusable="false"><path d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyPhones</span></div></div></div>
+ aria-hidden="true" focusable="false"><path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"/><path d="M6 6h.008v.008H6V6Z"/></svg></span><span class="satl" data-layout-allow-overlap>agencyOffers</span></div></div><div class="ripple" data-a="rip" data-layout-allow-overlap></div><div class="cursor" data-a="cur" data-layout-allow-overlap><i class="cs cs-n"></i><i class="cs cs-h"></i><i class="cs cs-c"></i></div></div>
     </div>
     <script>
       
@@ -530,17 +513,13 @@ const __dir = {
   camera(tl, root, spec, cs) {
     const stage = root.querySelector(spec.stage || ".stagec");
     if (!stage) return;
-    // Owner call (2026-10-04, second pass): NO camera movement at all — no push-in,
-    // no zoom, no tilt, no pull-back. The 3D lives in the depth set (the cards sit at
-    // different z, the pointer travels in z); the frame itself never moves or scales.
-    if (spec.flat) return;
-    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1);
+    const D = 1600, EASE = __dir.bez(0.22, 1, 0.36, 1.1), EASE_WIDE = __dir.bez(0.42, 0, 0.14, 1);
     // Aim a little BELOW the target, so what the camera is on rides high in the frame and clears
     // the subtitle pill that sits flat across the bottom (it is in the root, outside this world).
     const LOW = 120;
     tl.set(stage, { transformPerspective: D, transformOrigin: "50% 50%" }, 0);
-    // The entrance: the frame comes in from a little way back, LEVEL (no tilt), settling to rest.
-    tl.fromTo(stage, { z: 160, rotationY: 0, rotationX: 0, x: 0, y: 0 },
+    // The entrance: the frame starts pushed toward the camera and a few degrees off axis.
+    tl.fromTo(stage, { z: 220, rotationY: -spec.dir * 6, rotationX: 2, x: 0, y: 0 },
       { z: 0, rotationY: 0, rotationX: 0, duration: 1.2, ease: EASE }, spec.enter);
     spec.shots.forEach((sh, i) => {
       const at = spec.enter + sh.at;
@@ -569,9 +548,9 @@ const __dir = {
       const to = __dir.pose(P, s, sh.rx, sh.ry);
       const nextAt = i + 1 < spec.shots.length ? spec.enter + spec.shots[i + 1].at : spec.end;
       tl.to(stage, { x: to.x, y: to.y, z: to.z, rotationX: to.rotationX, rotationY: to.rotationY,
-        duration: 0.8, ease: EASE }, at);
-      // hold: a level push-in stays where it landed. No creep, no drift.
-      tl.to(stage, { z: to.z, rotationY: 0, rotationX: 0, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
+        duration: 0.8, ease: sh.mode === "wide" ? EASE_WIDE : EASE }, at);
+      // creep: a held shot keeps drifting - closer, and a little further round
+      tl.to(stage, { z: to.z + 45, rotationY: to.rotationY * 0.55, duration: Math.max(0.4, nextAt - at - 0.8), ease: "none" }, at + 0.8);
     });
     // Level out before the seam, so the exit animation starts from a flat frame.
     tl.to(stage, { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, duration: 0.5, ease: "power2.inOut" }, spec.end);
@@ -1076,15 +1055,15 @@ const __lip = { apply: __oklch.apply };
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-overview-b16"] = tl;
-      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;return (function (tl, t0, { q }) {
-        tl.fromTo(q('[data-a="m"]'), { scale: 0 }, { scale: 1, duration: 0.5, ease: __spr.pop }, t0);
-        tl.to(q('[data-a="zw"]'), { scale: 0.34, duration: 1.5, ease: "power3.inOut" }, t0 + 2.2);
-        tl.fromTo(q('[data-a="r"]'), { scale: 0 }, { scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 2.9);
-        // constant motion without touching letterSpacing: text reflow snaps to
-        // integer pixels under the frame-by-frame capture engine (lint:
-        // gsap_non_transform_motion), so the hero breathes on a transform.
-        tl.to(q('[data-a="r"] .hero'), { scale: 1.018, duration: 2.4, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 3.6);
-      });})({"mystery":"1","big":"Start on Site","sub":"Climb to Grow when the phones prove it."});
+      const ANIM = (function(A){const{blockers,count,foot,from,head,kicker,label,left,lines,marker,mystery,n,note,panels,r,reveal,right,hold,links,focus,fieldGlow,rowKeys,bars,rows,steps,sub,to,unit,url,cta,title,api,big,verdict,cursor,dur,labels,fx}=A;return (function (tl, t0, { q, qq }) {
+        tl.fromTo(q('[data-a="k"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0);
+        const s = qq(".sp");
+        tl.fromTo(s[0], { x: -90, scale: 0 }, { x: 0, scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.3);
+        tl.fromTo(q('[data-a="d"]'), { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: __spr.pop }, t0 + 0.9);
+        tl.fromTo(s[1], { x: 90, scale: 0 }, { x: 0, scale: 1, duration: 0.55, ease: __spr.pop }, t0 + 0.6);
+        s.forEach((el, i) => tl.to(el, { y: i ? 10 : -10, duration: 1.9 + i * 0.2, yoyo: true, repeat: -1, ease: "sine.inOut" }, t0 + 1.6));
+        tl.fromTo(q('[data-a="f"]'), { scale: 0, y: 26 }, { scale: 1, y: 0, duration: 0.5, ease: __spr.pop }, t0 + 2.2);
+      });})({"kicker":"Overview · what it is for","left":["READ IT FOR","primaryCta","the field that carries the meaning"],"right":["DO NOT","guess at it","the record is the source of truth"],"foot":""});
       const root = document.getElementById("root");
       ANIM(tl, 0.34, {
         q: (s) => root.querySelector(s),
@@ -1092,7 +1071,7 @@ const __lip = { apply: __oklch.apply };
       });
       // The pacing layer runs AFTER the scene has built its own timeline: it retimes
       // item entrances to the narration, then adds the camera and the cursor.
-      __dir.run(tl, root, {"clauses":[0.65],"span":3.7,"sats":{"enter":0.34,"items":[{"x":-840,"y":-140,"z":240,"name":"agencyProspects"},{"x":870,"y":200,"z":190,"name":"agencyLeads"},{"x":-600,"y":-390,"z":-300,"name":"agencyOpportunities"},{"x":640,"y":-360,"z":-340,"name":"agencyOffers"},{"x":-680,"y":300,"z":-280,"name":"agencyPhones"}]},"stops":[{"at":1.9,"ref":"[data-a=\"m\"]","item":null,"peakAt":null}],"peak":{"delay":0.224,"hand":0.26},"camera":{"stage":".stagec","flat":true,"enter":0.34,"dir":-1,"sats":[{"x":-840,"y":-140,"z":240,"name":"agencyProspects"},{"x":870,"y":200,"z":190,"name":"agencyLeads"},{"x":-600,"y":-390,"z":-300,"name":"agencyOpportunities"},{"x":640,"y":-360,"z":-340,"name":"agencyOffers"},{"x":-680,"y":300,"z":-280,"name":"agencyPhones"}],"stops":[{"world":null}],"shots":[{"at":0.61,"mode":"in","stop":0,"zoom":2.1,"rx":0,"ry":0}],"end":3.2},"exit":{"at":4.111,"from":"edges"},"cursor":null});
+      __dir.run(tl, root, {"clauses":[0.65],"span":5.75,"retime":{"items":[".sp:nth-of-type(1)",".sp:nth-of-type(3)"],"tail":["[data-a=\"f\"]"],"slots":[0.65,2.95],"lead":0.1},"slots":[0.65,2.95],"sats":{"enter":0.34,"items":[{"x":-840,"y":-140,"z":240,"name":"agencyProspects"},{"x":870,"y":200,"z":190,"name":"agencyLeads"},{"x":-600,"y":-390,"z":-300,"name":"agencyCalls"},{"x":640,"y":-360,"z":-340,"name":"agencyCampaigns"},{"x":-680,"y":300,"z":-280,"name":"agencyOffers"}]},"stops":[{"at":1.9,"ref":".sp:nth-of-type(1)","item":0,"peakAt":0.774},{"at":4.75,"ref":".sp:nth-of-type(3)","item":1,"peakAt":3.074}],"peak":{"delay":0.224,"hand":0.26},"camera":{"stage":".stagec","enter":0.34,"dir":-1,"sats":[{"x":-840,"y":-140,"z":240,"name":"agencyProspects"},{"x":870,"y":200,"z":190,"name":"agencyLeads"},{"x":-600,"y":-390,"z":-300,"name":"agencyCalls"},{"x":640,"y":-360,"z":-340,"name":"agencyCampaigns"},{"x":-680,"y":300,"z":-280,"name":"agencyOffers"}],"stops":[{"world":null},{"world":null}],"shots":[{"at":0.61,"mode":"in","stop":0,"zoom":2.1,"rx":-3,"ry":7},{"at":2.01,"mode":"out","zoom":0.94,"rx":0,"ry":-4},{"at":3.46,"mode":"in","stop":1,"zoom":2.1,"rx":3,"ry":-7},{"at":4.86,"mode":"out","zoom":0.94,"rx":0,"ry":4}],"end":5.25},"exit":{"at":5.71,"from":"edges"},"cursor":{"appear":0.64,"start":{"x":290,"y":730},"stops":[{"at":1.9,"ref":".sp:nth-of-type(1)","world":null,"rest":{"x":1570,"y":310,"z":260},"fx":0.6},{"at":4.75,"ref":".sp:nth-of-type(3)","world":null,"rest":{"x":290,"y":730,"z":260},"fx":0.6}],"end":5.25,"endPos":{"x":290,"y":730}},"lift":[{"sel":".sp:nth-of-type(1)","at":0.95,"back":3.05,"z":70},{"sel":".sp:nth-of-type(3)","at":3.25,"back":0,"z":70}]});
       // THE LIP: derived at render time from each slab host's own computed colour, in OKLCH (lkcolor.mjs)
       __lip.apply(root);
       tl.seek(0);

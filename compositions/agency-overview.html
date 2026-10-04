@@ -25,19 +25,6 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .stages{position:absolute;inset:0;z-index:0}
 .stage{position:absolute;inset:0;background:#2A8CFF}
 .stage.white{background:#FFFFFF}
-/* The per-beat STAGE PLATE. The wipe is a MASK now: the incoming beat is revealed
-   through a growing lattice of pixel windows while the outgoing beat stays live
-   everywhere else. For that to be correct the incoming beat has to bring its own
-   BACKGROUND with it - a root-level stage swap would repaint the outgoing scene
-   mid-wipe. So each beat sub-composition paints its own tone on its own #root
-   (see build-beats.mjs), and these classes key the chapter rail and the caption
-   pill to that tone. */
-#root.tone-white .chapter i{background:rgba(42,140,255,.16)}
-#root.tone-white .chapter i b{background:#2A8CFF}
-#root.tone-white #dither{opacity:.55;
-  background-image:
-   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
-   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
 
 /* ---- dither. The app's is a WebGL simplex fBm field put through an 8x8 Bayer
    ordered dither at colorNum 4, pixelSize 3 (DitherCanvas.tsx:101-126), masked
@@ -48,7 +35,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
    repeating gradients crossed at 45 degrees, which is what 8x8 Bayer looks like
    once quantised, plus the app's edge mask. It animates by sliding the lattice,
    so the frame is never static. */
-#dither,#root .dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
+#dither{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;
  background-image:
   repeating-linear-gradient(45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(255,255,255,.85) 0 1.5px, rgba(255,255,255,0) 1.5px 3px);
@@ -59,7 +46,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
    over every white beat: the stage stopped reading as white and white type on
    it dropped to roughly 1.3:1. The app masks its dither to the edges on BOTH
    backgrounds (OnboardingShell.tsx:15) - that is the behaviour to copy. */
-#dither.on-white,#root .dither.on-white{opacity:.55;
+#dither.on-white{opacity:.55;
  background-image:
   repeating-linear-gradient(45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px),
   repeating-linear-gradient(-45deg, rgba(42,140,255,.30) 0 1.5px, rgba(42,140,255,0) 1.5px 3px)}
@@ -366,17 +353,10 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 .sp{z-index:2;text-align:left}
 .spdiv{align-self:center;height:300px}
 
-/* The PIXEL WIPE is a MASK, not an overlay: the incoming beat is revealed THROUGH a
-   growing lattice of pixel windows (an SVG clipPath on the beat's own element), so the
-   outgoing beat stays live and visible everywhere the lattice has not reached. Nothing
-   is painted over the scene - the only thing drawn on top is a 2px outline on the cells
-   that are still growing, so the pixels read as pixels. This mirrors
-   src/transitions/pixel-wipe.mjs exactly. An earlier pass here drew 144 opaque colour
-   TILES at z-index 85 that closed over the whole frame: an overlay, which is what made
-   the transition read as a heavy coloured slab rather than a cut. Each beat sub-file
-   carries its own stage colour for the same reason - the incoming background has to
-   arrive with the windows, not be swapped behind them. */
-.pxedge{position:absolute;left:0;top:0;width:1920px;height:1080px;z-index:86;pointer-events:none}
+/* the wipe sheet a section transition crosses the frame on. It sits above the
+   stage and below nothing, so the beat it covers is fully hidden by it. */
+.flash{position:absolute;inset:0;z-index:85;opacity:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 50%,#FFFFFF 0,#FFFFFF 38%,#7FBAFF 100%)}
   // composition_heavy_overlay_count_high) ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â which is exactly why
 
 .fx .w,.fx .c{display:inline-block;will-change:transform,opacity}
@@ -405,33 +385,53 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
 </style>
   </head>
   <body>
-    <div id="root" data-composition-id="agency-overview" data-start="0" data-duration="112.400" data-width="1920" data-height="1080" data-fps="30">
+    <div id="root" data-composition-id="agency-overview" data-start="0" data-duration="112.800" data-width="1920" data-height="1080" data-fps="30">
       <div class="stages" data-a="stages">
-        <div class="stage white"></div>
+        <div class="stage white" data-s="0" style="opacity:0"></div>
+        <div class="stage " data-s="1" style="opacity:0"></div>
+        <div class="stage white" data-s="2" style="opacity:0"></div>
+        <div class="stage " data-s="3" style="opacity:0"></div>
+        <div class="stage white" data-s="4" style="opacity:0"></div>
+        <div class="stage " data-s="5" style="opacity:0"></div>
+        <div class="stage white" data-s="6" style="opacity:0"></div>
+        <div class="stage " data-s="7" style="opacity:0"></div>
+        <div class="stage white" data-s="8" style="opacity:0"></div>
+        <div class="stage " data-s="9" style="opacity:0"></div>
+        <div class="stage white" data-s="10" style="opacity:0"></div>
+        <div class="stage white" data-s="11" style="opacity:0"></div>
+        <div class="stage " data-s="12" style="opacity:0"></div>
+        <div class="stage " data-s="13" style="opacity:0"></div>
+        <div class="stage white" data-s="14" style="opacity:0"></div>
+        <div class="stage " data-s="15" style="opacity:0"></div>
+        <div class="stage white" data-s="16" style="opacity:0"></div>
+        <div class="stage " data-s="17" style="opacity:0"></div>
+        <div class="stage " data-s="18" style="opacity:0"></div>
+        <div class="stage " data-s="19" style="opacity:0"></div>
       </div>
       <div id="dither"></div>
-      <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><clipPath id="pxclip" clipPathUnits="userSpaceOnUse"><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/><rect x="0" y="0" width="0" height="0"/></clipPath></defs></svg>
-      <canvas class="pxedge" id="pxedge" width="1920" height="1080" data-layout-allow-overlap></canvas>
+      <div class="flash"></div>
       
 
-      <div class="clip beat" data-layout-allow-overlap id="beat-0" data-b="0" data-composition-id="agency-overview-b0" data-composition-src="compositions/agency-overview/b0.html" data-start="0.8" data-duration="7.8" data-track-index="1"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-1" data-b="1" data-composition-id="agency-overview-b1" data-composition-src="compositions/agency-overview/b1.html" data-start="6.85" data-duration="9.8" data-track-index="2"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-2" data-b="2" data-composition-id="agency-overview-b2" data-composition-src="compositions/agency-overview/b2.html" data-start="15.55" data-duration="4.8" data-track-index="3"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-3" data-b="3" data-composition-id="agency-overview-b3" data-composition-src="compositions/agency-overview/b3.html" data-start="19.25" data-duration="6.3" data-track-index="4"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-4" data-b="4" data-composition-id="agency-overview-b4" data-composition-src="compositions/agency-overview/b4.html" data-start="24.45" data-duration="10.6" data-track-index="5"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-5" data-b="5" data-composition-id="agency-overview-b5" data-composition-src="compositions/agency-overview/b5.html" data-start="33.95" data-duration="9.7" data-track-index="6"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-6" data-b="6" data-composition-id="agency-overview-b6" data-composition-src="compositions/agency-overview/b6.html" data-start="42.55" data-duration="5.9" data-track-index="7"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-7" data-b="7" data-composition-id="agency-overview-b7" data-composition-src="compositions/agency-overview/b7.html" data-start="47.35" data-duration="8.6" data-track-index="8"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-8" data-b="8" data-composition-id="agency-overview-b8" data-composition-src="compositions/agency-overview/b8.html" data-start="54.85" data-duration="8" data-track-index="9"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-9" data-b="9" data-composition-id="agency-overview-b9" data-composition-src="compositions/agency-overview/b9.html" data-start="61.75" data-duration="5.2" data-track-index="10"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-10" data-b="10" data-composition-id="agency-overview-b10" data-composition-src="compositions/agency-overview/b10.html" data-start="65.85" data-duration="6" data-track-index="11"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-11" data-b="11" data-composition-id="agency-overview-b11" data-composition-src="compositions/agency-overview/b11.html" data-start="70.75" data-duration="5.6" data-track-index="12"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-12" data-b="12" data-composition-id="agency-overview-b12" data-composition-src="compositions/agency-overview/b12.html" data-start="75.25" data-duration="8.2" data-track-index="13"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-13" data-b="13" data-composition-id="agency-overview-b13" data-composition-src="compositions/agency-overview/b13.html" data-start="82.35" data-duration="6.9" data-track-index="14"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-14" data-b="14" data-composition-id="agency-overview-b14" data-composition-src="compositions/agency-overview/b14.html" data-start="88.15" data-duration="6.8" data-track-index="15"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-15" data-b="15" data-composition-id="agency-overview-b15" data-composition-src="compositions/agency-overview/b15.html" data-start="93.85" data-duration="7.3" data-track-index="16"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-16" data-b="16" data-composition-id="agency-overview-b16" data-composition-src="compositions/agency-overview/b16.html" data-start="100.05" data-duration="4.8" data-track-index="17"></div>
-      <div class="clip beat" data-layout-allow-overlap id="beat-17" data-b="17" data-composition-id="agency-overview-b17" data-composition-src="compositions/agency-overview/b17.html" data-start="103.75" data-duration="8.65" data-track-index="18"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-0" data-b="0" data-composition-id="agency-overview-b0" data-composition-src="compositions/agency-overview/b0.html" data-start="1.2" data-duration="7.4" data-track-index="1"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-1" data-b="1" data-composition-id="agency-overview-b1" data-composition-src="compositions/agency-overview/b1.html" data-start="6.85" data-duration="6.97" data-track-index="2"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-2" data-b="2" data-composition-id="agency-overview-b2" data-composition-src="compositions/agency-overview/b2.html" data-start="12.72" data-duration="6.96" data-track-index="3"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-3" data-b="3" data-composition-id="agency-overview-b3" data-composition-src="compositions/agency-overview/b3.html" data-start="18.58" data-duration="6.97" data-track-index="4"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-4" data-b="4" data-composition-id="agency-overview-b4" data-composition-src="compositions/agency-overview/b4.html" data-start="24.45" data-duration="6.83" data-track-index="5"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-5" data-b="5" data-composition-id="agency-overview-b5" data-composition-src="compositions/agency-overview/b5.html" data-start="30.18" data-duration="6.82" data-track-index="6"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-6" data-b="6" data-composition-id="agency-overview-b6" data-composition-src="compositions/agency-overview/b6.html" data-start="35.9" data-duration="6.83" data-track-index="7"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-7" data-b="7" data-composition-id="agency-overview-b7" data-composition-src="compositions/agency-overview/b7.html" data-start="41.63" data-duration="6.82" data-track-index="8"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-8" data-b="8" data-composition-id="agency-overview-b8" data-composition-src="compositions/agency-overview/b8.html" data-start="47.35" data-duration="5.9" data-track-index="9"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-9" data-b="9" data-composition-id="agency-overview-b9" data-composition-src="compositions/agency-overview/b9.html" data-start="52.15" data-duration="5.9" data-track-index="10"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-10" data-b="10" data-composition-id="agency-overview-b10" data-composition-src="compositions/agency-overview/b10.html" data-start="56.95" data-duration="5.9" data-track-index="11"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-11" data-b="11" data-composition-id="agency-overview-b11" data-composition-src="compositions/agency-overview/b11.html" data-start="61.75" data-duration="5.2" data-track-index="12"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-12" data-b="12" data-composition-id="agency-overview-b12" data-composition-src="compositions/agency-overview/b12.html" data-start="65.85" data-duration="6.6" data-track-index="13"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-13" data-b="13" data-composition-id="agency-overview-b13" data-composition-src="compositions/agency-overview/b13.html" data-start="71.35" data-duration="6.6" data-track-index="14"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-14" data-b="14" data-composition-id="agency-overview-b14" data-composition-src="compositions/agency-overview/b14.html" data-start="76.85" data-duration="6.6" data-track-index="15"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-15" data-b="15" data-composition-id="agency-overview-b15" data-composition-src="compositions/agency-overview/b15.html" data-start="82.35" data-duration="6.85" data-track-index="16"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-16" data-b="16" data-composition-id="agency-overview-b16" data-composition-src="compositions/agency-overview/b16.html" data-start="88.1" data-duration="6.85" data-track-index="17"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-17" data-b="17" data-composition-id="agency-overview-b17" data-composition-src="compositions/agency-overview/b17.html" data-start="93.85" data-duration="7.3" data-track-index="18"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-18" data-b="18" data-composition-id="agency-overview-b18" data-composition-src="compositions/agency-overview/b18.html" data-start="100.05" data-duration="5.2" data-track-index="19"></div>
+      <div class="clip beat" data-layout-allow-overlap id="beat-19" data-b="19" data-composition-id="agency-overview-b19" data-composition-src="compositions/agency-overview/b19.html" data-start="104.15" data-duration="8.65" data-track-index="20"></div>
 
 
       <div class="clip cap" data-start="1.200" data-duration="2.960" data-track-index="90"><span>Listening Kit is a marketing agency for local shops.</span></div>
@@ -469,7 +469,7 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
       <div class="clip cap" data-start="100.705" data-duration="2.800" data-track-index="90"><span>Start on-site, climb to grow when the phones prove</span></div>
       <div class="clip cap" data-start="103.505" data-duration="0.240" data-track-index="90"><span>it.</span></div>
 
-      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i></div>
+      <div class="chapter" data-a="chapter"><i data-c="0"><b></b></i><i data-c="1"><b></b></i><i data-c="2"><b></b></i><i data-c="3"><b></b></i><i data-c="4"><b></b></i><i data-c="5"><b></b></i><i data-c="6"><b></b></i><i data-c="7"><b></b></i><i data-c="8"><b></b></i><i data-c="9"><b></b></i><i data-c="10"><b></b></i><i data-c="11"><b></b></i><i data-c="12"><b></b></i><i data-c="13"><b></b></i><i data-c="14"><b></b></i><i data-c="15"><b></b></i><i data-c="16"><b></b></i><i data-c="17"><b></b></i><i data-c="18"><b></b></i><i data-c="19"><b></b></i></div>
 
       <audio id="agency-overview-audio" src="assets/audio/agency-overview.mp3" data-start="0.8" data-duration="102.945" data-has-audio="true" data-volume="1"></audio>
     </div>
@@ -588,233 +588,24 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#2A8CFF}
   out.easeIn = easeIn;
   return out;
 })();
-      const __fx2 = (function fxModule() {
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const smooth = (u) => { u = clamp(u, 0, 1); return u * u * (3 - 2 * u); };
-  const smoother = (u) => { u = clamp(u, 0, 1); return u * u * u * (u * (6 * u - 15) + 10); };
-  const easeOut = (u) => 1 - Math.pow(1 - clamp(u, 0, 1), 3);
-
-  /** Deterministic PRNG (LCG). A render must be identical every run, so no Math.random, ever. */
-  function rng(seed) {
-    let s = (seed >>> 0) || 1;
-    return () => ((s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296);
-  }
-
-  /* ----------------------------------------------------------------------- the gunshot flash */
-
-  const FLASH = { attack: 0.05, decay: 0.13, duration: 0.5, peak: 0.5 };
-
-  /**
-   * Flash intensity 0..1 `age` seconds after it fires. A hard attack to full inside 0.05 s (3
-   * frames at 30 fps), then an exponential tail forced to exactly 0 by `duration`. Cut at the
-   * PEAK (age = attack): the swap is hidden by the brightest frame.
-   */
-  function flashAt(age, p) {
-    p = p || FLASH;
-    if (age <= 0 || age >= p.duration) return 0;
-    if (age < p.attack) return p.peak * smooth(age / p.attack);
-    const tail = Math.exp(-(age - p.attack) / p.decay);
-    return p.peak * tail * (1 - smooth((age - (p.duration - 0.12)) / 0.12));
-  }
-
-  /** A short recoil: extra zoom that jumps at the peak and settles. Added to the camera. */
-  function kickAt(age, amount) {
-    if (age < 0.02) return 0;
-    return (amount === undefined ? 0.07 : amount) * Math.exp(-(age - 0.02) / 0.09);
-  }
-
-  /**
-   * The camera rush: extra zoom that builds on an ease-in over the `rampOut` seconds before the seam
-   * (the world accelerating at the camera), peaks AT the seam, and settles on an ease-out over the
-   * `rampIn` seconds after it (decelerating). spec: { seam, rampOut, rampIn, amount }.
-   */
-  function rushAt(t, spec) {
-    if (t <= spec.seam - spec.rampOut || t >= spec.seam + spec.rampIn) return 0;
-    if (t < spec.seam) return spec.amount * Math.pow((t - (spec.seam - spec.rampOut)) / spec.rampOut, 3);
-    return spec.amount * Math.pow(1 - (t - spec.seam) / spec.rampIn, 3);
-  }
-
-  /* ------------------------------------------------------------------------ the speed ramp */
-
-  /**
-   * spec: { seam, rampOut, rampIn, peak }. Speed is 1, climbs to `peak` over the `rampOut` seconds
-   * before the seam, and falls back to 1 over the `rampIn` seconds after it. tau(t) is the integral
-   * of speed: monotonic, continuous, with continuous speed.
-   */
-  function makeWarp(spec) {
-    const HZ = 480, dt = 1 / HZ;
-    const speedAt = (t) => {
-      if (t <= spec.seam - spec.rampOut || t >= spec.seam + spec.rampIn) return 1;
-      if (t < spec.seam) return 1 + (spec.peak - 1) * smoother((t - (spec.seam - spec.rampOut)) / spec.rampOut);
-      return 1 + (spec.peak - 1) * (1 - smoother((t - spec.seam) / spec.rampIn));
-    };
-    const table = [0];
-    const end = spec.seam + spec.rampIn + 30;
-    for (let t = 0, i = 0; t < end; i++, t = i * dt) table.push(table[i] + 0.5 * (speedAt(t) + speedAt(t + dt)) * dt);
-    const tau = (t) => {
-      if (t <= 0) return t;
-      const f = t * HZ, i = Math.floor(f);
-      if (i >= table.length - 1) return table[table.length - 1] + (t - (table.length - 1) * dt);
-      return table[i] + (table[i + 1] - table[i]) * (f - i);
-    };
-    return { tau, speedAt };
-  }
-
-  /* ------------------------------------------------------------------------- the pixel wipe */
-
-  /**
-   * The wipe's cells, `age` seconds after it starts: [{ cx, cy, s, u }]. `s` is the cell's current
-   * size in px (0 -> `cell` with a little overshoot), `u` its 0..1 progress. A cell is a WINDOW: the
-   * incoming composition is visible inside it. The sweep runs across the frame (`dir`) and
-   * ACCELERATES (`accel` < 1 bunches the late cells in, so the edge speeds up like a speed ramp);
-   * each cell has seeded jitter so the edge is ragged. spec: { W, H, cell, seed, dir, sweep, pop,
-   * jitter, accel }. Cells that have not started are omitted; finished cells are full size.
-   */
-  function wipeCells(age, spec) {
-    const r = rng(spec.seed);
-    const cols = Math.ceil(spec.W / spec.cell), rows = Math.ceil(spec.H / spec.cell);
-    const horizontal = spec.dir === "right" || spec.dir === "left";
-    const accel = spec.accel === undefined ? 0.6 : spec.accel;
-    const out = [];
-    for (let j = 0; j < rows; j++) {
-      for (let i = 0; i < cols; i++) {
-        const jit = r() * spec.jitter;
-        let pos = horizontal ? i / Math.max(1, cols - 1) : j / Math.max(1, rows - 1);
-        if (spec.dir === "left" || spec.dir === "up") pos = 1 - pos;
-        const delay = Math.pow(pos, accel) * spec.sweep + jit;
-        const u = clamp((age - delay) / spec.pop, 0, 1);
-        if (u <= 0) continue;
-        const back = 1 + 2.2 * Math.pow(u - 1, 3) + 1.2 * Math.pow(u - 1, 2); // ease-out with a little overshoot
-        out.push({ i, j, cx: (i + 0.5) * spec.cell, cy: (j + 0.5) * spec.cell, s: spec.cell * back + (u >= 1 ? 1.5 : 0), u });
-      }
-    }
-    return out;
-  }
-
-  /** The time at which the wipe is complete (every cell full size). */
-  const wipeDuration = (spec) => spec.sweep + spec.jitter + spec.pop;
-
-  /** Fraction of the frame the cells cover (0..1): the incoming composition's visible share. */
-  function wipeCoverage(cells, spec) {
-    const frame = Math.ceil(spec.W / spec.cell) * Math.ceil(spec.H / spec.cell) * spec.cell * spec.cell;
-    return Math.min(1, cells.reduce((sum, c) => sum + Math.min(c.s, spec.cell + 2) * Math.min(c.s, spec.cell + 2), 0) / frame);
-  }
-
-  /**
-   * The only thing painted over the scene: a `width` px outline on each cell that is still growing, so
-   * the pixels read as pixels. Finished cells carry nothing. Scale only (outline size = cell size).
-   */
-  function drawWipeEdges(ctx, cells, spec) {
-    ctx.lineWidth = spec.edgeWidth === undefined ? 2 : spec.edgeWidth;
-    ctx.strokeStyle = spec.edgeColor || "#FFFFFF";
-    const flashU = spec.flashU || 0;
-    ctx.fillStyle = "#FFFFFF";
-    for (const c of cells) {
-      if (c.u >= 1) continue;
-      const h = c.s / 2;
-      // the gunshot lives on the wipe FRONT: a cell is solid white while it is young, then settles to its outline
-      if (c.u < flashU) ctx.fillRect(Math.round(c.cx - h), Math.round(c.cy - h), Math.round(c.s), Math.round(c.s));
-      ctx.strokeRect(Math.round(c.cx - h), Math.round(c.cy - h), Math.round(c.s), Math.round(c.s));
-    }
-  }
-
-  /* --------------------------------------------------------------------------- the click rings */
-
-  /**
-   * A click: `count` concentric rings radiating outward from (x, y), `age` seconds after the press, as 8-BIT PIXEL
-   * ART. Ring j starts `stagger` seconds after ring j-1, grows from 0 to `radius` (x the perspective scale k) on an
-   * ease-out and UNWINDS as it goes: its arc shortens from a full circle to nothing, so a ring leaves by scale,
-   * never by alpha.
-   *
-   * Each ring is THREE concentric pixel bands on ONE global grid of `cell` px (so every ring, and every click, sits
-   * on the same pixel lattice):
-   *     core     1 cell, the INNER COLOUR (white): the same on every ring, whatever it hit
-   *     stroke   1 cell each side, a slightly pixelated stroke (brand blue)
-   *     outline  1 cell each side, the outer stroke (the system's black)
-   * so it never fades into the background: whatever the stage, one of the bands contrasts with it.
-   * Layers are drawn across ALL rings (every outline, then every stroke, then every core), so a ring crossing
-   * another never cuts into its core.
-   *
-   * spec: { x, y, k, count, radius, life, stagger, cell, colors: { core, stroke, outline } }
-   */
-  function ringState(age, spec, j) {
-    const a = age - j * spec.stagger;
-    if (a < 0 || a >= spec.life) return null;
-    const u = a / spec.life;
-    const radius = spec.radius * (spec.k || 1) * easeOut(u);
-    const sweep = Math.PI * 2 * (1 - smooth((u - 0.45) / 0.55));
-    if (radius < 1 || sweep < 0.02) return null;
-    return { radius, sweep, start: -Math.PI / 2 + u * Math.PI * 1.2 + j * 0.9 };
-  }
-
-  /** The pixel cells ("i,j" on the global grid) of one band: the arc at `rad`, sampled finer than the cell. */
-  function bandCells(spec, st, rad, cell) {
-    const out = new Set();
-    if (rad < cell * 0.5) return out;
-    const n = Math.max(8, Math.ceil((st.sweep * rad) / (cell * 0.45)));
-    for (let i = 0; i <= n; i++) {
-      const th = st.start + (st.sweep * i) / n;
-      out.add(Math.floor((spec.x + rad * Math.cos(th)) / cell) + "," + Math.floor((spec.y + rad * Math.sin(th)) / cell));
-    }
-    return out;
-  }
-
-  /** The three layers of one ring as sets of cells: { core, stroke, outline } (disjoint). */
-  function ringCells(spec, st) {
-    const c = spec.cell || 4, r = st.radius;
-    const core = bandCells(spec, st, r, c);
-    const stroke = new Set([...bandCells(spec, st, r - c, c), ...bandCells(spec, st, r + c, c)].filter((k) => !core.has(k)));
-    const outline = new Set([...bandCells(spec, st, r - 2 * c, c), ...bandCells(spec, st, r + 2 * c, c)].filter((k) => !core.has(k) && !stroke.has(k)));
-    return { core, stroke, outline };
-  }
-
-  function drawRings(ctx, age, spec) {
-    const count = spec.count || 3, c = spec.cell || 4;
-    const rings = [];
-    for (let j = 0; j < count; j++) {
-      const st = ringState(age, spec, j);
-      if (st) rings.push(ringCells(spec, st));
-    }
-    const cols = spec.colors;
-    for (const layer of ["outline", "stroke", "core"]) {
-      ctx.fillStyle = cols[layer];
-      for (const ring of rings) {
-        for (const key of ring[layer]) {
-          const m = key.indexOf(",");
-          ctx.fillRect(+key.slice(0, m) * c, +key.slice(m + 1) * c, c, c);
-        }
-      }
-    }
-  }
-
-  /**
-   * The ring's colours: the INNER COLOUR IS THE SAME EVERY TIME (white), with the brand blue as the pixel stroke and
-   * the system's black as the outer stroke. They do not adapt to the item any more: an adaptive ring was a ring that
-   * vanished on the one item it was not adapted for. (item and stage are kept for the call sites.)
-   */
-  function ringColors(item, stage, blue) {
-    return { core: "#FFFFFF", stroke: blue, outline: "#0A0F1A" };
-  }
-
-  return { flashAt, kickAt, rushAt, makeWarp, wipeCells, wipeDuration, wipeCoverage, drawWipeEdges, drawRings, ringCells, ringState, ringColors, rng, FLASH, smooth, smoother };
-})();
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["agency-overview"] = tl;
 
-      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":0.8,"dur":7.8,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":"number-tick","xf":null,"shots":2},{"i":1,"sel":".beat[data-b=\"1\"]","start":6.85,"dur":9.8,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-left","shots":3},{"i":2,"sel":".beat[data-b=\"2\"]","start":15.55,"dur":4.8,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":1},{"i":3,"sel":".beat[data-b=\"3\"]","start":19.25,"dur":6.3,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":2},{"i":4,"sel":".beat[data-b=\"4\"]","start":24.45,"dur":10.6,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-right","shots":4},{"i":5,"sel":".beat[data-b=\"5\"]","start":33.95,"dur":9.7,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":3},{"i":6,"sel":".beat[data-b=\"6\"]","start":42.55,"dur":5.9,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":2},{"i":7,"sel":".beat[data-b=\"7\"]","start":47.35,"dur":8.6,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-left","shots":2},{"i":8,"sel":".beat[data-b=\"8\"]","start":54.85,"dur":8,"tone":"white","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"zoom-in","shots":3},{"i":9,"sel":".beat[data-b=\"9\"]","start":61.75,"dur":5.2,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":"typewriter-run","xf":"push-up","shots":1},{"i":10,"sel":".beat[data-b=\"10\"]","start":65.85,"dur":6,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight","fx":"number-tick","xf":"push-right","shots":2},{"i":11,"sel":".beat[data-b=\"11\"]","start":70.75,"dur":5.6,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight","fx":"number-tick","xf":"zoom-out","shots":1},{"i":12,"sel":".beat[data-b=\"12\"]","start":75.25,"dur":8.2,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-down","shots":3},{"i":13,"sel":".beat[data-b=\"13\"]","start":82.35,"dur":6.9,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":"card-assemble","xf":"push-left","shots":2},{"i":14,"sel":".beat[data-b=\"14\"]","start":88.15,"dur":6.8,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":2},{"i":15,"sel":".beat[data-b=\"15\"]","start":93.85,"dur":7.3,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-up","shots":2},{"i":16,"sel":".beat[data-b=\"16\"]","start":100.05,"dur":4.8,"tone":"blue","name":"zoom-out","blueprint":"zoom-out-workspace-reveal","type":"benefit_highlight","fx":null,"xf":"push-right","shots":1},{"i":17,"sel":".beat[data-b=\"17\"]","start":103.75,"dur":8.65,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":"zoom-out","shots":0}];
+      const PLAN = [{"i":0,"sel":".beat[data-b=\"0\"]","start":1.2,"dur":7.4,"tone":"white","name":"countup","blueprint":"dataviz-countup","type":"hook","fx":null,"xf":null,"shots":4},{"i":1,"sel":".beat[data-b=\"1\"]","start":6.85,"dur":6.97,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":2,"sel":".beat[data-b=\"2\"]","start":12.72,"dur":6.96,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":3,"sel":".beat[data-b=\"3\"]","start":18.58,"dur":6.97,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-up","shots":4},{"i":4,"sel":".beat[data-b=\"4\"]","start":24.45,"dur":6.83,"tone":"white","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-right","shots":2},{"i":5,"sel":".beat[data-b=\"5\"]","start":30.18,"dur":6.82,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":6,"sel":".beat[data-b=\"6\"]","start":35.9,"dur":6.83,"tone":"white","name":"relations","blueprint":"constellation-hub","type":"feature_showcase","fx":null,"xf":"push-down","shots":4},{"i":7,"sel":".beat[data-b=\"7\"]","start":41.63,"dur":6.82,"tone":"blue","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-left","shots":4},{"i":8,"sel":".beat[data-b=\"8\"]","start":47.35,"dur":5.9,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"zoom-in","shots":2},{"i":9,"sel":".beat[data-b=\"9\"]","start":52.15,"dur":5.9,"tone":"blue","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-up","shots":4},{"i":10,"sel":".beat[data-b=\"10\"]","start":56.95,"dur":5.9,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"push-right","shots":4},{"i":11,"sel":".beat[data-b=\"11\"]","start":61.75,"dur":5.2,"tone":"white","name":"cost-countup","blueprint":"dataviz-countup","type":"benefit_highlight","fx":null,"xf":"zoom-out","shots":2},{"i":12,"sel":".beat[data-b=\"12\"]","start":65.85,"dur":6.6,"tone":"blue","name":"table","blueprint":"data-table-rise","type":"feature_showcase","fx":null,"xf":"push-down","shots":2},{"i":13,"sel":".beat[data-b=\"13\"]","start":71.35,"dur":6.6,"tone":"blue","name":"agent-work","blueprint":"agent-progress-theater","type":"key_feature","fx":null,"xf":"push-left","shots":4},{"i":14,"sel":".beat[data-b=\"14\"]","start":76.85,"dur":6.6,"tone":"white","name":"record","blueprint":"asr-keyword-glow","type":"feature_showcase","fx":null,"xf":"zoom-in","shots":4},{"i":15,"sel":".beat[data-b=\"15\"]","start":82.35,"dur":6.85,"tone":"blue","name":"journey","blueprint":"grid-card-assemble","type":"key_feature","fx":null,"xf":"push-up","shots":4},{"i":16,"sel":".beat[data-b=\"16\"]","start":88.1,"dur":6.85,"tone":"white","name":"split","blueprint":"comparison-split","type":"benefit_highlight","fx":null,"xf":"push-right","shots":4},{"i":17,"sel":".beat[data-b=\"17\"]","start":93.85,"dur":7.3,"tone":"blue","name":"typewriter","blueprint":"typewriter-reveal","type":"feature_showcase","fx":null,"xf":"zoom-out","shots":4},{"i":18,"sel":".beat[data-b=\"18\"]","start":100.05,"dur":5.2,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":null,"xf":"push-down","shots":2},{"i":19,"sel":".beat[data-b=\"19\"]","start":104.15,"dur":8.65,"tone":"blue","name":"endcard","blueprint":"logo-assemble-lockup","type":"cta","fx":"wordmark-lockup","xf":"push-left","shots":0}];
       // The seams are DATA (lkmotion.mjs SEAMS): a clip shape for the stage-colour
       // reveal, and where the outgoing and incoming scenes travel. One generic
       // builder below turns any of them into tweens.
       const SEAMS = {"push-left":{"from":["page-slide","whip-pan-cut"],"exit":"start"},"push-right":{"from":["page-slide","whip-pan-cut"],"exit":"end"},"push-up":{"from":["shared-axis-y","push-in"],"exit":"center"},"push-down":{"from":["shared-axis-y"],"exit":"edges"},"zoom-in":{"from":["zoom-through-transition"],"exit":"center"},"zoom-out":{"from":["zoom-through-transition","iris-reveal"],"exit":"edges"},"blur":{"from":["fade-through"],"exit":"center"}};
       const XF = 0.45;
       const LEAD = 0.65;
-      const TOTAL = 112.400;
+      const TOTAL = 112.800;
       const OUTRO_END = TOTAL - 2.4;
 const root = document.getElementById("root");
 
       tl.to({}, { duration: TOTAL }, 0);
 
+      const stages = Array.from(root.querySelectorAll(".stage"));
       const chips = Array.from(root.querySelectorAll(".chapter i b"));
 
       function toneAt(i) { return PLAN[i].tone; }
@@ -825,63 +616,37 @@ const root = document.getElementById("root");
       // scale 1 -> 0; no element, scene or beat is ever tweened in opacity. A seam is:
       //   S-0.3..S   the OUTGOING scene removes every element: each scales DOWN to 0 (staggered, in the
       //              order its seam names), inside that beat's own timeline (lkdirector.mjs exit)
-      //   S..S+D    the PIXEL WIPE sweeps: the incoming beat is mounted at S (it is already mounted -
-      //              LEAD is the J-cut) and is clipped to a lattice of pixel windows that grow 0 -> 1
-      //              across the frame with seeded jitter, so the edge is ragged
-      //   S+D..     the clip is released and the incoming beat owns the frame
-      // Owner call (2026-10-04): it is a MASK, not an overlay. It was 144 opaque tiles at z-index 85
-      // closing over the frame, which painted a flat colour slab on top of both scenes.
-      const WIPE = {"W":1920,"H":1080,"cell":120,"sweep":0.42,"pop":0.34,"jitter":0.06,"dir":"right","seed":41,"accel":0.7,"flashU":0,"edgeWidth":2,"edgeColor":"#FFFFFF"};
-      const WIPE_LEN = __fx2.wipeDuration(WIPE);
-      const clipRects = Array.from(document.querySelectorAll("#pxclip rect"));
-      const edge = document.getElementById("pxedge"), ectx = edge.getContext("2d");
-      const beats = PLAN.map((b) => document.getElementById("beat-" + b.i));
-      const seamStart = PLAN.map((b, i) => (i === 0 ? null : b.start));
-      const WIPE_COLS = Math.ceil(WIPE.W / WIPE.cell);
-      function clearClip() {
-        for (const r of clipRects) { r.setAttribute("width", 0); r.setAttribute("height", 0); }
-      }
-      function releaseAll() { beats.forEach((el) => { if (el) el.style.clipPath = "none"; }); clearClip(); }
-      function paintWipe(now) {
-        let active = -1;
-        for (let i = 1; i < PLAN.length; i++) {
-          const age = now - seamStart[i];
-          if (age < 0 || age > WIPE_LEN + 0.02) continue;
-          active = i; break;
-        }
-        if (active < 0) { releaseAll(); ectx.clearRect(0, 0, WIPE.W, WIPE.H); return; }
-        const el = beats[active];
-        if (!el) return;
-        el.style.clipPath = "url(#pxclip)";
-        for (let k = 0; k < PLAN.length; k++) if (k !== active && beats[k]) beats[k].style.clipPath = "none";
-        ectx.clearRect(0, 0, WIPE.W, WIPE.H);
-        clearClip();
-        const cells = __fx2.wipeCells(now - seamStart[active], WIPE);
-        for (const c of cells) {
-          const r = clipRects[c.j * WIPE_COLS + c.i];
-          if (!r) continue;
-          r.setAttribute("x", c.cx - c.s / 2); r.setAttribute("y", c.cy - c.s / 2);
-          r.setAttribute("width", c.s); r.setAttribute("height", c.s);
-        }
-        __fx2.drawWipeEdges(ectx, cells, WIPE);
-      }
-      // The root timeline is seeked by the render, and onUpdate fires on every seek, so the
-      // lattice is a pure function of time: the same frame is produced at any render speed.
-      tl.eventCallback("onUpdate", () => paintWipe(tl.time()));
+      //   S..C       the stage is empty. An exposure flare (a light overlay, not a fade of content)
+      //              rises on a cosine to hide the stage-colour swap
+      //   C          the peak: stage colour, dither and tone swap here, unseen
+      //   ENTER..    the INCOMING scene's elements scale UP from 0 with overshoot, into the falling flare
+      const FLASH_UP = 0.3;
+      const FLASH_DOWN = 0.55;
+      const flashEl = root.querySelector(".flash");
       PLAN.forEach((b, i) => {
-        const chip = chips[i];
+        const st = stages[b.i];
         const tone = toneAt(i);
+        const C = b.start + FLASH_UP;
+        if (st) {
+          if (i === 0) tl.set(st, { opacity: 1 }, 0);
+          else {
+            tl.set(st, { opacity: 1 }, C);
+            tl.set(stages[i - 1], { opacity: 0 }, C);
+          }
+        }
         if (i > 0) {
           tl.call(() => {
             root.classList.toggle("tone-white", tone === "white");
             const dth = document.getElementById("dither");
             if (dth) dth.classList.toggle("on-white", tone === "white");
-          }, null, b.start);
-        } else {
-          root.classList.toggle("tone-white", tone === "white");
-          const dth0 = document.getElementById("dither");
-          if (dth0) dth0.classList.toggle("on-white", tone === "white");
+          }, null, C);
+          if (flashEl) {
+            // flare-ok: the exposure flare is a LIGHT OVERLAY (it hides the stage-colour swap), not a fade of content
+            tl.fromTo(flashEl, { opacity: 0 }, { opacity: 1, duration: FLASH_UP, ease: "sine.inOut" }, b.start);
+            tl.to(flashEl, { opacity: 0, duration: FLASH_DOWN, ease: "sine.out" }, C);
+          }
         }
+        const chip = chips[i];
         if (chip) {
           tl.set(chip, { scaleX: 0 }, b.start);
           tl.to(chip, { scaleX: 1, duration: b.dur, ease: "none" }, b.start);
