@@ -18,22 +18,62 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+// The product's own Heroicons package, when it is present. The build must NOT
+// depend on it: a fresh clone has no `node_modules/.bun`, and a render machine
+// that cannot reach that path still has to emit a composition. So the lookup is
+// lazy and the paths are vendored into src/heroicon-paths.json (regenerate with
+// `npm run vendor:icons`).
 const ROOT = "C:/Users/0/.buzz/REPOS/listeningkit-hackathon/node_modules/.bun";
-const PKG_ROOT = path.join(
-  ROOT,
-  fs.readdirSync(ROOT).find((d) => d.startsWith("@heroicons+react@")),
-  "node_modules/@heroicons/react/24/outline",
-);
+let PKG_ROOT = null;
+try {
+  PKG_ROOT = path.join(
+    ROOT,
+    fs.readdirSync(ROOT).find((d) => d.startsWith("@heroicons+react@")),
+    "node_modules/@heroicons/react/24/outline",
+  );
+} catch {
+  PKG_ROOT = null;
+}
 
-/** name (any case, with or without the Icon suffix) -> svg markup. */
+// Vendored fallback: bare PascalCase icon name (no "Icon" suffix) -> array of
+// `d` strings, generated once from the package via `npm run vendor:icons`.
+const FALLBACK_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), "heroicon-paths.json");
+let FALLBACK = {};
+try {
+  FALLBACK = JSON.parse(fs.readFileSync(FALLBACK_FILE, "utf8"));
+} catch {
+  FALLBACK = {};
+}
+// Lower-cased name -> canonical key, so a caller can write "magnifying-glass",
+// "MagnifyingGlass", "magnifying glass" or "MagnifyingGlassIcon" and hit the
+// same entry. Without this, `pascal("square-3-stack-3d")` = "Square3Stack3d"
+// missed the real "Square3Stack3D" and the icon silently threw at build time.
+const FALLBACK_BY_KEY = {};
+for (const key of Object.keys(FALLBACK)) FALLBACK_BY_KEY[key.toLowerCase()] = key;
+
+/** name (any case, kebab / pascal / spaced, with or without the Icon suffix) -> svg markup. */
 export function icon(name, size = 24, color = "currentColor") {
-  const key = kebab(name);
-  const file = path.join(PKG_ROOT, pascal(key) + "Icon.js");
-  const d = paths(file);
+  const d = iconPaths(name);
+  if (!d) throw new Error(`icon "${name}" not found (no package and not in heroicon-paths.json)`);
   return `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"
  stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
  aria-hidden="true" focusable="false">${d.map((p) => `<path d="${p}"/>`).join("")}</svg>`;
+}
+
+/** Path data for an icon name, from the package if present, else the vendored map. */
+function iconPaths(name) {
+  const bare = pascal(name);
+  const key = FALLBACK_BY_KEY[bare.toLowerCase()] || FALLBACK_BY_KEY[kebab(name)];
+  if (PKG_ROOT && key) {
+    try {
+      return paths(path.join(PKG_ROOT, key + "Icon.js"));
+    } catch {
+      /* fall through to the vendored copy */
+    }
+  }
+  return key ? FALLBACK[key] : null;
 }
 
 /**
@@ -67,7 +107,10 @@ export function iconRow(iconName, inner, opts = {}) {
 export const FIELD_ICON = {
   // identity
   name: "building-storefront",
-  title: "text",
+  // Heroicons ships no `TextIcon`; `document-text` is the title/text glyph that
+  // exists. It was a latent build error — resolve it lazily and the map row that
+  // named a non-existent icon blows up the first beat that uses it.
+  title: "document-text",
   slug: "link",
   label: "tag",
   status: "flag",
@@ -131,11 +174,18 @@ const paths = (file) => {
 };
 
 const kebab = (s) => {
-  const base = s.replace(/Icon$/, "");
+  const base = String(s).replace(/Icon$/, "");
   return base.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
 };
 
-const pascal = (s) => s.split("-").map((p) => p[0].toUpperCase() + p.slice(1)).join("");
+/** Any spelling (kebab / spaced / pascal, optional Icon suffix) -> bare PascalCase. */
+const pascal = (s) =>
+  String(s)
+    .replace(/Icon$/, "")
+    .split(/[-\s_]+/)
+    .filter(Boolean)
+    .map((p) => p[0].toUpperCase() + p.slice(1))
+    .join("");
 
 /** Twenty object -> heroicon, used on every record panel header and by components/table. */
 export const OBJECT_ICON = {

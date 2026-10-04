@@ -39,6 +39,14 @@ export const FAMILY = {
     fields: ["name", "contactName", "source", "status", "qualificationStatus", "coldCallStatus", "outboundMessage"],
     objects: ["agencyProspects", "agencyCalls", "agencyMessages", "agencyOpportunities", "agencyConversations", "agencyTasks"],
   },
+  "agency-phones": {
+    fields: ["phoneNumber", "countryCode", "numberType", "state", "tenDlcCampaignId", "tollFreeVerificationId", "messagingProfileId"],
+    objects: ["agencyMessages", "agencyCalls", "agencyCampaigns", "agencyConversations"],
+  },
+  "agency-tasks": {
+    fields: ["title", "status", "assignee", "dueAt"],
+    objects: ["agencyProspects", "agencyLeads", "agencyOpportunities", "agencyCampaigns", "agencyContents", "agencyCalls", "agencyMessages"],
+  },
 };
 
 /** Beats that are about relationships or the whole object draw from the related objects. */

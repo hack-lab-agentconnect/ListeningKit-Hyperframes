@@ -66,6 +66,18 @@ const ARTEFACT_EXT = new Set([
  * excluded, not forgotten.
  */
 
+/**
+ * Source assets that are images. The brand's ear cutouts (components/cutout) are
+ * die-cut WEBPs the compositions reference directly; without them a fresh clone
+ * cannot build (lint-components C14 checks both asset dirs). They are source, like
+ * the SVG logo and cursors, so they are tracked despite the `*.webp` ignore rule —
+ * and named here so no OTHER webp can ride in.
+ *
+ * Rendered videos are NOT tracked: they are served from file storage and linked
+ * from the README, because the finished mp4s are far too large for git.
+ */
+const REQUIRED_ASSETS = /^(?:compositions\/)?assets\/ears\/ear[1-8]\.webp$/;
+
 const failures = [];
 const fail = (rule, msg) => failures.push(`  [${rule}] ${msg}`);
 
@@ -83,6 +95,7 @@ try {
 
 // 1 + 2. Tracked artefacts and tracked review directories.
 for (const f of tracked) {
+  if (REQUIRED_ASSETS.test(f)) continue;
   const ext = path.extname(f).toLowerCase();
   if (ARTEFACT_EXT.has(ext)) {
     fail(
